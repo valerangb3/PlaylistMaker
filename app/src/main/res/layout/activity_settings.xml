@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/button_back"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:backgroundTint="@color/transparent"
+        android:text="@string/app_back"
+        android:gravity="start|center"
+        android:textColor="@color/black"
+        android:textSize="@dimen/title_size"
+        android:textAllCaps="false"
+        android:layout_marginEnd="100dp"
+        app:icon="@drawable/back"
+        app:iconPadding="28dp"
+        app:iconTint="@color/black"
+        style="?android:attr/borderlessButtonStyle"/>
+    <!--
+    Решил отказаться от вертски imageview + textview, т.к. кажется не логично в будущем обрабатывать
+    imageview как кнопку. Подобное скорее всего нужно будет сделать и с кнопками ниже.
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginBottom="24dp"
+        android:padding="4dp">
+        <ImageView
+            android:id="@+id/button_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:src="@drawable/back"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="@dimen/title_size"
+            android:textStyle="bold"
+            android:layout_marginStart="64dp"
+            android:layout_marginEnd="100dp"
+            android:gravity="center"
+            android:layout_height="match_parent"
+            android:text="@string/app_back"/>
+    </FrameLayout>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="24dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_height"
+            android:paddingStart="16dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="7dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:gravity="center"
+                android:text="@string/settings_menu_dark_theme"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_gravity="end"
+                android:alpha="@dimen/material_emphasis_medium"
+                app:thumbTint="#AEAFB4"
+                app:trackTint="#E6E8EB" />
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_height"
+            android:paddingStart="@dimen/setting_padding_s"
+            android:paddingTop="@dimen/setting_padding_t"
+            android:paddingEnd="@dimen/setting_padding_e"
+            android:paddingBottom="@dimen/setting_padding_b">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:gravity="center"
+                android:text="@string/settings_menu_share"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size" />
+
+            <ImageView
+                android:layout_width="@dimen/ico_width"
+                android:layout_height="@dimen/ico_height"
+                android:layout_gravity="end"
+                android:gravity="center"
+                android:src="@drawable/share" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_height"
+            android:paddingStart="@dimen/setting_padding_s"
+            android:paddingTop="@dimen/setting_padding_t"
+            android:paddingEnd="@dimen/setting_padding_e"
+            android:paddingBottom="@dimen/setting_padding_b">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:gravity="center"
+                android:text="@string/settings_menu_support"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size" />
+
+            <ImageView
+                android:layout_width="@dimen/ico_width"
+                android:layout_height="@dimen/ico_height"
+                android:layout_gravity="end"
+                android:gravity="center"
+                android:src="@drawable/support" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_height"
+            android:paddingStart="@dimen/setting_padding_s"
+            android:paddingTop="@dimen/setting_padding_t"
+            android:paddingEnd="@dimen/setting_padding_e"
+            android:paddingBottom="@dimen/setting_padding_b">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:gravity="center"
+                android:text="@string/settings_menu_user_agreement"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size" />
+
+            <ImageView
+                android:layout_width="@dimen/ico_width"
+                android:layout_height="@dimen/ico_height"
+                android:layout_gravity="end"
+                android:gravity="center"
+
+                android:src="@drawable/forward" />
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>
