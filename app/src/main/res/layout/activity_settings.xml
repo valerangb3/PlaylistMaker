@@ -7,19 +7,8 @@
 
     <Button
         android:id="@+id/button_back"
-        android:layout_width="wrap_content"
-        android:layout_height="56dp"
-        android:backgroundTint="@color/transparent"
         android:text="@string/app_back"
-        android:gravity="start|center"
-        android:textColor="@color/black"
-        android:textSize="@dimen/title_size"
-        android:textAllCaps="false"
-        android:layout_marginEnd="100dp"
-        app:icon="@drawable/back"
-        app:iconPadding="28dp"
-        app:iconTint="@color/black"
-        style="?android:attr/borderlessButtonStyle"/>
+        style="@style/BackButtonStyle"/>
     <!--
     Решил отказаться от вертски imageview + textview, т.к. кажется не логично в будущем обрабатывать
     imageview как кнопку. Подобное скорее всего нужно будет сделать и с кнопками ниже.
@@ -52,107 +41,30 @@
         android:orientation="vertical"
         android:layout_marginTop="24dp">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/setting_height"
-            android:paddingStart="16dp"
-            android:paddingTop="6dp"
-            android:paddingEnd="12dp"
-            android:paddingBottom="7dp">
+        <androidx.appcompat.widget.SwitchCompat
+            style="@style/SettingsButtonStyle"
+            android:text="@string/settings_menu_dark_theme"
+            />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="start"
-                android:gravity="center"
-                android:text="@string/settings_menu_dark_theme"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size" />
+        <TextView
+            android:id="@+id/share"
+            style="@style/SettingsButtonStyle"
+            app:drawableEndCompat="@drawable/share_24"
+            android:text="@string/settings_menu_share"
+            />
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_gravity="end"
-                android:alpha="@dimen/material_emphasis_medium"
-                app:thumbTint="#AEAFB4"
-                app:trackTint="#E6E8EB" />
-        </FrameLayout>
+        <TextView
+            android:id="@+id/support"
+            style="@style/SettingsButtonStyle"
+            app:drawableEndCompat="@drawable/support_24"
+            android:text="@string/settings_menu_support"
+             />
 
+        <TextView
+            android:id="@+id/forward"
+            style="@style/SettingsButtonStyle"
+            android:text="@string/settings_menu_user_agreement"
+            app:drawableEndCompat="@drawable/forward_24" />
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/setting_height"
-            android:paddingStart="@dimen/setting_padding_s"
-            android:paddingTop="@dimen/setting_padding_t"
-            android:paddingEnd="@dimen/setting_padding_e"
-            android:paddingBottom="@dimen/setting_padding_b">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="start"
-                android:gravity="center"
-                android:text="@string/settings_menu_share"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size" />
-
-            <ImageView
-                android:layout_width="@dimen/ico_width"
-                android:layout_height="@dimen/ico_height"
-                android:layout_gravity="end"
-                android:gravity="center"
-                android:src="@drawable/share" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/setting_height"
-            android:paddingStart="@dimen/setting_padding_s"
-            android:paddingTop="@dimen/setting_padding_t"
-            android:paddingEnd="@dimen/setting_padding_e"
-            android:paddingBottom="@dimen/setting_padding_b">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="start"
-                android:gravity="center"
-                android:text="@string/settings_menu_support"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size" />
-
-            <ImageView
-                android:layout_width="@dimen/ico_width"
-                android:layout_height="@dimen/ico_height"
-                android:layout_gravity="end"
-                android:gravity="center"
-                android:src="@drawable/support" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/setting_height"
-            android:paddingStart="@dimen/setting_padding_s"
-            android:paddingTop="@dimen/setting_padding_t"
-            android:paddingEnd="@dimen/setting_padding_e"
-            android:paddingBottom="@dimen/setting_padding_b">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="start"
-                android:gravity="center"
-                android:text="@string/settings_menu_user_agreement"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size" />
-
-            <ImageView
-                android:layout_width="@dimen/ico_width"
-                android:layout_height="@dimen/ico_height"
-                android:layout_gravity="end"
-                android:gravity="center"
-
-                android:src="@drawable/forward" />
-        </FrameLayout>
     </LinearLayout>
 </LinearLayout>

@@ -1,10 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchActivity">
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/button_back"
+        android:text="@string/main_menu_search"
+        style="@style/BackButtonStyle"/>
+    <!--
+    Решил отказаться от вертски imageview + textview, т.к. кажется не логично в будущем обрабатывать
+    imageview как кнопку. Подобное скорее всего нужно будет сделать и с кнопками ниже.
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginBottom="24dp"
+        android:padding="4dp">
+        <ImageView
+            android:id="@+id/button_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:src="@drawable/back"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="@dimen/title_size"
+            android:textStyle="bold"
+            android:layout_marginStart="64dp"
+            android:layout_marginEnd="100dp"
+            android:gravity="center"
+            android:layout_height="match_parent"
+            android:text="@string/app_back"/>
+    </FrameLayout>-->
+
+    <FrameLayout
+        style="@style/SearchLayoutStyle">
+
+        <ImageView
+            style="@style/LoupeStyle"
+            />
+
+        <EditText
+            android:id="@+id/search"
+            style="@style/EditTextStyle" />
+
+        <ImageView
+            android:id="@+id/reset_button"
+            style="@style/ResetTextStyle"
+            />
+
+    </FrameLayout>
+</LinearLayout>
