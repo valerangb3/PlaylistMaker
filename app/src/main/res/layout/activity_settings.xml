@@ -5,35 +5,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
+    <!--
+    Решил оставить пока кнопку. Скорее всего нужно потом пределать на toolbar?
+    -->
     <Button
         android:id="@+id/button_back"
+        style="@style/BackButtonStyle"
         android:text="@string/app_back"
-        style="@style/BackButtonStyle"/>
-    <!--
-    Решил отказаться от вертски imageview + textview, т.к. кажется не логично в будущем обрабатывать
-    imageview как кнопку. Подобное скорее всего нужно будет сделать и с кнопками ниже.
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginBottom="24dp"
-        android:padding="4dp">
-        <ImageView
-            android:id="@+id/button_back"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:padding="16dp"
-            android:src="@drawable/back"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="@dimen/title_size"
-            android:textStyle="bold"
-            android:layout_marginStart="64dp"
-            android:layout_marginEnd="100dp"
-            android:gravity="center"
-            android:layout_height="match_parent"
-            android:text="@string/app_back"/>
-    </FrameLayout>-->
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/title_height" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,27 +25,32 @@
         <androidx.appcompat.widget.SwitchCompat
             style="@style/SettingsButtonStyle"
             android:text="@string/settings_menu_dark_theme"
-            />
+            android:layout_height="61dp"
+            android:layout_width="match_parent" />
 
         <TextView
             android:id="@+id/share"
             style="@style/SettingsButtonStyle"
             app:drawableEndCompat="@drawable/share_24"
             android:text="@string/settings_menu_share"
-            />
+            android:layout_height="62dp"
+            android:layout_width="match_parent" />
 
         <TextView
             android:id="@+id/support"
             style="@style/SettingsButtonStyle"
             app:drawableEndCompat="@drawable/support_24"
             android:text="@string/settings_menu_support"
-             />
+            android:layout_height="62dp"
+            android:layout_width="match_parent" />
 
         <TextView
             android:id="@+id/forward"
             style="@style/SettingsButtonStyle"
             android:text="@string/settings_menu_user_agreement"
-            app:drawableEndCompat="@drawable/forward_24" />
+            app:drawableEndCompat="@drawable/forward_24"
+            android:layout_height="62dp"
+            android:layout_width="match_parent" />
 
     </LinearLayout>
 </LinearLayout>
