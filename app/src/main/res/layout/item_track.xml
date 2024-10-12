@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/TrackItemContainerStyle"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/album_picture"
+        tools:src="@drawable/beatles"
+        android:layout_width="@dimen/image_track_item_width"
+        android:layout_height="@dimen/image_track_item_height" />
+
+    <LinearLayout
+        style="@style/TrackItemInnerContainerStyle"
+
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/track_name"
+            style="@style/TrackNameTitleStyle"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            tools:text="Here Comes The Sun (New Remastered). Here Comes The Sun (New Remastered)." />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/musical_artist_name"
+                style="@style/MusicalArtistStyle"
+
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                tools:text="The Beatles.The Beatles.The Beatles.The Beatles.The Beatles.The Beatles.The Beatles.The Beatles."/>
+
+            <TextView
+                android:id="@+id/duration"
+                style="@style/TrackTimeStyle"
+                android:gravity="start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                tools:text="4:01" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        style="@style/TrackArrowStyle"
+        android:layout_width="@dimen/forward_arraw_width"
+        android:layout_height="@dimen/forward_arraw_height"
+        android:src="@drawable/forward_24" />
+</LinearLayout>
+

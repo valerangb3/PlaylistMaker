@@ -14,5 +14,14 @@
 <!--    <dimen name="setting_padding_t">19dp</dimen>-->
     <dimen name="setting_padding_s">16dp</dimen>
     <dimen name="setting_padding_e">12dp</dimen>
+
+    <dimen name="forward_arraw_width">24dp</dimen>
+    <dimen name="forward_arraw_height">24dp</dimen>
+
+    <dimen name="image_track_item_width">45dp</dimen>
+    <dimen name="image_track_item_height">45dp</dimen>
+
+    <dimen name="loupe_ico_width">16dp</dimen>
+    <dimen name="loupe_ico_height">16dp</dimen>
 <!--    <dimen name="setting_padding_b">18dp</dimen>-->
 </resources>
