@@ -31,7 +31,10 @@
             android:id="@+id/search"
             style="@style/EditTextStyle"
             android:layout_height="36dp"
-            android:layout_width="match_parent" />
+            android:layout_width="match_parent"
+
+            android:imeOptions="actionDone"
+            android:singleLine="true"/>
 
         <ImageView
             android:id="@+id/reset_button"
@@ -41,11 +44,43 @@
 
     </FrameLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/track_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/item_track"
-        tools:itemCount="7"/>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/track_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/item_track"
+            tools:itemCount="1"/>
+        <LinearLayout
+            style="@style/ErrorContainer"
+            android:id="@+id/errorContainer"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/errorImage"
+                android:visibility="gone"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                tools:src="@drawable/connection_problems"
+                />
+            <TextView
+                style="@style/ErrorTextRequest"
+                android:id="@+id/errorText"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="@string/search_error_internet"/>
+
+            <Button
+                style="@style/ButtonUpdate"
+                android:id="@+id/updateRequest"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </FrameLayout>
 </LinearLayout>
