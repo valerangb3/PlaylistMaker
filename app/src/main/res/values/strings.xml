@@ -16,4 +16,8 @@
     <string name="settings_offer_link">https://yandex.ru/legal/practicum_offer/</string>
     <!--COMMON-->
     <string name="app_back">Назад</string>
+    <string name="update_request">Обновить</string>
+    <!--REQUEST_ERROR-->
+    <string name="search_error_internet">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="search_error_nothing_found">Ничего не нашлось</string>
 </resources>
