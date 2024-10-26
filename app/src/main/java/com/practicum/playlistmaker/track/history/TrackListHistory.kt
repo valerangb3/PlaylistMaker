@@ -7,7 +7,6 @@ import com.practicum.playlistmaker.data.Track
 
 const val HISTORY_KEY = "track_list_history"
 
-//Класс предназначен только для работы со списком треков из истории
 class TrackListHistory(
     context: Context
 ) {
@@ -41,27 +40,13 @@ class TrackListHistory(
         }
     }
 
-    fun addToBegin(track: Track, duplicatePosition: Int?) {
-        val position = duplicatePosition ?: -1
+    fun addToHistory(track: Track) {
+        val position = trackListHistory.indexOfFirst { it.trackId == track.trackId }
         if (position > -1) {
             trackListHistory.removeAt(position)
-        } else {
-            removeDuplicate(track)
         }
-        addToHistory(track)
-    }
-
-    fun addToHistory(track: Track) {
         trackListHistory.add(0, track)
-        //избавляемся от возможных дубляжей
-        if (trackListHistory.size > COUNT_ITEMS) {
-            trackListHistory.removeAt(trackListHistory.lastIndex)
-        }
-    }
 
-    fun removeDuplicate(track: Track) {
-        val duplicatePosition = getPositionDuplicate(track)
-        trackListHistory.removeAt(duplicatePosition)
         if (trackListHistory.size > COUNT_ITEMS) {
             trackListHistory.removeAt(trackListHistory.lastIndex)
         }
@@ -72,7 +57,6 @@ class TrackListHistory(
         sharedPreferences.edit()
             .remove(HISTORY_KEY)
             .apply()
-//        saveTrackHistory(trackListHistory)
     }
 
     fun saveTrackHistory(trackList: MutableList<Track>) {

@@ -26,7 +26,7 @@
             android:id="@+id/themeSwitcher"
             style="@style/SettingsButtonStyle"
             android:text="@string/settings_menu_dark_theme"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent" />
 
         <TextView
@@ -34,7 +34,7 @@
             style="@style/SettingsButtonStyle"
             app:drawableEndCompat="@drawable/share_24"
             android:text="@string/settings_menu_share"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent" />
 
         <TextView
@@ -42,7 +42,7 @@
             style="@style/SettingsButtonStyle"
             app:drawableEndCompat="@drawable/support_24"
             android:text="@string/settings_menu_support"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent" />
 
         <TextView
@@ -50,7 +50,7 @@
             style="@style/SettingsButtonStyle"
             android:text="@string/settings_menu_user_agreement"
             app:drawableEndCompat="@drawable/forward_24"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent" />
 
     </LinearLayout>

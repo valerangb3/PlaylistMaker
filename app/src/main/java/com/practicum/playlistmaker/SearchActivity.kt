@@ -10,7 +10,6 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.getSystemService
 import androidx.core.view.isVisible
@@ -70,31 +69,23 @@ class SearchActivity : AppCompatActivity() {
     private var searchInputValue: String = DEFAULT_INPUT_VALUE
 
     private fun handleTap(trackItem: Track) {
-        //Ищем индекса дубля
-        val duplicatePosition = userHistory.getPositionDuplicate(trackItem)
         when (trackListState) {
             //Тап истории перерисовываем: показываем, что логика работает
             TrackListType.TRACK_LIST_HISTORY -> {
-                //Если нашли дубль:
-                //1) Удаляем дубль по индексу в адаптере и перерисовываем
-                //2) Добавляем элемент на 0 позицию - перерисовываем
-                if (duplicatePosition > 0) {
+                val duplicatePosition = userHistory.getPositionDuplicate(trackItem)
+                if (duplicatePosition > -1) {
+                    userHistory.addToHistory(trackItem)
                     trackListAdapter.trackList.removeAt(duplicatePosition)
                     trackListAdapter.notifyItemRemoved(duplicatePosition)
                     trackListAdapter.notifyItemRangeChanged(duplicatePosition, trackListAdapter.trackList.size)
                     trackListAdapter.trackList.add(0, trackItem)
                     trackListAdapter.notifyItemInserted(0)
                     trackListAdapter.notifyItemRangeChanged(0, trackListAdapter.trackList.size)
-                    //Перемещаем трек в начало
-                    userHistory.addToBegin(trackItem, duplicatePosition)
                 }
             }
             //Тап из списка. Добавляем треки в историю.
             TrackListType.TRACK_LIST -> {
                 historyTrackList.clear()
-                if (duplicatePosition > 0) {
-                    userHistory.removeDuplicate(trackItem)
-                }
                 userHistory.addToHistory(trackItem)
                 historyTrackList.addAll(userHistory.getTrackListHistory())
             }
@@ -267,8 +258,6 @@ class SearchActivity : AppCompatActivity() {
             searchInput.setText(DEFAULT_INPUT_VALUE)
             val inputMethodManager = getSystemService<InputMethodManager>()
             inputMethodManager?.hideSoftInputFromWindow(resetButton.windowToken, 0)
-            //пока убрал учистку фокуса, чтобы при нажатии на кнопку "x" отображалась история
-//            searchInput.clearFocus()
         }
 
         searchInput.setOnFocusChangeListener { editText, hasFocus ->
