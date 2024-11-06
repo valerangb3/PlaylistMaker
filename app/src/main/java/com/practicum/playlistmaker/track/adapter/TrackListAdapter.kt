@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.track.adapter
 
 import android.content.Context
 import android.util.TypedValue
@@ -9,13 +9,17 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.data.Track
+import com.practicum.playlistmaker.track.adapter.common.OnItemClickListener
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class TrackListAdapter(
-    val trackList: MutableList<Track>
+    private val trackItemHandler: OnItemClickListener
 ) : RecyclerView.Adapter<TrackListAdapter.TrackViewHolder>() {
+
+    var trackList = mutableListOf<Track>()
 
     override fun getItemCount(): Int = trackList.size
 
@@ -23,6 +27,7 @@ class TrackListAdapter(
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(trackList[position])
+        holder.itemView.setOnClickListener { trackItemHandler.onItemClick(trackList[position]) }
     }
 
     class TrackViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
