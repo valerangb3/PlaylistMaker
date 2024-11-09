@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="24dp"
+    android:layout_marginBottom="20dp"
     tools:context=".TrackActivity">
 
     <androidx.constraintlayout.widget.Guideline
@@ -24,16 +24,15 @@
         app:layout_constraintGuide_end="24dp"/>
 
     <TextView
-        style="@style/TrackCharacteristicName"
         android:id="@+id/countryName"
+        style="@style/TrackCharacteristicName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:text="@string/county_name"
 
-        app:layout_constraintTag="countryTag"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTag="countryTag" />
 
     <TextView
         style="@style/TrackCharacteristicValue"
@@ -262,8 +261,8 @@
         android:id="@+id/poster"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="24dp"
-        android:layout_marginTop="24dp"
+        android:scaleType="centerCrop"
+
         android:contentDescription="@string/poster"
 
         app:layout_constraintStart_toStartOf="@id/leftBorder"
