@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="24dp"
     tools:context=".TrackActivity">
 
     <androidx.constraintlayout.widget.Guideline
@@ -166,7 +167,6 @@
         android:layout_marginTop="24dp"
         android:layout_marginBottom="12dp"
 
-        app:layout_constraintTop_toBottomOf="@id/poster"
         app:layout_constraintStart_toEndOf="@id/leftBorder"
         app:layout_constraintEnd_toStartOf="@id/rightBorder"
         app:layout_constraintBottom_toTopOf="@id/artistName"
@@ -254,8 +254,7 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="4dp"
         android:contentDescription="@string/back_description"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@id/poster"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
