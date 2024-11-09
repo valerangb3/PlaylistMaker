@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,6 +11,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.getSystemService
 import androidx.core.view.isVisible
@@ -69,10 +71,10 @@ class SearchActivity : AppCompatActivity() {
     private var searchInputValue: String = DEFAULT_INPUT_VALUE
 
     private fun handleTap(trackItem: Track) {
+        val duplicatePosition = userHistory.getPositionDuplicate(trackItem)
         when (trackListState) {
             //Тап истории перерисовываем: показываем, что логика работает
             TrackListType.TRACK_LIST_HISTORY -> {
-                val duplicatePosition = userHistory.getPositionDuplicate(trackItem)
                 if (duplicatePosition > -1) {
                     userHistory.addToHistory(trackItem)
                     trackListAdapter.trackList.removeAt(duplicatePosition)
@@ -90,8 +92,9 @@ class SearchActivity : AppCompatActivity() {
                 historyTrackList.addAll(userHistory.getTrackListHistory())
             }
         }
-
-
+        intent = Intent(this@SearchActivity, TrackActivity::class.java)
+        intent.putExtra(Track::class.simpleName, trackItem)
+        startActivity(intent)
     }
 
     private fun hideTrackList() {
@@ -183,7 +186,11 @@ class SearchActivity : AppCompatActivity() {
                     if (countResult > 0) {
                         val listResponse = response.body()?.results ?: arrayListOf()
                         if (listResponse.isNotEmpty()) {
-                            trackListResponse = listResponse
+                            trackListResponse = listResponse.filter {
+                                it.trackName.isNotEmpty() &&
+                                it.artistName.isNotEmpty() &&
+                                it.trackTimeMillis > 0
+                            }.toMutableList()
                             showTrackList(TrackListType.TRACK_LIST)
                             //Сохраняем состояние для handleTap
                             trackListState = TrackListType.TRACK_LIST
@@ -307,7 +314,9 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        historyTrackList.addAll(userHistory.getTrackListHistory())
+        if (trackListState == TrackListType.TRACK_LIST_HISTORY) {
+            historyTrackList.addAll(userHistory.getTrackListHistory())
+        }
     }
 
     override fun onStop() {

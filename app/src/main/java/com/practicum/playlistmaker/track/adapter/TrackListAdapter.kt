@@ -1,7 +1,5 @@
 package com.practicum.playlistmaker.track.adapter
 
-import android.content.Context
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -12,6 +10,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.data.Track
 import com.practicum.playlistmaker.track.adapter.common.OnItemClickListener
+import com.practicum.playlistmaker.utils.dpToPx
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -52,14 +51,6 @@ class TrackListAdapter(
                 SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackItem.trackTimeMillis)
             musicalView.requestLayout()
 
-        }
-
-        private fun dpToPx(dp: Float, context: Context): Int {
-            return TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                dp,
-                context.resources.displayMetrics
-            ).toInt()
         }
 
         companion object {
