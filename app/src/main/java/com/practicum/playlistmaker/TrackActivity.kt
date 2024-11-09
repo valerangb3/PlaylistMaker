@@ -56,7 +56,7 @@ class TrackActivity : AppCompatActivity() {
         Glide.with(this)
             .load(trackItem.getCoverArtwork())
             .placeholder(R.drawable.big_placeholder)
-            .centerInside()
+            .centerCrop()
             .transform(RoundedCorners(dpToPx(POSTER_RADIUS, this)))
             .into(poster)
 
