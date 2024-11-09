@@ -176,7 +176,7 @@
     <TextView
         style="@style/ArtistName"
         android:id="@+id/artistName"
-        android:layout_marginBottom="36dp"
+        android:layout_marginBottom="40dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -224,7 +224,7 @@
         android:layout_height="wrap_content"
         android:background="@null"
         android:src="@drawable/play"
-        android:layout_marginBottom="38dp"
+        android:layout_marginBottom="56dp"
         android:contentDescription="@string/play"
 
         app:layout_constraintStart_toEndOf="@id/toPlaylist"
@@ -236,7 +236,7 @@
         android:id="@+id/timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:text="@string/timer_value"
 
         app:layout_constraintTop_toBottomOf="@id/play"
@@ -256,20 +256,20 @@
         android:contentDescription="@string/back_description"
 
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/poster"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:contentDescription="@string/poster"
-        android:layout_marginTop="24dp"
         android:layout_marginBottom="24dp"
+        android:layout_marginTop="24dp"
+        android:contentDescription="@string/poster"
 
-        app:layout_constraintTop_toBottomOf="@id/buttonBack"
-        app:layout_constraintBottom_toTopOf="@id/trackName"
         app:layout_constraintStart_toStartOf="@id/leftBorder"
         app:layout_constraintEnd_toStartOf="@id/rightBorder"
+        app:layout_constraintTop_toBottomOf="@id/buttonBack"
+        app:layout_constraintBottom_toTopOf="@id/trackName"
         app:layout_constraintDimensionRatio="h,1:1"
 
         tools:src="@drawable/beatles_big"/>
