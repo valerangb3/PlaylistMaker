@@ -256,19 +256,19 @@
         android:contentDescription="@string/back_description"
 
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:id="@+id/poster"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:scaleType="centerCrop"
         android:contentDescription="@string/poster"
+        android:layout_marginBottom="24dp"
 
-        app:layout_constraintStart_toStartOf="@id/leftBorder"
-        app:layout_constraintEnd_toStartOf="@id/rightBorder"
         app:layout_constraintTop_toBottomOf="@id/buttonBack"
         app:layout_constraintBottom_toTopOf="@id/trackName"
+        app:layout_constraintStart_toStartOf="@id/leftBorder"
+        app:layout_constraintEnd_toStartOf="@id/rightBorder"
         app:layout_constraintDimensionRatio="h,1:1"
 
         tools:src="@drawable/beatles_big"/>
