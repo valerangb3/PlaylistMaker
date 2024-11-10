@@ -265,6 +265,7 @@
         android:layout_marginBottom="24dp"
         android:layout_marginTop="24dp"
         android:contentDescription="@string/poster"
+        android:scaleType="centerCrop"
 
         app:layout_constraintStart_toStartOf="@id/leftBorder"
         app:layout_constraintEnd_toStartOf="@id/rightBorder"

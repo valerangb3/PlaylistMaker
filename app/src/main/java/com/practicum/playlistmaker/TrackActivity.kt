@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.data.Track
 import com.practicum.playlistmaker.track.adapter.TrackListAdapter.TrackViewHolder.Companion.IMG_RADIUS
@@ -56,8 +57,8 @@ class TrackActivity : AppCompatActivity() {
         Glide.with(this)
             .load(trackItem.getCoverArtwork())
             .placeholder(R.drawable.big_placeholder)
-            .centerCrop()
-            .transform(RoundedCorners(dpToPx(POSTER_RADIUS, this)))
+//            .centerCrop()
+            .transform(CenterCrop(), RoundedCorners(dpToPx(POSTER_RADIUS, this)))
             .into(poster)
 
         backButton.setOnClickListener {
