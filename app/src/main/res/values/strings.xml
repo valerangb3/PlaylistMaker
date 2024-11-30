@@ -23,4 +23,24 @@
     <!--SEARCH-->
     <string name="search_results">Вы искали</string>
     <string name="clear_history">Очистить историю</string>
+    <!--TOOLS_VAR-->
+    <string name="track_name">Yesterday (Remastered 2009) Yesterday (Remastered 2009) Yesterday (Remastered 2009) Yesterday (Remastered 2009)</string>
+    <string name="artist_name">The Beatles The Beatles The Beatles The Beatles The Beatles The Beatles</string>
+    <string name="county_name">Страна</string>
+    <string name="county_value">Великобритания</string>
+    <string name="genre_name">Жанр</string>
+    <string name="genre_value">Rock</string>
+    <string name="year_name">Год</string>
+    <string name="year_value">1995 1995 1995 1995 1995 1995</string>
+    <string name="album_name">Альбом</string>
+    <string name="album_value">Yesterday (Remastered 2009) Yesterday (Remastered 2009) Yesterday (Remastered 2009)</string>
+    <string name="duration_name">Продолжительность</string>
+    <string name="duration_value">Продолжительность Продолжительность Продолжительность Продолжительность</string>
+    <string name="timer_value">0:29</string>
+    <!--CONTENT_DESCRIPTION-->
+    <string name="back_description">Назад</string>
+    <string name="to_favourite">В избранное</string>
+    <string name="to_playlist">В плейлист</string>
+    <string name="play">Слушать</string>
+    <string name="poster">Обложка</string>
 </resources>
