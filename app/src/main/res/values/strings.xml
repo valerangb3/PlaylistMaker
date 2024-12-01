@@ -36,11 +36,13 @@
     <string name="album_value">Yesterday (Remastered 2009) Yesterday (Remastered 2009) Yesterday (Remastered 2009)</string>
     <string name="duration_name">Продолжительность</string>
     <string name="duration_value">Продолжительность Продолжительность Продолжительность Продолжительность</string>
-    <string name="timer_value">0:29</string>
+    <string name="timer_value">00:00</string>
     <!--CONTENT_DESCRIPTION-->
     <string name="back_description">Назад</string>
     <string name="to_favourite">В избранное</string>
     <string name="to_playlist">В плейлист</string>
     <string name="play">Слушать</string>
     <string name="poster">Обложка</string>
+    <!--TRACK_INFO-->
+    <string name="play_error">Что-то пошло не так. Повторите попытку позже.</string>
 </resources>

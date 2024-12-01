@@ -239,4 +239,7 @@
     <style name="PlayTrackBtn">
         <item name="tint">@color/btn_track</item>
     </style>
+    <style name="ProgressBar">
+        <item name="android:indeterminateTint">?attr/colorSecondary</item>
+    </style>
 </resources>
