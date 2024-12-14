@@ -2,6 +2,8 @@ package com.practicum.playlistmaker
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.EditorInfo
@@ -10,8 +12,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.getSystemService
 import androidx.core.view.isVisible
@@ -31,6 +33,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
+
+    companion object {
+        const val INPUT_VALUE = "INPUT_VALUE"
+        const val DEFAULT_INPUT_VALUE = ""
+        const val BASE_URL = "https://itunes.apple.com/"
+        const val CLICK_DEBOUNCE_DELAY = 1_000L
+        const val SEARCH_DEBOUNCE_DELAY = 2_000L
+    }
 
     private enum class ErrorType {
         NOT_FOUND, CONNECTIONS_PROBLEMS
@@ -66,9 +76,19 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var historyTitle: TextView
     private lateinit var clearHistoryButton: Button
 
+    private lateinit var progressBar: ProgressBar
+    private lateinit var itemsContainer: LinearLayout
+
     private lateinit var userHistory: TrackListHistory
 
     private var searchInputValue: String = DEFAULT_INPUT_VALUE
+
+    private var isClickAllowed = true
+    private val handler = Handler(Looper.getMainLooper())
+
+    private val searchRunnable = Runnable {
+        makeRequest()
+    }
 
     private fun handleTap(trackItem: Track) {
         val duplicatePosition = userHistory.getPositionDuplicate(trackItem)
@@ -171,57 +191,76 @@ class SearchActivity : AppCompatActivity() {
 
     private fun initRecyclerView() {
         trackListAdapter = TrackListAdapter {
-            handleTap(it)
+            if (clickDebounce()) {
+                handleTap(it)
+            }
         }
         recyclerView = findViewById(R.id.track_list)
         recyclerView.adapter = trackListAdapter
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
     }
 
-    private fun makeRequest(searchText: String) {
-        searchTrackApi.getTrackList(searchText).enqueue(object : Callback<TrackResponse> {
-            override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>) {
-                if (response.code() == 200) {
-                    val countResult = response.body()?.resultCount ?: 0
-                    if (countResult > 0) {
-                        val listResponse = response.body()?.results ?: arrayListOf()
-                        if (listResponse.isNotEmpty()) {
-                            trackListResponse = listResponse.filter {
-                                it.trackName.isNotEmpty() &&
-                                it.artistName.isNotEmpty() &&
-                                it.trackTimeMillis > 0
-                            }.toMutableList()
-                            showTrackList(TrackListType.TRACK_LIST)
-                            //Сохраняем состояние для handleTap
-                            trackListState = TrackListType.TRACK_LIST
+    private fun makeRequest() {
+        if (searchInput.text.isNotEmpty()) {
+            progressBar.show()
+            hideTrackList()
+            searchTrackApi.getTrackList(searchInput.text.toString()).enqueue(object : Callback<TrackResponse> {
+                override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>) {
+                    progressBar.gone()
+                    if (response.code() == 200) {
+                        val countResult = response.body()?.resultCount ?: 0
+                        if (countResult > 0) {
+                            val listResponse = response.body()?.results ?: arrayListOf()
+                            if (listResponse.isNotEmpty()) {
+                                trackListResponse = listResponse.filter {
+                                    it.trackName.isNotEmpty() &&
+                                            it.artistName.isNotEmpty() &&
+                                            it.trackTimeMillis > 0
+                                }.toMutableList()
+                                showTrackList(TrackListType.TRACK_LIST)
+                                //Сохраняем состояние для handleTap
+                                trackListState = TrackListType.TRACK_LIST
+                            }
+                        } else {
+                            showErrorContainer(ErrorType.NOT_FOUND)
                         }
                     } else {
                         showErrorContainer(ErrorType.NOT_FOUND)
                     }
-                } else {
-                    showErrorContainer(ErrorType.NOT_FOUND)
                 }
-            }
 
-            override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                showErrorContainer(ErrorType.CONNECTIONS_PROBLEMS)
-            }
-        })
+                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                    progressBar.gone()
+                    showErrorContainer(ErrorType.CONNECTIONS_PROBLEMS)
+                }
+            })
+        }
     }
 
     private fun handleSearchInput() {
         searchInput.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if (searchInput.text.isNotEmpty()) {
-                    makeRequest(searchInput.text.toString())
-                } else {
-                    trackListAdapter.trackList.clear()
-                    trackListAdapter.notifyDataSetChanged()
-                }
+                //На случай если нажали на кнопку
+                handler.removeCallbacks(searchRunnable)
+                makeRequest()
                 true
             }
             false
         }
+    }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -241,6 +280,9 @@ class SearchActivity : AppCompatActivity() {
         historyTitle = findViewById(R.id.historyTiyle)
         clearHistoryButton = findViewById(R.id.clearHistory)
 
+        itemsContainer = findViewById(R.id.ItemsContainer)
+        progressBar = findViewById(R.id.ProgressBar)
+
         userHistory = TrackListHistory(applicationContext)
 
         buttonBack.setOnClickListener {
@@ -254,7 +296,8 @@ class SearchActivity : AppCompatActivity() {
         }
 
         updateRequestButton.setOnClickListener {
-            makeRequest(searchInput.text.toString())
+            hideErrorContainer()
+            makeRequest()
         }
 
         if (searchInputValue.isNotEmpty()) {
@@ -301,6 +344,7 @@ class SearchActivity : AppCompatActivity() {
                     if (trackListState == TrackListType.TRACK_LIST_HISTORY) {
                         hideTrackList()
                     }
+                    searchDebounce()
                 }
             }
 
@@ -335,11 +379,5 @@ class SearchActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         searchInputValue = savedInstanceState.getString(INPUT_VALUE, DEFAULT_INPUT_VALUE)
-    }
-
-    companion object {
-        const val INPUT_VALUE = "INPUT_VALUE"
-        const val DEFAULT_INPUT_VALUE = ""
-        const val BASE_URL = "https://itunes.apple.com/"
     }
 }
