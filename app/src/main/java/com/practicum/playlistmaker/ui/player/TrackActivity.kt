@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.ui.player
 
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -12,7 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.practicum.playlistmaker.data.Track
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.utils.dpToPx
 import com.practicum.playlistmaker.utils.gone
 import java.text.SimpleDateFormat
@@ -143,11 +144,10 @@ class TrackActivity : AppCompatActivity() {
         backButton.setOnClickListener {
             finish()
         }
-        getFormatPosition(trackItem.trackTimeMillis)
         timer.text = getString(R.string.timer_value)
         trackName.text = trackItem.trackName
         artistName.text = trackItem.artistName
-        durationValue.text = getFormatPosition(trackItem.trackTimeMillis)
+        durationValue.text = trackItem.trackTime
 
         if (trackItem.collectionName?.isNotEmpty() == true) {
             albumNameValue.text = trackItem.collectionName
