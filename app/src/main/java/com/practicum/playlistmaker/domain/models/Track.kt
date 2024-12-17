@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.data
+package com.practicum.playlistmaker.domain.models
 
 import java.io.Serializable
 
@@ -6,7 +6,7 @@ data class Track(
     val trackId: Long,
     val trackName: String,
     val artistName: String,
-    val trackTimeMillis: Long,
+    val trackTime: String,
     val artworkUrl100: String,
 
     val collectionName: String?,

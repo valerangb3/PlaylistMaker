@@ -1,6 +1,6 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.ui.player
 
-import android.media.MediaPlayer
+
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,7 +12,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.practicum.playlistmaker.data.Track
+import com.practicum.playlistmaker.Creator
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.data.PlayerManager
+import com.practicum.playlistmaker.domain.api.PlayerInteractor
+import com.practicum.playlistmaker.domain.impl.PlayerInteractorImpl
+import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.utils.dpToPx
 import com.practicum.playlistmaker.utils.gone
 import java.text.SimpleDateFormat
@@ -37,64 +42,19 @@ class TrackActivity : AppCompatActivity() {
     private lateinit var playButton: ImageButton
     private lateinit var myHandler: Handler
     private lateinit var timer: TextView
+    private lateinit var playerInteractor: PlayerInteractor
 
     private val trackRunnable = Runnable {
         changeTrackViewPosition()
     }
-    private var mediaPlayer = MediaPlayer()
-
-    private var playerState = STATE_DEFAULT
 
     companion object {
         private const val POSTER_RADIUS = 8.0F
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
         private const val CHECK_TIME_DELAY = 400L
     }
 
-    private fun preparePlayer(url: String) {
-        mediaPlayer.setDataSource(url).toString()
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playerState = STATE_PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
-            playButton.setImageResource(R.drawable.play)
-            playerState = STATE_PREPARED
-            myHandler.removeCallbacks(trackRunnable)
-            timer.text = getFormatPosition(0L)
-        }
-    }
-
-    private fun startPlayer() {
-        mediaPlayer.start()
-        playButton.setImageResource(R.drawable.pause)
-        playerState = STATE_PLAYING
-        myHandler.postDelayed(trackRunnable, CHECK_TIME_DELAY)
-    }
-
-    private fun pausePlayer() {
-        mediaPlayer.pause()
-        playButton.setImageResource(R.drawable.play)
-        playerState = STATE_PAUSED
-        myHandler.removeCallbacks(trackRunnable)
-    }
-
-    private fun playbackControl() {
-        when (playerState) {
-            STATE_PLAYING -> {
-                pausePlayer()
-            }
-            STATE_PREPARED, STATE_PAUSED -> {
-                startPlayer()
-            }
-        }
-    }
-
     private fun changeTrackViewPosition() {
-        timer.text = getFormatPosition(mediaPlayer.currentPosition.toLong())
+        timer.text = getFormatPosition(playerInteractor.getCurrentPosition())
         myHandler.postDelayed(trackRunnable, CHECK_TIME_DELAY)
     }
 
@@ -108,6 +68,11 @@ class TrackActivity : AppCompatActivity() {
 
         myHandler = Handler(Looper.getMainLooper())
         val trackItem = intent.getSerializableExtra(Track::class.simpleName) as Track
+
+        trackItem.previewUrl?.let {
+            playerInteractor = Creator.provideMediaPlayer()
+            playerInteractor.prepare(trackItem.previewUrl)
+        }
 
         backButton = findViewById(R.id.buttonBack)
         trackName = findViewById(R.id.trackName)
@@ -130,7 +95,21 @@ class TrackActivity : AppCompatActivity() {
             if (trackItem.previewUrl == null) {
                 Toast.makeText(this, R.string.play_error, Toast.LENGTH_SHORT).show()
             } else {
-                playbackControl()
+                playerInteractor.playbackControl(
+                    start = {
+                        playButton.setImageResource(R.drawable.pause)
+                        myHandler.postDelayed(trackRunnable, CHECK_TIME_DELAY)
+                    },
+                    pause = {
+                        playButton.setImageResource(R.drawable.play)
+                        myHandler.removeCallbacks(trackRunnable)
+                    },
+                    complete = {
+                        playButton.setImageResource(R.drawable.play)
+                        myHandler.removeCallbacks(trackRunnable)
+                        timer.text = getFormatPosition(0L)
+                    }
+                )
             }
         }
 
@@ -143,11 +122,10 @@ class TrackActivity : AppCompatActivity() {
         backButton.setOnClickListener {
             finish()
         }
-        getFormatPosition(trackItem.trackTimeMillis)
         timer.text = getString(R.string.timer_value)
         trackName.text = trackItem.trackName
         artistName.text = trackItem.artistName
-        durationValue.text = getFormatPosition(trackItem.trackTimeMillis)
+        durationValue.text = trackItem.trackTime
 
         if (trackItem.collectionName?.isNotEmpty() == true) {
             albumNameValue.text = trackItem.collectionName
@@ -176,19 +154,17 @@ class TrackActivity : AppCompatActivity() {
             countryName.gone()
             countryValue.gone()
         }
-        trackItem.previewUrl?.let {
-            preparePlayer(trackItem.previewUrl)
-        }
+
     }
 
     override fun onPause() {
         super.onPause()
-        pausePlayer()
+        playerInteractor.pauseTrack()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         myHandler.removeCallbacks(trackRunnable)
-        mediaPlayer.release()
+        playerInteractor.release()
     }
 }
