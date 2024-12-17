@@ -1,14 +1,17 @@
 package com.practicum.playlistmaker
 
 import android.app.Application
+import com.practicum.playlistmaker.data.PlayerManager
 import com.practicum.playlistmaker.data.ThemeManager
 import com.practicum.playlistmaker.data.TracksHistoryManager
 import com.practicum.playlistmaker.data.TracksRepositoryImpl
 import com.practicum.playlistmaker.data.network.RetrofitNetworkClient
+import com.practicum.playlistmaker.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.domain.api.ThemeInteractor
 import com.practicum.playlistmaker.domain.api.TracksHistoryInteractor
 import com.practicum.playlistmaker.domain.api.TracksInteractor
 import com.practicum.playlistmaker.domain.api.TracksRepository
+import com.practicum.playlistmaker.domain.impl.PlayerInteractorImpl
 import com.practicum.playlistmaker.domain.impl.ThemeInteractorImpl
 import com.practicum.playlistmaker.domain.impl.TracksHistoryInteractorImpl
 import com.practicum.playlistmaker.domain.impl.TracksInteractorImpl
@@ -46,5 +49,9 @@ object Creator {
                 sharedPrefs = (application as App).getSharedPreferences()
             )
         )
+    }
+
+    fun provideMediaPlayer(): PlayerInteractor {
+        return PlayerInteractorImpl(PlayerManager())
     }
 }

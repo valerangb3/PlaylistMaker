@@ -26,6 +26,7 @@ import com.practicum.playlistmaker.ui.search.adapter.TrackListAdapter
 import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.domain.api.TracksHistoryInteractor
 import com.practicum.playlistmaker.domain.api.TracksInteractor
+import com.practicum.playlistmaker.domain.models.Resource
 import com.practicum.playlistmaker.utils.gone
 import com.practicum.playlistmaker.utils.show
 
@@ -187,18 +188,21 @@ class SearchActivity : AppCompatActivity() {
             progressBar.show()
             hideTrackList()
             loadTracksUseCase.searchTracks(searchInput.text.toString(), object : TracksInteractor.TracksConsumer {
-                override fun consume(foundTracks: List<Track>) {
+                override fun consume(foundTracks: Resource<List<Track>>) {
                     handler.post {
                         progressBar.gone()
-                        if (foundTracks == null) {
-                            showErrorContainer(ErrorType.CONNECTIONS_PROBLEMS)
-                        } else {
-                            if (foundTracks.isNotEmpty()) {
-                                showTrackList(TrackListType.TRACK_LIST, foundTracks)
-                                //Сохраняем состояние для handleTap
-                                trackListState = TrackListType.TRACK_LIST
-                            } else {
-                                showErrorContainer(ErrorType.NOT_FOUND)
+                        when (foundTracks) {
+                            is Resource.Error -> {
+                                showErrorContainer(ErrorType.CONNECTIONS_PROBLEMS)
+                            }
+                            is Resource.Success -> {
+                                if (foundTracks.data.isNotEmpty()) {
+                                    showTrackList(TrackListType.TRACK_LIST, foundTracks.data)
+                                    //Сохраняем состояние для handleTap
+                                    trackListState = TrackListType.TRACK_LIST
+                                } else {
+                                    showErrorContainer(ErrorType.NOT_FOUND)
+                                }
                             }
                         }
                     }
