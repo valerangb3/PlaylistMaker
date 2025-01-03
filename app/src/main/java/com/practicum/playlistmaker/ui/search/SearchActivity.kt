@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.ui.search
 
 import android.content.Intent
 import android.os.Bundle
@@ -19,25 +19,22 @@ import androidx.core.content.getSystemService
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.practicum.playlistmaker.track.adapter.TrackListAdapter
-import com.practicum.playlistmaker.api.TrackSearch
-import com.practicum.playlistmaker.data.Track
-import com.practicum.playlistmaker.data.TrackResponse
-import com.practicum.playlistmaker.track.history.TrackListHistory
+import com.practicum.playlistmaker.Creator
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.ui.player.TrackActivity
+import com.practicum.playlistmaker.ui.search.adapter.TrackListAdapter
+import com.practicum.playlistmaker.domain.models.Track
+import com.practicum.playlistmaker.domain.api.TracksHistoryInteractor
+import com.practicum.playlistmaker.domain.api.TracksInteractor
+import com.practicum.playlistmaker.domain.models.Resource
 import com.practicum.playlistmaker.utils.gone
 import com.practicum.playlistmaker.utils.show
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
 
     companion object {
         const val INPUT_VALUE = "INPUT_VALUE"
         const val DEFAULT_INPUT_VALUE = ""
-        const val BASE_URL = "https://itunes.apple.com/"
         const val CLICK_DEBOUNCE_DELAY = 1_000L
         const val SEARCH_DEBOUNCE_DELAY = 2_000L
     }
@@ -46,7 +43,7 @@ class SearchActivity : AppCompatActivity() {
         NOT_FOUND, CONNECTIONS_PROBLEMS
     }
 
-    enum class TrackListType {
+    private enum class TrackListType {
         TRACK_LIST, TRACK_LIST_HISTORY;
     }
 
@@ -55,15 +52,13 @@ class SearchActivity : AppCompatActivity() {
     // 2) списка треков из истории.
     private var trackListState = TrackListType.TRACK_LIST_HISTORY
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-    private val searchTrackApi = retrofit.create(TrackSearch::class.java)
-    private var trackListResponse = mutableListOf<Track>()
     private val historyTrackList = mutableListOf<Track>()
 
+    private lateinit var loadTracksUseCase: TracksInteractor
+    private lateinit var tracksHistoryUseCase: TracksHistoryInteractor
+
     private lateinit var trackListAdapter: TrackListAdapter
+
     private lateinit var buttonBack: Button
     private lateinit var resetButton: ImageView
     private lateinit var searchInput: EditText
@@ -72,14 +67,10 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var errorText: TextView
     private lateinit var updateRequestButton: Button
     private lateinit var errorImage: ImageView
-
     private lateinit var historyTitle: TextView
     private lateinit var clearHistoryButton: Button
-
     private lateinit var progressBar: ProgressBar
     private lateinit var itemsContainer: LinearLayout
-
-    private lateinit var userHistory: TrackListHistory
 
     private var searchInputValue: String = DEFAULT_INPUT_VALUE
 
@@ -91,25 +82,17 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun handleTap(trackItem: Track) {
-        val duplicatePosition = userHistory.getPositionDuplicate(trackItem)
+        tracksHistoryUseCase.addToHistory(trackItem)
         when (trackListState) {
-            //Тап истории перерисовываем: показываем, что логика работает
+            //Тап истории.
             TrackListType.TRACK_LIST_HISTORY -> {
-                if (duplicatePosition > -1) {
-                    userHistory.addToHistory(trackItem)
-                    trackListAdapter.trackList.removeAt(duplicatePosition)
-                    trackListAdapter.notifyItemRemoved(duplicatePosition)
-                    trackListAdapter.notifyItemRangeChanged(duplicatePosition, trackListAdapter.trackList.size)
-                    trackListAdapter.trackList.add(0, trackItem)
-                    trackListAdapter.notifyItemInserted(0)
-                    trackListAdapter.notifyItemRangeChanged(0, trackListAdapter.trackList.size)
-                }
+                trackListAdapter.trackList = tracksHistoryUseCase.getHistory().toMutableList()
+                trackListAdapter.notifyDataSetChanged()
             }
             //Тап из списка. Добавляем треки в историю.
             TrackListType.TRACK_LIST -> {
                 historyTrackList.clear()
-                userHistory.addToHistory(trackItem)
-                historyTrackList.addAll(userHistory.getTrackListHistory())
+                historyTrackList.addAll(tracksHistoryUseCase.getHistory())
             }
         }
         intent = Intent(this@SearchActivity, TrackActivity::class.java)
@@ -137,20 +120,20 @@ class SearchActivity : AppCompatActivity() {
         clearHistoryButton.show()
     }
 
-    private fun showTrackList(state: TrackListType) {
+    private fun showTrackList(state: TrackListType, trackList: List<Track>) {
         if (trackListAdapter.trackList.isNotEmpty()) {
             trackListAdapter.trackList.clear()
         }
         //В зависимости от состояния наполняем адаптеры нужным нам списком
         when (state) {
             TrackListType.TRACK_LIST -> {
-                trackListAdapter.trackList.addAll(trackListResponse)
+                trackListAdapter.trackList.addAll(trackList)
                 hideErrorContainer()
                 trackListAdapter.notifyDataSetChanged()
             }
             TrackListType.TRACK_LIST_HISTORY -> {
                 if (historyTrackList.isNotEmpty()) {
-                    trackListAdapter.trackList.addAll(historyTrackList)
+                    trackListAdapter.trackList.addAll(trackList)
                     trackListAdapter.notifyDataSetChanged()
                     showHistoryView()
                 }
@@ -204,34 +187,25 @@ class SearchActivity : AppCompatActivity() {
         if (searchInput.text.isNotEmpty()) {
             progressBar.show()
             hideTrackList()
-            searchTrackApi.getTrackList(searchInput.text.toString()).enqueue(object : Callback<TrackResponse> {
-                override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>) {
-                    progressBar.gone()
-                    if (response.code() == 200) {
-                        val countResult = response.body()?.resultCount ?: 0
-                        if (countResult > 0) {
-                            val listResponse = response.body()?.results ?: arrayListOf()
-                            if (listResponse.isNotEmpty()) {
-                                trackListResponse = listResponse.filter {
-                                    it.trackName.isNotEmpty() &&
-                                            it.artistName.isNotEmpty() &&
-                                            it.trackTimeMillis > 0
-                                }.toMutableList()
-                                showTrackList(TrackListType.TRACK_LIST)
-                                //Сохраняем состояние для handleTap
-                                trackListState = TrackListType.TRACK_LIST
+            loadTracksUseCase.searchTracks(searchInput.text.toString(), object : TracksInteractor.TracksConsumer {
+                override fun consume(foundTracks: Resource<List<Track>>) {
+                    handler.post {
+                        progressBar.gone()
+                        when (foundTracks) {
+                            is Resource.Error -> {
+                                showErrorContainer(ErrorType.CONNECTIONS_PROBLEMS)
                             }
-                        } else {
-                            showErrorContainer(ErrorType.NOT_FOUND)
+                            is Resource.Success -> {
+                                if (foundTracks.data.isNotEmpty()) {
+                                    showTrackList(TrackListType.TRACK_LIST, foundTracks.data)
+                                    //Сохраняем состояние для handleTap
+                                    trackListState = TrackListType.TRACK_LIST
+                                } else {
+                                    showErrorContainer(ErrorType.NOT_FOUND)
+                                }
+                            }
                         }
-                    } else {
-                        showErrorContainer(ErrorType.NOT_FOUND)
                     }
-                }
-
-                override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    progressBar.gone()
-                    showErrorContainer(ErrorType.CONNECTIONS_PROBLEMS)
                 }
             })
         }
@@ -270,6 +244,9 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
+        loadTracksUseCase = Creator.provideTracksInteractor()
+        tracksHistoryUseCase = Creator.provideTrackHistoryInteractor()
+
         buttonBack = findViewById(R.id.button_back)
         resetButton = findViewById(R.id.reset_button)
         searchInput = findViewById(R.id.search)
@@ -283,14 +260,12 @@ class SearchActivity : AppCompatActivity() {
         itemsContainer = findViewById(R.id.ItemsContainer)
         progressBar = findViewById(R.id.ProgressBar)
 
-        userHistory = TrackListHistory(applicationContext)
-
         buttonBack.setOnClickListener {
             finish()
         }
 
         clearHistoryButton.setOnClickListener {
-            userHistory.removeTrackHistory()
+            tracksHistoryUseCase.remove()
             historyTrackList.clear()
             hideTrackList()
         }
@@ -310,9 +285,9 @@ class SearchActivity : AppCompatActivity() {
             inputMethodManager?.hideSoftInputFromWindow(resetButton.windowToken, 0)
         }
 
-        searchInput.setOnFocusChangeListener { editText, hasFocus ->
+        searchInput.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus && searchInput.text.isEmpty()) {
-                showTrackList(TrackListType.TRACK_LIST_HISTORY)
+                showTrackList(TrackListType.TRACK_LIST_HISTORY, tracksHistoryUseCase.getHistory())
                 //Сохраняем состояние для handleTap
                 trackListState = TrackListType.TRACK_LIST_HISTORY
             } else {
@@ -330,10 +305,10 @@ class SearchActivity : AppCompatActivity() {
                     //Сохраняем состояние для handleTap
                     trackListState = TrackListType.TRACK_LIST_HISTORY
                     hideTrackList()
-                    showTrackList(TrackListType.TRACK_LIST_HISTORY)
-                    //нужно фиксить, focus - false
+                    showTrackList(TrackListType.TRACK_LIST_HISTORY, tracksHistoryUseCase.getHistory())
+
                     if (searchInput.hasFocus()) {
-                        showTrackList(TrackListType.TRACK_LIST_HISTORY)
+                        showTrackList(TrackListType.TRACK_LIST_HISTORY, tracksHistoryUseCase.getHistory())
                     }
                 } else {
                     if (!resetButton.isVisible) {
@@ -359,7 +334,7 @@ class SearchActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         if (trackListState == TrackListType.TRACK_LIST_HISTORY) {
-            historyTrackList.addAll(userHistory.getTrackListHistory())
+            historyTrackList.addAll(tracksHistoryUseCase.getHistory())
         }
     }
 
@@ -369,7 +344,7 @@ class SearchActivity : AppCompatActivity() {
             historyTrackList.clear()
             historyTrackList.addAll(trackListAdapter.trackList)
         }
-        userHistory.saveTrackHistory(historyTrackList)
+        tracksHistoryUseCase.saveHistory(historyTrackList)
     }
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

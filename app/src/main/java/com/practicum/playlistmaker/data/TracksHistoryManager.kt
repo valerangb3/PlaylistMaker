@@ -1,33 +1,21 @@
-package com.practicum.playlistmaker.track.history
+package com.practicum.playlistmaker.data
 
-import android.content.Context
+import android.content.SharedPreferences
 import com.google.gson.Gson
-import com.practicum.playlistmaker.App
-import com.practicum.playlistmaker.data.Track
+import com.practicum.playlistmaker.domain.models.Track
 
-const val HISTORY_KEY = "track_list_history"
-
-class TrackListHistory(
-    context: Context
+class TracksHistoryManager(
+    private val sharedPreferences: SharedPreferences
 ) {
     private val trackListHistory = mutableListOf<Track>()
-    private val sharedPreferences = (context as App).getSharedPreferences()
+
+    companion object {
+        const val COUNT_ITEMS = 10
+        const val HISTORY_KEY = "track_list_history"
+    }
 
     init {
         restoreHistoryList()
-    }
-
-    //Функция для поиска индекса дубля в списке
-    fun getPositionDuplicate(track: Track): Int {
-        var index = -1
-        if (trackListHistory.isNotEmpty()) {
-            trackListHistory.forEachIndexed { i, duplicateTrack ->
-                if (duplicateTrack.trackId == track.trackId) {
-                    index = i
-                }
-            }
-        }
-        return index
     }
 
     private fun restoreHistoryList() {
@@ -69,8 +57,4 @@ class TrackListHistory(
     }
 
     fun getTrackListHistory(): MutableList<Track> = trackListHistory
-
-    companion object {
-        const val COUNT_ITEMS = 10
-    }
 }

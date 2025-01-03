@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.track.adapter
+package com.practicum.playlistmaker.ui.search.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.data.Track
-import com.practicum.playlistmaker.track.adapter.common.OnItemClickListener
+import com.practicum.playlistmaker.domain.models.Track
+import com.practicum.playlistmaker.ui.search.adapter.common.OnItemClickListener
 import com.practicum.playlistmaker.utils.dpToPx
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -47,8 +47,7 @@ class TrackListAdapter(
 
             trackView.text = trackItem.trackName
             musicalView.text = trackItem.artistName
-            directionView.text =
-                SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackItem.trackTimeMillis)
+            directionView.text = trackItem.trackTime
             musicalView.requestLayout()
 
         }
