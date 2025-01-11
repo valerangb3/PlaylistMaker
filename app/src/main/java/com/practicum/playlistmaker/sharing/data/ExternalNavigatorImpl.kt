@@ -14,51 +14,35 @@ class ExternalNavigatorImpl(
 ): ExternalNavigator {
 
     companion object {
-        private val EMAIL_LIST = arrayOf("karev.valera2013@yandex.ru")
-        private const val EMAIL_SUBJECT = "Сообщение разработчикам и разработчицам приложения Playlist Maker"
-        private const val EMAIL_TEXT = "Спасибо разработчикам и разработчицам за крутое приложение!"
         private const val EMAIL_URI = "mailto:"
 
-        private const val BROWSER_URL = "https://yandex.ru/legal/practicum_offer/"
-
-        private const val SHARE_URL = "https://practicum.yandex.ru/android-developer/?from=catalog"
         private const val SHARE_MIME_TYPE = "text/plain"
     }
 
     private fun getSupportEmailData(): EmailData = EmailData(
-        emailList = EMAIL_LIST,
-        emailSubject = EMAIL_SUBJECT,
-        emailText = EMAIL_TEXT,
+        emailList = arrayOf(context.getString(R.string.settings_email_student)),
+        emailSubject = context.getString(R.string.settings_email_subject),
+        emailText = context.getString(R.string.settings_email_text),
         uri = EMAIL_URI
     )
 
     private fun getTermsBrowserLinkData(): BrowserLinkData = BrowserLinkData(
-        url = BROWSER_URL
+        url = context.getString(R.string.settings_offer_link)
     )
 
     private fun getAppShareLinkData(): ShareLinkData = ShareLinkData(
-        url = SHARE_URL,
+        url = context.getString(R.string.settings_share_link),
         mimeType = SHARE_MIME_TYPE
     )
 
     override fun openEmail() {
         val intent = Intent(Intent.ACTION_SENDTO).apply {
             val emailData = getSupportEmailData()
+
             data = Uri.parse(emailData.uri)
-            val emailList = if (emailData.emailList.isEmpty()) {
-                arrayOf(context.getString(R.string.settings_email_student))
-            } else {
-                emailData.emailList
-            }
-            val emailSubject = emailData.emailSubject.ifEmpty {
-                context.getString(R.string.settings_email_subject)
-            }
-            val emailText = emailData.emailText.ifEmpty {
-                context.getString(R.string.settings_email_text)
-            }
-            putExtra(Intent.EXTRA_EMAIL, emailList)
-            putExtra(Intent.EXTRA_SUBJECT, emailSubject)
-            putExtra(Intent.EXTRA_TEXT, emailText)
+            putExtra(Intent.EXTRA_EMAIL, emailData.emailList)
+            putExtra(Intent.EXTRA_SUBJECT, emailData.emailSubject)
+            putExtra(Intent.EXTRA_TEXT, emailData.emailText)
             setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         context.startActivity(intent)
@@ -68,11 +52,8 @@ class ExternalNavigatorImpl(
     override fun openLink() {
         val browserLinkData = getTermsBrowserLinkData()
 
-        val url = browserLinkData.url.ifEmpty {
-            context.getString(R.string.settings_offer_link)
-        }
         val intent = Intent(Intent.ACTION_VIEW).apply {
-            data = Uri.parse(url)
+            data = Uri.parse(browserLinkData.url)
             setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 
@@ -83,14 +64,8 @@ class ExternalNavigatorImpl(
         val shareLinkData = getAppShareLinkData()
 
         val intent = Intent(Intent.ACTION_SEND).apply {
-            val url = shareLinkData.url.ifEmpty {
-                context.getString(R.string.settings_share_link)
-            }
-            val mimeType = shareLinkData.mimeType.ifEmpty {
-                SHARE_MIME_TYPE
-            }
-            putExtra(Intent.EXTRA_TEXT, url)
-            setType(mimeType)
+            putExtra(Intent.EXTRA_TEXT, shareLinkData.url)
+            setType(shareLinkData.mimeType)
             setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         context.startActivity(intent)
