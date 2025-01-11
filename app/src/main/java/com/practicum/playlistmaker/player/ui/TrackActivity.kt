@@ -6,7 +6,7 @@ import android.os.Looper
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
+import androidx.activity.viewModels
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -18,16 +18,17 @@ import com.practicum.playlistmaker.player.presentation.viewmodel.PlayerViewModel
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.utils.dpToPx
 import com.practicum.playlistmaker.utils.gone
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class TrackActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityTrackBinding
     private lateinit var myHandler: Handler
 
-    private lateinit var viewModel: PlayerViewModel
+    private val viewModel: PlayerViewModel by viewModels {
+        PlayerViewModel.factory(trackItem)
+    }
 
+    private lateinit var trackItem: Track
 
     companion object {
         private const val POSTER_RADIUS = 8.0F
@@ -89,9 +90,7 @@ class TrackActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-        val trackItem = intent.getSerializableExtra(Track::class.simpleName) as Track
-
-        viewModel = ViewModelProvider(this, PlayerViewModel.factory(trackItem))[PlayerViewModel::class.java]
+        trackItem = intent.getSerializableExtra(Track::class.simpleName) as Track
 
         myHandler = Handler(Looper.getMainLooper())
 
