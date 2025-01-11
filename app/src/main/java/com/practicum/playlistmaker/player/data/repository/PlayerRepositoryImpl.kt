@@ -36,19 +36,18 @@ class PlayerRepositoryImpl(
         }
     }
 
-    override fun prepare(url: String, event: PlayerInteractor.TrackHandler) {
-        eventHandler = event
+    override fun prepare(url: String, eventHandler: PlayerInteractor.TrackHandler) {
+        this.eventHandler = eventHandler
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
             playerState = STATE_PREPARED
-            //trackDuration = mediaPlayer.duration.toLong()
-            eventHandler.onLoad()
+            this.eventHandler.onLoad()
         }
         mediaPlayer.setOnCompletionListener {
             playerState = STATE_PREPARED
             myHandler.removeCallbacks(trackRunnable)
-            eventHandler.onComplete()
+            this.eventHandler.onComplete()
         }
     }
 

@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.creator
 
 import android.app.Application
+import android.content.Context.MODE_PRIVATE
 import android.media.MediaPlayer
 import com.practicum.playlistmaker.App
 import com.practicum.playlistmaker.player.data.repository.PlayerRepositoryImpl
@@ -26,7 +27,7 @@ object Creator {
 
     private lateinit var application: Application
 
-    fun initApplication(application: Application) {
+    fun initApplication(application: App) {
         Creator.application = application
     }
 
@@ -38,7 +39,7 @@ object Creator {
 
     private fun getTrackHistoryRepository(): TracksHistoryRepository {
         return TracksHistoryRepositoryImpl(
-            sharedPreferences = (application as App).getSharedPreferences()
+            sharedPreferences = application.getSharedPreferences(App.APP_PREFERENCES, MODE_PRIVATE)
         )
     }
 
@@ -58,7 +59,7 @@ object Creator {
         return SettingsInteractorImpl(
             SettingsRepositoryImpl(
                 app = application,
-                sharedPrefs = (application as App).getSharedPreferences()
+                sharedPrefs = application.getSharedPreferences(App.APP_PREFERENCES, MODE_PRIVATE)
             )
         )
     }

@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.sharing.domain.model
+package com.practicum.playlistmaker.sharing.data.model
 
 data class ShareLinkData(
     val url: String,

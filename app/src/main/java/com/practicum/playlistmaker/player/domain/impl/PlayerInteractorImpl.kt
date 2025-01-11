@@ -4,26 +4,26 @@ import com.practicum.playlistmaker.player.domain.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.repository.PlayerRepository
 
 class PlayerInteractorImpl(
-    private val manager: PlayerRepository
+    private val playerRepository: PlayerRepository
 ) : PlayerInteractor {
 
     override fun pause() {
-        manager.pausePlayer()
+        playerRepository.pausePlayer()
     }
 
     override fun prepareTrack(url: String, events: PlayerInteractor.TrackHandler) {
-        manager.prepare(
+        playerRepository.prepare(
             url = url,
-            event = events
+            eventHandler = events
         )
     }
 
     override fun playback() {
-        manager.playbackControl()
+        playerRepository.playbackControl()
     }
 
     override fun release() {
-        manager.release()
+        playerRepository.release()
     }
 
 

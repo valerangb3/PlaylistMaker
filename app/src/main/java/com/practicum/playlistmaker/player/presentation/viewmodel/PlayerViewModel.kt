@@ -18,19 +18,18 @@ class PlayerViewModel(
     private val playerUserCase: PlayerInteractor
 ): ViewModel() {
 
-    private val trackInfo: TrackInfo
+    private val trackInfo: TrackInfo by lazy {
+        toTrackInfoMapper(track)
+    }
 
     private var screenStateLiveData = MutableLiveData<PlayerScreenState>(PlayerScreenState.Loading)
     private val playStatusLiveData = MutableLiveData<PlayStatus>()
-    /*
-
-   */
 
     init {
-        trackInfo = toTrackInfoMapper(track)
-        trackInfo.previewUrl?.let {
+        val previewUrl = trackInfo.previewUrl
+        previewUrl?.let {
             playerUserCase.prepareTrack(
-                url = trackInfo.previewUrl,
+                url = previewUrl,
                 events = object : PlayerInteractor.TrackHandler {
                     override fun onProgress(progress: Long) {
                         playStatusLiveData.value = getCurrentPlayStatus().copy(progress = progress)
