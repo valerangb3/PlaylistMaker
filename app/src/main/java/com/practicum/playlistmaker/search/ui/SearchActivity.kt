@@ -11,7 +11,6 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.getSystemService
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
@@ -23,6 +22,7 @@ import com.practicum.playlistmaker.search.presentation.state.TrackListState
 import com.practicum.playlistmaker.search.presentation.viewmodel.SearchViewModel
 import com.practicum.playlistmaker.utils.gone
 import com.practicum.playlistmaker.utils.show
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
@@ -42,7 +42,7 @@ class SearchActivity : AppCompatActivity() {
 
     private var textWatcher: TextWatcher? = null
 
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel by viewModel<SearchViewModel>()
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -192,8 +192,6 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
-
-        viewModel = ViewModelProvider(this, SearchViewModel.factory())[SearchViewModel::class.java]
 
         binding.buttonBack.setOnClickListener {
             finish()

@@ -3,13 +3,10 @@ package com.practicum.playlistmaker.player.presentation.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.player.domain.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.models.PlayStatus
 import com.practicum.playlistmaker.player.domain.models.TrackInfo
+import com.practicum.playlistmaker.player.mapper.TrackInfoMapper
 import com.practicum.playlistmaker.player.presentation.state.PlayerScreenState
 import com.practicum.playlistmaker.search.domain.models.Track
 
@@ -19,7 +16,7 @@ class PlayerViewModel(
 ): ViewModel() {
 
     private val trackInfo: TrackInfo by lazy {
-        toTrackInfoMapper(track)
+        TrackInfoMapper.toTrackInfoMapper(track)
     }
 
     private var screenStateLiveData = MutableLiveData<PlayerScreenState>(PlayerScreenState.Loading)
@@ -53,34 +50,6 @@ class PlayerViewModel(
                 }
             )
         }
-    }
-
-    companion object {
-        fun factory(trackItem: Track): ViewModelProvider.Factory {
-            return viewModelFactory {
-                initializer {
-                    PlayerViewModel(
-                        track = trackItem,
-                        playerUserCase = Creator.provideMediaPlayer()
-                    )
-                }
-            }
-        }
-    }
-
-    private fun toTrackInfoMapper(track: Track): TrackInfo {
-        return TrackInfo(
-            trackId = track.trackId,
-            trackName = track.trackName,
-            trackTime = track.trackTime,
-            previewUrl = track.previewUrl,
-            primaryGenreName = track.primaryGenreName,
-            collectionName = track.collectionName,
-            artistName = track.artistName,
-            releaseDate = track.releaseDate,
-            country = track.country,
-            artworkUrl512 = track.getCoverArtwork(),
-        )
     }
 
     private fun getCurrentPlayStatus(): PlayStatus {
