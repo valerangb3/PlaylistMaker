@@ -6,7 +6,8 @@ import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.domain.repository.TracksHistoryRepository
 
 class TracksHistoryRepositoryImpl(
-    private val sharedPreferences: SharedPreferences
+    private val sharedPreferences: SharedPreferences,
+    private val gson: Gson
 ): TracksHistoryRepository {
     private val trackListHistory = mutableListOf<Track>()
 
@@ -22,7 +23,7 @@ class TracksHistoryRepositoryImpl(
     private fun restoreHistoryList() {
         val json = sharedPreferences.getString(HISTORY_KEY, null)
         if (!json.isNullOrEmpty()) {
-            val history = Gson().fromJson(json, Array<Track>::class.java)
+            val history = gson.fromJson(json, Array<Track>::class.java)
             if (!history.isNullOrEmpty()) {
                 trackListHistory.addAll(history)
             }
@@ -50,7 +51,7 @@ class TracksHistoryRepositoryImpl(
 
     override fun saveTrackHistory(trackList: MutableList<Track>) {
         if (trackList.isNotEmpty()) {
-            val history = Gson().toJson(trackList)
+            val history = gson.toJson(trackList)
             sharedPreferences.edit()
                 .putString(HISTORY_KEY, history)
                 .apply()

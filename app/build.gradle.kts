@@ -36,8 +36,12 @@ android {
 }
 
 dependencies {
+    implementation(libs.koin)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation(libs.androidx.activity.ktx)
+    implementation(libs.glide)
+    annotationProcessor(libs.compiler)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -47,9 +51,4 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-    implementation("androidx.activity:activity-ktx:1.9.3")
-
-    implementation("com.github.bumptech.glide:glide:4.14.2")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.14.2")
 }
