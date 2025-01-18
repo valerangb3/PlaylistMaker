@@ -6,7 +6,6 @@ import android.os.Looper
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.activity.viewModels
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -18,20 +17,21 @@ import com.practicum.playlistmaker.player.presentation.viewmodel.PlayerViewModel
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.utils.dpToPx
 import com.practicum.playlistmaker.utils.gone
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class TrackActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityTrackBinding
-    private lateinit var myHandler: Handler
-
-    private val viewModel: PlayerViewModel by viewModels {
-        PlayerViewModel.factory(trackItem)
-    }
-
-    private lateinit var trackItem: Track
-
     companion object {
         private const val POSTER_RADIUS = 8.0F
+    }
+
+    private lateinit var binding: ActivityTrackBinding
+    private lateinit var myHandler: Handler
+    private lateinit var trackItem: Track
+
+    private val viewModel: PlayerViewModel by viewModel {
+        parametersOf(trackItem)
     }
 
     private fun render(isLoading: Boolean, trackInfo: TrackInfo?) {
