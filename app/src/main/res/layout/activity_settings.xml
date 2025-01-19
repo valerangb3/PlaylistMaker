@@ -12,7 +12,7 @@
     <Button
         android:id="@+id/button_back"
         style="@style/BackButtonStyle"
-        android:text="@string/app_back"
+        android:text="@string/main_menu_settings"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/title_height" />
 
