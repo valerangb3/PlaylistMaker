@@ -45,4 +45,10 @@
     <string name="poster">Обложка</string>
     <!--TRACK_INFO-->
     <string name="play_error">Что-то пошло не так. Повторите попытку позже.</string>
+    <!--MEDIA-->
+    <string name="favorites_tab">Избранные треки</string>
+    <string name="playlist_tab">Плейлисты</string>
+    <string name="favorites_empty">Ваша медиатека пуста</string>
+    <string name="playlist_empty">Вы не создали \nни одного плейлиста</string>
+    <string name="playlist_add">Новый плейлист</string>
 </resources>
