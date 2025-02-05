@@ -1,17 +1,14 @@
 package com.practicum.playlistmaker.media.presentation.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.media.presentation.state.PlaylistState
 
-class PlaylistViewModel(
-    application: Application
-) : AndroidViewModel(application) {
+class PlaylistViewModel : ViewModel() {
 
-    private var screenStateLiveData = MutableLiveData<PlaylistState>(PlaylistState.EmptyContent(application.getString(R.string.playlist_empty)))
+    private var screenStateLiveData = MutableLiveData<PlaylistState>(PlaylistState.EmptyContent(R.string.playlist_empty))
 
     fun getScreenStateLiveData(): LiveData<PlaylistState> = screenStateLiveData
 

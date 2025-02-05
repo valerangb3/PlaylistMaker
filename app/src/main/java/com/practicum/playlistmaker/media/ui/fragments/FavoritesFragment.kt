@@ -34,7 +34,7 @@ class FavoritesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getScreenStateLiveData().observe(requireActivity()) { screenState ->
             when (screenState) {
-                is FavoriteState.EmptyContent -> showEmptyContent(screenState.textContent)
+                is FavoriteState.EmptyContent -> showEmptyContent(getString(screenState.res))
             }
         }
     }
