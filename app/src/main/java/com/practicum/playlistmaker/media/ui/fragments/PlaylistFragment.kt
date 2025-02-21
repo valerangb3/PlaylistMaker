@@ -45,12 +45,11 @@ class PlaylistFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
     companion object {
-
         fun newInstance() = PlaylistFragment()
     }
 }
