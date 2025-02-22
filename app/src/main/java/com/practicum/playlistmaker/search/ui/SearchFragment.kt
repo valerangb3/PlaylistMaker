@@ -1,40 +1,50 @@
 package com.practicum.playlistmaker.search.ui
 
-import android.content.Intent
+import androidx.core.content.getSystemService
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.getSystemService
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.databinding.ActivitySearchBinding
+import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.player.ui.TrackActivity
-import com.practicum.playlistmaker.search.ui.adapter.TrackListAdapter
+import com.practicum.playlistmaker.player.ui.TrackActivityArgs
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.presentation.models.ErrorType
 import com.practicum.playlistmaker.search.presentation.state.TrackListState
 import com.practicum.playlistmaker.search.presentation.viewmodel.SearchViewModel
+import com.practicum.playlistmaker.search.ui.adapter.TrackListAdapter
 import com.practicum.playlistmaker.utils.gone
 import com.practicum.playlistmaker.utils.show
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
 
     companion object {
         const val INPUT_VALUE = "INPUT_VALUE"
         const val DEFAULT_INPUT_VALUE = ""
         const val CLICK_DEBOUNCE_DELAY = 1_000L
+
+        fun createArts(): Bundle {
+            return bundleOf()
+        }
     }
 
-    private lateinit var trackListAdapter: TrackListAdapter
+    private var _binding : FragmentSearchBinding? = null
+    private val binding get() = _binding!!
 
-    private lateinit var binding: ActivitySearchBinding
+    private lateinit var trackListAdapter: TrackListAdapter
 
     private var searchInputValue: String = DEFAULT_INPUT_VALUE
 
@@ -81,9 +91,7 @@ class SearchActivity : AppCompatActivity() {
             trackListAdapter.trackList = viewModel.getHistoryList().toMutableList()
             trackListAdapter.notifyDataSetChanged()
         }
-        intent = Intent(this@SearchActivity, TrackActivity::class.java)
-        intent.putExtra(Track::class.simpleName, trackItem)
-        startActivity(intent)
+        findNavController().navigate(R.id.action_searchFragment_to_trackActivity, TrackActivityArgs(trackItem).toBundle())
     }
 
     private fun hideTrackList() {
@@ -164,7 +172,7 @@ class SearchActivity : AppCompatActivity() {
             }
         }
         binding.trackList.adapter = trackListAdapter
-        binding.trackList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.trackList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
     }
 
     private fun clickDebounce() : Boolean {
@@ -188,14 +196,25 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-
-        setContentView(binding.root)
-
-        binding.buttonBack.setOnClickListener {
-            finish()
+        savedInstanceState?.apply {
+            searchInputValue = getString(
+                INPUT_VALUE,
+                DEFAULT_INPUT_VALUE
+            )
         }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.clearHistory.setOnClickListener {
             viewModel.clearHistory()
@@ -213,7 +232,7 @@ class SearchActivity : AppCompatActivity() {
 
         binding.resetButton.setOnClickListener {
             binding.search.setText(DEFAULT_INPUT_VALUE)
-            val inputMethodManager = getSystemService<InputMethodManager>()
+            val inputMethodManager = requireContext().getSystemService<InputMethodManager>()
             inputMethodManager?.hideSoftInputFromWindow(binding.resetButton.windowToken, 0)
         }
 
@@ -253,20 +272,8 @@ class SearchActivity : AppCompatActivity() {
         initRecyclerView()
         handleSearchInput()
 
-        viewModel.getTracksState().observe(this) { state ->
+        viewModel.getTracksState().observe(viewLifecycleOwner) { state ->
             renderSearchResult(state)
-        }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        viewModel.saveHistory()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        textWatcher?.let { tw ->
-            binding.search.removeTextChangedListener(tw)
         }
     }
 
@@ -275,8 +282,12 @@ class SearchActivity : AppCompatActivity() {
         outState.putString(INPUT_VALUE, searchInputValue)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        searchInputValue = savedInstanceState.getString(INPUT_VALUE, DEFAULT_INPUT_VALUE)
+
+    override fun onDestroyView() {
+        textWatcher?.let { tw ->
+            binding.search.removeTextChangedListener(tw)
+        }
+        _binding = null
+        super.onDestroyView()
     }
 }

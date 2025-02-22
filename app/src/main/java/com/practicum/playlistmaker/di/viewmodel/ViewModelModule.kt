@@ -33,14 +33,10 @@ val viewModelModule = module {
     }
 
     viewModel<FavoriteViewModel> {
-        FavoriteViewModel(
-            application = androidApplication(),
-        )
+        FavoriteViewModel()
     }
 
     viewModel<PlaylistViewModel> {
-        PlaylistViewModel(
-            application = androidApplication(),
-        )
+        PlaylistViewModel()
     }
 }

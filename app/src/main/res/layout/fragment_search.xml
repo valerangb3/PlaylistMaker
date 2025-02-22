@@ -5,13 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.practicum.playlistmaker.search.ui.SearchFragment">
     <!--
     Решил оставить пока кнопку. Скорее всего нужно потом пределать на toolbar?
     -->
-    <Button
+    <TextView
         android:id="@+id/button_back"
-        style="@style/BackButtonStyle"
+        style="@style/TitleText"
         android:text="@string/main_menu_search"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/title_height" />

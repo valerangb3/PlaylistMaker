@@ -34,7 +34,7 @@ class PlaylistFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getScreenStateLiveData().observe(requireActivity()) { screenState ->
             when (screenState) {
-                is PlaylistState.EmptyContent -> showEmptyContent(screenState.textContent)
+                is PlaylistState.EmptyContent -> showEmptyContent(getString(screenState.res))
             }
         }
     }
@@ -44,8 +44,12 @@ class PlaylistFragment : Fragment() {
         binding.errorText.text = text
     }
 
-    companion object {
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
 
+    companion object {
         fun newInstance() = PlaylistFragment()
     }
 }

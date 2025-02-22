@@ -5,7 +5,9 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.navigation.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -25,6 +27,8 @@ class TrackActivity : AppCompatActivity() {
     companion object {
         private const val POSTER_RADIUS = 8.0F
     }
+
+    private val args : TrackActivityArgs by navArgs()
 
     private lateinit var binding: ActivityTrackBinding
     private lateinit var myHandler: Handler
@@ -89,9 +93,7 @@ class TrackActivity : AppCompatActivity() {
         binding = ActivityTrackBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
-
-        trackItem = intent.getSerializableExtra(Track::class.simpleName) as Track
-
+        trackItem = args.track
         myHandler = Handler(Looper.getMainLooper())
 
         binding.play.setOnClickListener {
