@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.R
@@ -27,6 +28,8 @@ import com.practicum.playlistmaker.search.presentation.viewmodel.SearchViewModel
 import com.practicum.playlistmaker.search.ui.adapter.TrackListAdapter
 import com.practicum.playlistmaker.utils.gone
 import com.practicum.playlistmaker.utils.show
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
@@ -36,9 +39,6 @@ class SearchFragment : Fragment() {
         const val DEFAULT_INPUT_VALUE = ""
         const val CLICK_DEBOUNCE_DELAY = 1_000L
 
-        fun createArts(): Bundle {
-            return bundleOf()
-        }
     }
 
     private var _binding : FragmentSearchBinding? = null
@@ -53,8 +53,6 @@ class SearchFragment : Fragment() {
     private var textWatcher: TextWatcher? = null
 
     private val viewModel by viewModel<SearchViewModel>()
-
-    private val handler = Handler(Looper.getMainLooper())
 
     private fun renderSearchResult(state: TrackListState) {
         when (state) {
@@ -179,7 +177,10 @@ class SearchFragment : Fragment() {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
         }
         return current
     }
@@ -282,8 +283,13 @@ class SearchFragment : Fragment() {
         outState.putString(INPUT_VALUE, searchInputValue)
     }
 
+    override fun onPause() {
+        viewModel.saveHistory()
+        super.onPause()
+    }
 
     override fun onDestroyView() {
+        //viewModel.saveHistory()
         textWatcher?.let { tw ->
             binding.search.removeTextChangedListener(tw)
         }

@@ -6,28 +6,37 @@ import com.practicum.playlistmaker.search.data.dto.TracksSearchResponse
 import com.practicum.playlistmaker.search.domain.repository.TracksRepository
 import com.practicum.playlistmaker.search.domain.models.Resource
 import com.practicum.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class TracksRepositoryImpl(
     private val networkClient: NetworkClient
 ) : TracksRepository {
     companion object {
-        const val CLIENT_ERROR = 404
+        const val HTTP_OK = 200
+        const val CLIENT_ERROR = 400
         const val SERVER_ERROR = 500
     }
 
-    override fun searchTracks(expression: String): Resource<List<Track>> {
+    override fun searchTracks(expression: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doRequest(TracksSearchRequest(expression))
-        return when (response.resultCode) {
+        when (response.resultCode) {
             SERVER_ERROR -> {
-                Resource.ServerError(
-                    status = SERVER_ERROR
+                emit(
+                    value = Resource.ServerError(
+                        status = SERVER_ERROR
+                    )
                 )
             }
+
             CLIENT_ERROR -> {
-                Resource.ClientError(
-                    status = CLIENT_ERROR
+                emit(
+                    value = Resource.ClientError(
+                        status = CLIENT_ERROR
+                    )
                 )
             }
+
             else -> {
                 if (response is TracksSearchResponse) {
                     val tracksList = response.results.filter {
@@ -50,17 +59,24 @@ class TracksRepositoryImpl(
 
                     }
                     if (tracksList.isEmpty()) {
-                        Resource.ClientError(
-                            status = 404
+                        emit(
+                            value = Resource.ClientError(
+                                status = CLIENT_ERROR
+                            )
                         )
                     } else {
-                        Resource.Success(
-                            data = tracksList
+                        emit(
+                            value = Resource.Success(
+                                status = HTTP_OK,
+                                data = tracksList
+                            )
                         )
                     }
                 } else {
-                    Resource.ClientError(
-                        status = CLIENT_ERROR
+                    emit(
+                        value = Resource.ClientError(
+                            status = CLIENT_ERROR
+                        )
                     )
                 }
             }

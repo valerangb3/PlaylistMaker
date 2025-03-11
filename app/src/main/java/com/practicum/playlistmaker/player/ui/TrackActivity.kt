@@ -5,7 +5,6 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.navigation.navArgs
 import com.bumptech.glide.Glide
@@ -31,7 +30,6 @@ class TrackActivity : AppCompatActivity() {
     private val args : TrackActivityArgs by navArgs()
 
     private lateinit var binding: ActivityTrackBinding
-    private lateinit var myHandler: Handler
     private lateinit var trackItem: Track
 
     private val viewModel: PlayerViewModel by viewModel {
@@ -94,7 +92,6 @@ class TrackActivity : AppCompatActivity() {
 
         setContentView(binding.root)
         trackItem = args.track
-        myHandler = Handler(Looper.getMainLooper())
 
         binding.play.setOnClickListener {
             if (trackItem.previewUrl == null) {
