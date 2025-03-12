@@ -1,14 +1,9 @@
 package com.practicum.playlistmaker.player.data.repository
 
 import android.media.MediaPlayer
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import com.practicum.playlistmaker.player.domain.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.repository.PlayerRepository
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 
 class PlayerRepositoryImpl(
     private val mediaPlayer: MediaPlayer

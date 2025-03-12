@@ -277,7 +277,8 @@
     </style>
 
     <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
-
+        <item name="itemPaddingTop">6dp</item>
+        <item name="itemPaddingBottom">8dp</item>
         <item name="backgroundTint">@color/transparent</item>
         <item name="itemTextColor">@color/nav_item</item>
         <item name="itemActiveIndicatorStyle">@style/Custom.Indicator</item>
