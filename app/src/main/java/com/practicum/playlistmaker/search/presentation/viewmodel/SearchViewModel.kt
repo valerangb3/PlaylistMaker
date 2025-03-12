@@ -1,8 +1,5 @@
 package com.practicum.playlistmaker.search.presentation.viewmodel
 
-import android.os.Handler
-import android.os.Looper
-import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,6 +11,7 @@ import com.practicum.playlistmaker.search.presentation.models.ErrorType
 import com.practicum.playlistmaker.search.presentation.state.TrackListState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
@@ -91,13 +89,23 @@ class SearchViewModel(
     fun showHistoryList() {
         latestSearchText = ""
         searchJob?.cancel()
-        tracksState.value = TrackListState.HistoryContent(tracksHistoryInteractor.getHistory())
+        viewModelScope.launch {
+            tracksHistoryInteractor.getHistory().collect { historyList ->
+                tracksState.postValue(TrackListState.HistoryContent(historyList))
+            }
+        }
     }
     fun getHistoryList() = tracksHistoryInteractor.getHistory()
     fun saveHistory() {
-        tracksHistoryInteractor.saveHistory(tracksHistoryInteractor.getHistory())
+        viewModelScope.launch {
+            tracksHistoryInteractor.getHistory().collect { historyList ->
+                tracksHistoryInteractor.saveHistory(historyList)
+            }
+        }
     }
     fun clearHistory() {
-        tracksHistoryInteractor.remove()
+        viewModelScope.launch {
+            tracksHistoryInteractor.remove()
+        }
     }
 }

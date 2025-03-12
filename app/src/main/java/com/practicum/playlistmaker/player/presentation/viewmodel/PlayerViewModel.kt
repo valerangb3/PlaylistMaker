@@ -35,12 +35,10 @@ class PlayerViewModel(
                 events = object : PlayerInteractor.TrackHandler {
                     override fun onProgress(progress: Long) {
                         playStatusLiveData.value = getCurrentPlayStatus().copy(progress = progress)
-                        //Log.d("SPRINT20---", "progress = $progress")
-                        //Log.d("SPRINT20", "progress = ${getCurrentPlayStatus().copy(progress = progress)}")
-
                     }
 
                     override fun onComplete() {
+                        timerJob?.cancel()
                         playStatusLiveData.value =
                             getCurrentPlayStatus().copy(progress = 0L, isPlaying = false)
                     }
@@ -53,7 +51,6 @@ class PlayerViewModel(
                         playStatusLiveData.value = getCurrentPlayStatus().copy(
                             isPlaying = true
                         )
-
                     }
 
                     override fun onLoad() {
@@ -83,6 +80,7 @@ class PlayerViewModel(
     }
 
     override fun onCleared() {
+        timerJob?.cancel()
         playerUserCase.release()
     }
 }

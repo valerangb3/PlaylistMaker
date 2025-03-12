@@ -27,28 +27,6 @@ class PlayerRepositoryImpl(
 
     private lateinit var eventHandler: PlayerInteractor.TrackHandler
 
-    private val myHandler = Handler(Looper.getMainLooper())
-    private val trackRunnable = Runnable {
-        handleRunnable()
-    }
-
-    private fun handleRunnable() {
-        if (playerState == STATE_PLAYING) {
-            val position = mediaPlayer.currentPosition.toLong()
-            //Log.d("SPRINT20", "{position = $position}")
-            eventHandler.onProgress(progress = position)
-            myHandler.postDelayed(trackRunnable, CHECK_TIME_DELAY)
-        }
-    }
-
-    override fun getCurrentPosition() : Long {
-        var curPosition = 0L
-        if (mediaPlayer.isPlaying) {
-            curPosition = mediaPlayer.currentPosition.toLong()
-        }
-        return curPosition
-    }
-
     override fun prepare(url: String, eventHandler: PlayerInteractor.TrackHandler) {
         this.eventHandler = eventHandler
         mediaPlayer.setDataSource(url)
@@ -59,8 +37,6 @@ class PlayerRepositoryImpl(
         }
         mediaPlayer.setOnCompletionListener {
             playerState = STATE_PREPARED
-            //timerJob?.cancel()
-            //myHandler.removeCallbacks(trackRunnable)
             this.eventHandler.onComplete()
         }
     }
@@ -73,18 +49,11 @@ class PlayerRepositoryImpl(
             delay(CHECK_TIME_DELAY)
             eventHandler.onProgress(progress = mediaPlayer.currentPosition.toLong())
         }
-        /*while (mediaPlayer.isPlaying) {
-            Log.d("SPRINT20xxx", "p=${mediaPlayer.currentPosition.toLong()}")
-            eventHandler.onProgress(progress = mediaPlayer.currentPosition.toLong())
-            delay(300L)
-        }*/
-        //myHandler.postDelayed(trackRunnable, CHECK_TIME_DELAY)
     }
 
     override fun pausePlayer() {
         mediaPlayer.pause()
         playerState = STATE_PAUSED
-        //timerJob?.cancel()
         eventHandler.onPause(isPlaying = mediaPlayer.isPlaying)
     }
 

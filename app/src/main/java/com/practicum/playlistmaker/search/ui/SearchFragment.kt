@@ -2,8 +2,6 @@ package com.practicum.playlistmaker.search.ui
 
 import androidx.core.content.getSystemService
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -11,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -19,7 +16,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
-import com.practicum.playlistmaker.player.ui.TrackActivity
 import com.practicum.playlistmaker.player.ui.TrackActivityArgs
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.presentation.models.ErrorType
@@ -86,8 +82,12 @@ class SearchFragment : Fragment() {
     private fun handleTap(trackItem: Track) {
         viewModel.addToHistory(trackItem)
         if (viewModel.getTracksState().value is TrackListState.HistoryContent) {
-            trackListAdapter.trackList = viewModel.getHistoryList().toMutableList()
-            trackListAdapter.notifyDataSetChanged()
+            lifecycleScope.launch {
+                viewModel.getHistoryList().collect { historyList ->
+                    trackListAdapter.trackList = historyList.toMutableList()
+                    trackListAdapter.notifyDataSetChanged()
+                }
+            }
         }
         findNavController().navigate(R.id.action_searchFragment_to_trackActivity, TrackActivityArgs(trackItem).toBundle())
     }
@@ -289,7 +289,6 @@ class SearchFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        //viewModel.saveHistory()
         textWatcher?.let { tw ->
             binding.search.removeTextChangedListener(tw)
         }
