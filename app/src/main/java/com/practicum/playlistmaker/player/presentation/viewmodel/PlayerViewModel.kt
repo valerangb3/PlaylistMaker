@@ -11,11 +11,12 @@ import com.practicum.playlistmaker.player.mapper.TrackInfoMapper
 import com.practicum.playlistmaker.player.presentation.state.PlayerScreenState
 import com.practicum.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 
 class PlayerViewModel(
     private val track: Track,
     private val playerUserCase: PlayerInteractor
-): ViewModel() {
+) : ViewModel() {
 
     private val trackInfo: TrackInfo by lazy {
         TrackInfoMapper.toTrackInfoMapper(track)
@@ -38,15 +39,19 @@ class PlayerViewModel(
                     }
 
                     override fun onComplete() {
-                        playStatusLiveData.value = getCurrentPlayStatus().copy(progress = 0L, isPlaying = false)
+                        playStatusLiveData.value =
+                            getCurrentPlayStatus().copy(progress = 0L, isPlaying = false)
                     }
 
                     override fun onPause() {
                         playStatusLiveData.value = getCurrentPlayStatus().copy(isPlaying = false)
                     }
 
-                    override fun onStart() {
-                        playStatusLiveData.value = getCurrentPlayStatus().copy(isPlaying = true)
+                    override suspend fun onStart(isPlaying: Boolean, progress: Long) {
+                        playStatusLiveData.value = getCurrentPlayStatus().copy(
+                            isPlaying = true,
+                            progress = progress
+                        )
 
                     }
 
@@ -65,7 +70,7 @@ class PlayerViewModel(
     fun getScreenStateLiveData(): LiveData<PlayerScreenState> = screenStateLiveData
     fun getPlayStatusLiveData(): LiveData<PlayStatus> = playStatusLiveData
 
-    fun playback() {
+    suspend fun playback() {
         playerUserCase.playback()
     }
 

@@ -27,8 +27,6 @@ class PlayerRepositoryImpl(
 
     private lateinit var eventHandler: PlayerInteractor.TrackHandler
 
-    private var timerJob: Job? = null
-
     private val myHandler = Handler(Looper.getMainLooper())
     private val trackRunnable = Runnable {
         handleRunnable()
@@ -62,27 +60,36 @@ class PlayerRepositoryImpl(
         mediaPlayer.setOnCompletionListener {
             playerState = STATE_PREPARED
             //timerJob?.cancel()
-            myHandler.removeCallbacks(trackRunnable)
+            //myHandler.removeCallbacks(trackRunnable)
             this.eventHandler.onComplete()
         }
     }
 
-    override fun startPlayer() {
+    private suspend fun startPlayer() {
         playerState = STATE_PLAYING
         mediaPlayer.start()
-        eventHandler.onStart()
+
+        while (mediaPlayer.isPlaying) {
+            delay(CHECK_TIME_DELAY)
+            eventHandler.onStart(
+                isPlaying = mediaPlayer.isPlaying,
+                progress = mediaPlayer.currentPosition.toLong()
+            )
+        }
+
+
         /*while (mediaPlayer.isPlaying) {
             Log.d("SPRINT20xxx", "p=${mediaPlayer.currentPosition.toLong()}")
             eventHandler.onProgress(progress = mediaPlayer.currentPosition.toLong())
             delay(300L)
         }*/
-        myHandler.postDelayed(trackRunnable, CHECK_TIME_DELAY)
+        //myHandler.postDelayed(trackRunnable, CHECK_TIME_DELAY)
     }
 
     override fun pausePlayer() {
         mediaPlayer.pause()
         playerState = STATE_PAUSED
-        timerJob?.cancel()
+        //timerJob?.cancel()
         eventHandler.onPause()
     }
 
@@ -90,7 +97,7 @@ class PlayerRepositoryImpl(
         mediaPlayer.release()
     }
 
-    override fun playbackControl() {
+    override suspend fun playbackControl() {
         when (playerState) {
             STATE_PLAYING -> {
                 pausePlayer()
