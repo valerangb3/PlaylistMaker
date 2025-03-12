@@ -3,6 +3,7 @@ package com.practicum.playlistmaker.player.ui
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -117,6 +118,8 @@ class TrackActivity : AppCompatActivity() {
         }
 
         viewModel.getPlayStatusLiveData().observe(this) { playStatus ->
+            //Log.d("SPRINT20++", "p=${playStatus.progress}")
+            //Log.d("SPRINT20~~", "p=${playStatus.isPlaying}")
             if (!playStatus.isPlaying) {
                 binding.play.setImageResource(R.drawable.play)
             } else {

@@ -3,8 +3,12 @@ package com.practicum.playlistmaker.player.data.repository
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import com.practicum.playlistmaker.player.domain.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.repository.PlayerRepository
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 
 class PlayerRepositoryImpl(
     private val mediaPlayer: MediaPlayer
@@ -16,12 +20,14 @@ class PlayerRepositoryImpl(
         private const val STATE_PLAYING = 2
         private const val STATE_PAUSED = 3
 
-        private const val CHECK_TIME_DELAY = 500L
+        private const val CHECK_TIME_DELAY = 300L
     }
 
     private var playerState = STATE_DEFAULT
 
     private lateinit var eventHandler: PlayerInteractor.TrackHandler
+
+    private var timerJob: Job? = null
 
     private val myHandler = Handler(Looper.getMainLooper())
     private val trackRunnable = Runnable {
@@ -31,9 +37,18 @@ class PlayerRepositoryImpl(
     private fun handleRunnable() {
         if (playerState == STATE_PLAYING) {
             val position = mediaPlayer.currentPosition.toLong()
+            //Log.d("SPRINT20", "{position = $position}")
             eventHandler.onProgress(progress = position)
             myHandler.postDelayed(trackRunnable, CHECK_TIME_DELAY)
         }
+    }
+
+    override fun getCurrentPosition() : Long {
+        var curPosition = 0L
+        if (mediaPlayer.isPlaying) {
+            curPosition = mediaPlayer.currentPosition.toLong()
+        }
+        return curPosition
     }
 
     override fun prepare(url: String, eventHandler: PlayerInteractor.TrackHandler) {
@@ -46,6 +61,7 @@ class PlayerRepositoryImpl(
         }
         mediaPlayer.setOnCompletionListener {
             playerState = STATE_PREPARED
+            //timerJob?.cancel()
             myHandler.removeCallbacks(trackRunnable)
             this.eventHandler.onComplete()
         }
@@ -55,14 +71,18 @@ class PlayerRepositoryImpl(
         playerState = STATE_PLAYING
         mediaPlayer.start()
         eventHandler.onStart()
-
+        /*while (mediaPlayer.isPlaying) {
+            Log.d("SPRINT20xxx", "p=${mediaPlayer.currentPosition.toLong()}")
+            eventHandler.onProgress(progress = mediaPlayer.currentPosition.toLong())
+            delay(300L)
+        }*/
         myHandler.postDelayed(trackRunnable, CHECK_TIME_DELAY)
     }
 
     override fun pausePlayer() {
         mediaPlayer.pause()
         playerState = STATE_PAUSED
-        myHandler.removeCallbacks(trackRunnable)
+        timerJob?.cancel()
         eventHandler.onPause()
     }
 

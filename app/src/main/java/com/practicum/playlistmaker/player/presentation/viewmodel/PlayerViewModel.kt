@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker.player.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,7 @@ import com.practicum.playlistmaker.player.domain.models.TrackInfo
 import com.practicum.playlistmaker.player.mapper.TrackInfoMapper
 import com.practicum.playlistmaker.player.presentation.state.PlayerScreenState
 import com.practicum.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.Job
 
 class PlayerViewModel(
     private val track: Track,
@@ -18,7 +20,7 @@ class PlayerViewModel(
     private val trackInfo: TrackInfo by lazy {
         TrackInfoMapper.toTrackInfoMapper(track)
     }
-
+    private var timerJob: Job? = null
     private var screenStateLiveData = MutableLiveData<PlayerScreenState>(PlayerScreenState.Loading)
     private val playStatusLiveData = MutableLiveData<PlayStatus>()
 
@@ -30,6 +32,9 @@ class PlayerViewModel(
                 events = object : PlayerInteractor.TrackHandler {
                     override fun onProgress(progress: Long) {
                         playStatusLiveData.value = getCurrentPlayStatus().copy(progress = progress)
+                        //Log.d("SPRINT20---", "progress = $progress")
+                        //Log.d("SPRINT20", "progress = ${getCurrentPlayStatus().copy(progress = progress)}")
+
                     }
 
                     override fun onComplete() {
@@ -42,6 +47,7 @@ class PlayerViewModel(
 
                     override fun onStart() {
                         playStatusLiveData.value = getCurrentPlayStatus().copy(isPlaying = true)
+
                     }
 
                     override fun onLoad() {
