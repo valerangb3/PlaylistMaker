@@ -3,14 +3,18 @@ package com.practicum.playlistmaker.search.domain.impl
 import com.practicum.playlistmaker.search.domain.TracksHistoryInteractor
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.domain.repository.TracksHistoryRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class TracksHistoryInteractorImpl(
     private val tracksHistoryRepository: TracksHistoryRepository
 ) : TracksHistoryInteractor {
 
-    override fun getHistory(): List<Track> = tracksHistoryRepository.getTrackListHistory()
+    override fun getHistory(): Flow<List<Track>> = flow {
+        emit(tracksHistoryRepository.getTrackListHistory())
+    }
 
-    override fun saveHistory(trackList: List<Track>) {
+    override suspend fun saveHistory(trackList: List<Track>) {
         tracksHistoryRepository.saveTrackHistory(trackList.toMutableList())
     }
 
@@ -18,7 +22,7 @@ class TracksHistoryInteractorImpl(
         tracksHistoryRepository.addToHistory(track)
     }
 
-    override fun remove() {
+    override suspend fun remove() {
         tracksHistoryRepository.removeTrackHistory()
     }
 }

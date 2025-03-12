@@ -4,20 +4,18 @@ import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.domain.repository.TracksHistoryRepository
+import androidx.core.content.edit
 
 class TracksHistoryRepositoryImpl(
     private val sharedPreferences: SharedPreferences,
     private val gson: Gson
 ): TracksHistoryRepository {
     private val trackListHistory = mutableListOf<Track>()
+    private var isRestore = false
 
     companion object {
         const val COUNT_ITEMS = 10
         const val HISTORY_KEY = "track_list_history"
-    }
-
-    init {
-        restoreHistoryList()
     }
 
     private fun restoreHistoryList() {
@@ -42,21 +40,27 @@ class TracksHistoryRepositoryImpl(
         }
     }
 
-    override fun removeTrackHistory() {
+    override suspend fun removeTrackHistory() {
         trackListHistory.clear()
-        sharedPreferences.edit()
-            .remove(HISTORY_KEY)
-            .apply()
-    }
-
-    override fun saveTrackHistory(trackList: MutableList<Track>) {
-        if (trackList.isNotEmpty()) {
-            val history = gson.toJson(trackList)
-            sharedPreferences.edit()
-                .putString(HISTORY_KEY, history)
-                .apply()
+        sharedPreferences.edit() {
+            remove(HISTORY_KEY)
         }
     }
 
-    override fun getTrackListHistory(): MutableList<Track> = trackListHistory
+    override suspend fun saveTrackHistory(trackList: MutableList<Track>) {
+        if (trackList.isNotEmpty()) {
+            val history = gson.toJson(trackList)
+            sharedPreferences.edit() {
+                putString(HISTORY_KEY, history)
+            }
+        }
+    }
+
+    override suspend fun getTrackListHistory(): MutableList<Track> {
+        if (!isRestore) {
+            restoreHistoryList()
+            isRestore = true
+        }
+        return trackListHistory
+    }
 }
