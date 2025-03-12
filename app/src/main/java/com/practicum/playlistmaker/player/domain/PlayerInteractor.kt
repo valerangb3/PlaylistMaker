@@ -8,11 +8,11 @@ interface PlayerInteractor {
     fun release()
 
     interface TrackHandler {
-        suspend fun onStart(isPlaying: Boolean, progress: Long)
+        suspend fun onStart(isPlaying: Boolean)
 
         fun onComplete()
         fun onLoad()
-        fun onPause()
+        fun onPause(isPlaying: Boolean)
         fun onProgress(progress: Long)
     }
 }

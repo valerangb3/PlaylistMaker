@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.player.domain.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.models.PlayStatus
 import com.practicum.playlistmaker.player.domain.models.TrackInfo
@@ -12,6 +13,7 @@ import com.practicum.playlistmaker.player.presentation.state.PlayerScreenState
 import com.practicum.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val track: Track,
@@ -43,14 +45,13 @@ class PlayerViewModel(
                             getCurrentPlayStatus().copy(progress = 0L, isPlaying = false)
                     }
 
-                    override fun onPause() {
-                        playStatusLiveData.value = getCurrentPlayStatus().copy(isPlaying = false)
+                    override fun onPause(isPlaying: Boolean) {
+                        playStatusLiveData.value = getCurrentPlayStatus().copy(isPlaying = isPlaying)
                     }
 
-                    override suspend fun onStart(isPlaying: Boolean, progress: Long) {
+                    override suspend fun onStart(isPlaying: Boolean) {
                         playStatusLiveData.value = getCurrentPlayStatus().copy(
-                            isPlaying = true,
-                            progress = progress
+                            isPlaying = true
                         )
 
                     }
@@ -70,11 +71,14 @@ class PlayerViewModel(
     fun getScreenStateLiveData(): LiveData<PlayerScreenState> = screenStateLiveData
     fun getPlayStatusLiveData(): LiveData<PlayStatus> = playStatusLiveData
 
-    suspend fun playback() {
-        playerUserCase.playback()
+    fun playback() {
+        timerJob = viewModelScope.launch {
+            playerUserCase.playback()
+        }
     }
 
     fun pause() {
+        timerJob?.cancel()
         playerUserCase.pause()
     }
 

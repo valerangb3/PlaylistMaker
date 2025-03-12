@@ -100,9 +100,7 @@ class TrackActivity : AppCompatActivity() {
             if (trackItem.previewUrl == null) {
                 Toast.makeText(this, R.string.play_error, Toast.LENGTH_SHORT).show()
             }
-            lifecycleScope.launch {
-                viewModel.playback()
-            }
+            viewModel.playback()
         }
 
         binding.buttonBack.setOnClickListener {
@@ -135,8 +133,6 @@ class TrackActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        lifecycleScope.launch {
-            viewModel.pause()
-        }
+        viewModel.pause()
     }
 }

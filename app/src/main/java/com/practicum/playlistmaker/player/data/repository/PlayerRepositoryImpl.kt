@@ -68,16 +68,11 @@ class PlayerRepositoryImpl(
     private suspend fun startPlayer() {
         playerState = STATE_PLAYING
         mediaPlayer.start()
-
+        eventHandler.onStart(isPlaying = mediaPlayer.isPlaying)
         while (mediaPlayer.isPlaying) {
             delay(CHECK_TIME_DELAY)
-            eventHandler.onStart(
-                isPlaying = mediaPlayer.isPlaying,
-                progress = mediaPlayer.currentPosition.toLong()
-            )
+            eventHandler.onProgress(progress = mediaPlayer.currentPosition.toLong())
         }
-
-
         /*while (mediaPlayer.isPlaying) {
             Log.d("SPRINT20xxx", "p=${mediaPlayer.currentPosition.toLong()}")
             eventHandler.onProgress(progress = mediaPlayer.currentPosition.toLong())
@@ -90,7 +85,7 @@ class PlayerRepositoryImpl(
         mediaPlayer.pause()
         playerState = STATE_PAUSED
         //timerJob?.cancel()
-        eventHandler.onPause()
+        eventHandler.onPause(isPlaying = mediaPlayer.isPlaying)
     }
 
     override fun release() {
