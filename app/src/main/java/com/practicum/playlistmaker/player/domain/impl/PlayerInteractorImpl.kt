@@ -18,7 +18,7 @@ class PlayerInteractorImpl(
         )
     }
 
-    override fun playback() {
+    override suspend fun playback() {
         playerRepository.playbackControl()
     }
 

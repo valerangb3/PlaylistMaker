@@ -2,8 +2,6 @@ package com.practicum.playlistmaker.search.ui
 
 import androidx.core.content.getSystemService
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -11,14 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
-import com.practicum.playlistmaker.player.ui.TrackActivity
 import com.practicum.playlistmaker.player.ui.TrackActivityArgs
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.presentation.models.ErrorType
@@ -27,6 +24,8 @@ import com.practicum.playlistmaker.search.presentation.viewmodel.SearchViewModel
 import com.practicum.playlistmaker.search.ui.adapter.TrackListAdapter
 import com.practicum.playlistmaker.utils.gone
 import com.practicum.playlistmaker.utils.show
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
@@ -36,9 +35,6 @@ class SearchFragment : Fragment() {
         const val DEFAULT_INPUT_VALUE = ""
         const val CLICK_DEBOUNCE_DELAY = 1_000L
 
-        fun createArts(): Bundle {
-            return bundleOf()
-        }
     }
 
     private var _binding : FragmentSearchBinding? = null
@@ -53,8 +49,6 @@ class SearchFragment : Fragment() {
     private var textWatcher: TextWatcher? = null
 
     private val viewModel by viewModel<SearchViewModel>()
-
-    private val handler = Handler(Looper.getMainLooper())
 
     private fun renderSearchResult(state: TrackListState) {
         when (state) {
@@ -88,8 +82,12 @@ class SearchFragment : Fragment() {
     private fun handleTap(trackItem: Track) {
         viewModel.addToHistory(trackItem)
         if (viewModel.getTracksState().value is TrackListState.HistoryContent) {
-            trackListAdapter.trackList = viewModel.getHistoryList().toMutableList()
-            trackListAdapter.notifyDataSetChanged()
+            lifecycleScope.launch {
+                viewModel.getHistoryList().collect { historyList ->
+                    trackListAdapter.trackList = historyList.toMutableList()
+                    trackListAdapter.notifyDataSetChanged()
+                }
+            }
         }
         findNavController().navigate(R.id.action_searchFragment_to_trackActivity, TrackActivityArgs(trackItem).toBundle())
     }
@@ -179,7 +177,10 @@ class SearchFragment : Fragment() {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
         }
         return current
     }
@@ -282,6 +283,10 @@ class SearchFragment : Fragment() {
         outState.putString(INPUT_VALUE, searchInputValue)
     }
 
+    override fun onPause() {
+        viewModel.saveHistory()
+        super.onPause()
+    }
 
     override fun onDestroyView() {
         textWatcher?.let { tw ->

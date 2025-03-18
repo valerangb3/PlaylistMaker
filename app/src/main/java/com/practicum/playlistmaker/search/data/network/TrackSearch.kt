@@ -8,5 +8,5 @@ import retrofit2.http.Query
 interface TrackSearch {
 
     @GET("/search?entity=song")
-    fun getTrackList(@Query("term") searchText: String): Call<TracksSearchResponse>
+    suspend fun getTrackList(@Query("term") searchText: String): TracksSearchResponse
 }
