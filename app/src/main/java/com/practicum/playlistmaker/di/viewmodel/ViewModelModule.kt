@@ -15,6 +15,8 @@ val viewModelModule = module {
         PlayerViewModel(
             track = track,
             playerUserCase = get(),
+            favouriteRepository = get(),
+            map = get()
         )
     }
 

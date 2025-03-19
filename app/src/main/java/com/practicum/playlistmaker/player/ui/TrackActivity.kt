@@ -15,6 +15,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityTrackBinding
 import com.practicum.playlistmaker.player.domain.models.TrackInfo
+import com.practicum.playlistmaker.player.mapper.TrackInfoMapper
 import com.practicum.playlistmaker.player.presentation.state.PlayerScreenState
 import com.practicum.playlistmaker.player.presentation.viewmodel.PlayerViewModel
 import com.practicum.playlistmaker.search.domain.models.Track
@@ -108,6 +109,10 @@ class TrackActivity : AppCompatActivity() {
         }
 
 
+        binding.toFavourite.setOnClickListener {
+            viewModel.addToFavourite(TrackInfoMapper.toTrackInfoMapper(trackItem))
+        }
+
         viewModel.getScreenStateLiveData().observe(this) { screenState ->
             when (screenState) {
                 is PlayerScreenState.Loading -> {
@@ -120,8 +125,7 @@ class TrackActivity : AppCompatActivity() {
         }
 
         viewModel.getPlayStatusLiveData().observe(this) { playStatus ->
-            //Log.d("SPRINT20++", "p=${playStatus.progress}")
-            //Log.d("SPRINT20~~", "p=${playStatus.isPlaying}")
+
             if (!playStatus.isPlaying) {
                 binding.play.setImageResource(R.drawable.play)
             } else {
