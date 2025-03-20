@@ -22,4 +22,6 @@ interface FavouriteTrackDao {
     @Query("SELECT trackId FROM favourite_track_table")
     suspend fun getFavouriteTrackIdList(): List<Long>
 
+    @Query("SELECT * FROM favourite_track_table WHERE trackId = :trackId")
+    suspend fun getFavourite(trackId: Long): FavouriteTrackEntity
 }

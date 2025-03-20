@@ -16,6 +16,7 @@ import com.practicum.playlistmaker.player.presentation.state.PlayerScreenState
 import com.practicum.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
@@ -31,11 +32,14 @@ class PlayerViewModel(
     private var timerJob: Job? = null
     private var screenStateLiveData = MutableLiveData<PlayerScreenState>(PlayerScreenState.Loading)
     private val playStatusLiveData = MutableLiveData<PlayStatus>()
-    //TODO завести новый стейт для избранного
-    //private var inFavourite = MutableLiveData<>()
+    private var inFavouriteLiveData = MutableLiveData<Boolean>()
 
     init {
         val previewUrl = trackInfo.previewUrl
+
+        inFavouriteLiveData.postValue(trackInfo.inFavourite)
+        //checkFavourite(trackInfo.trackId)
+
         previewUrl?.let {
             playerUserCase.prepareTrack(
                 url = previewUrl,
@@ -69,36 +73,64 @@ class PlayerViewModel(
         }
     }
 
+
     private fun getCurrentPlayStatus(): PlayStatus {
         return playStatusLiveData.value ?: PlayStatus(progress = 0L, isPlaying = false)
     }
 
     fun getScreenStateLiveData(): LiveData<PlayerScreenState> = screenStateLiveData
     fun getPlayStatusLiveData(): LiveData<PlayStatus> = playStatusLiveData
+    fun inFavouriteLiveData(): LiveData<Boolean> = inFavouriteLiveData
 
-    fun addToFavourite(trackItem: TrackInfo) {
+
+    private fun checkFavourite(trackId: Long) {
         viewModelScope.launch {
-            val favourite = map.map(
-                trackItem,
-                object : FavouriteMap.MapToFavourite<TrackInfo> {
-                    override fun toFavourite(item: TrackInfo): Favourite {
-                        return Favourite(
-                            trackId = item.trackId,
-                            trackName = item.trackName,
-                            artistName = item.artistName,
-                            trackTime = item.trackTime,
-                            artworkUrl100 = item.artworkUrl512,
-                            collectionName = item.collectionName ?: "",
-                            releaseDate = item.releaseDate ?: "",
-                            primaryGenreName = item.primaryGenreName ?: "",
-                            country = item.country ?: "",
-                            previewUrl = item.previewUrl ?: ""
-                        )
-                    }
-                })
-            favouriteRepository.addToFavourite(
-                item = favourite
-            )
+            favouriteRepository.getFavourite(trackId)
+                .catch {
+                    inFavouriteLiveData.postValue(false)
+                }
+                .collect {
+                    inFavouriteLiveData.postValue(true)
+            }
+        }
+    }
+
+    private suspend fun addToFavourite(trackItem: TrackInfo) {
+        val favourite = map.map(
+            trackItem,
+            object : FavouriteMap.MapToFavourite<TrackInfo> {
+                override fun toFavourite(item: TrackInfo): Favourite {
+                    return Favourite(
+                        trackId = item.trackId,
+                        trackName = item.trackName,
+                        artistName = item.artistName,
+                        trackTime = item.trackTime,
+                        artworkUrl100 = item.artworkUrl512,
+                        collectionName = item.collectionName ?: "",
+                        releaseDate = item.releaseDate ?: "",
+                        primaryGenreName = item.primaryGenreName ?: "",
+                        country = item.country ?: "",
+                        previewUrl = item.previewUrl ?: ""
+                    )
+                }
+            })
+        favouriteRepository.addToFavourite(
+            item = favourite
+        )
+    }
+
+    private suspend fun removeFromFavourite(trackItem: TrackInfo) {
+
+    }
+
+    fun favouriteHandler(trackItem: TrackInfo) {
+        viewModelScope.launch {
+            if (trackItem.inFavourite) {
+                removeFromFavourite(trackItem)
+            } else {
+                addToFavourite(trackItem)
+                inFavouriteLiveData.postValue(true)
+            }
         }
     }
 

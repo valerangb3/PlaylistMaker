@@ -10,5 +10,6 @@ interface FavouriteInteractor {
 
     fun getFavouriteIdList(): Flow<List<Long>>
     fun getFavouriteItems(): Flow<List<Favourite>>
+    fun getFavourite(trackId: Long): Flow<Favourite>
 
 }

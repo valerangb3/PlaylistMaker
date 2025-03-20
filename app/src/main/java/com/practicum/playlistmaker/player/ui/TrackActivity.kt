@@ -110,7 +110,15 @@ class TrackActivity : AppCompatActivity() {
 
 
         binding.toFavourite.setOnClickListener {
-            viewModel.addToFavourite(TrackInfoMapper.toTrackInfoMapper(trackItem))
+            viewModel.favouriteHandler(TrackInfoMapper.toTrackInfoMapper(trackItem))
+        }
+
+        viewModel.inFavouriteLiveData().observe(this) { inFavourite ->
+            if (inFavourite) {
+                binding.toFavourite.setImageResource(R.drawable.in_favourite)
+            } else {
+                binding.toFavourite.setImageResource(R.drawable.favourite)
+            }
         }
 
         viewModel.getScreenStateLiveData().observe(this) { screenState ->

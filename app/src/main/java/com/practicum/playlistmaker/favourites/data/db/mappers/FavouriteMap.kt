@@ -13,6 +13,21 @@ class FavouriteMap {
         return map.toFavourite(item)
     }
 
+    fun map(item: FavouriteTrackEntity): Favourite {
+        return Favourite(
+            trackId = item.trackId,
+            trackName = item.trackName,
+            artistName = item.artistName,
+            trackTime = item.trackTime,
+            artworkUrl100 = item.artworkUrl100,
+            collectionName = item.collectionName,
+            releaseDate = item.releaseDate,
+            primaryGenreName = item.primaryGenreName,
+            country = item.country,
+            previewUrl = item.previewUrl
+        )
+    }
+
     fun map(item: Favourite): FavouriteTrackEntity {
         return FavouriteTrackEntity(
             trackId = item.trackId,

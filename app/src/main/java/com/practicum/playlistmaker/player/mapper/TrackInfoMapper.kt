@@ -16,6 +16,7 @@ object TrackInfoMapper {
             releaseDate = track.releaseDate,
             country = track.country,
             artworkUrl512 = track.getCoverArtwork(),
+            inFavourite = track.inFavourite
         )
     }
 }
