@@ -6,29 +6,64 @@
     tools:context=".media.ui.fragments.FavoritesFragment">
 
 
-    <!--Контейнер для пустого контейнера-->
-    <LinearLayout
-        style="@style/EmptyContainer"
-        android:id="@+id/errorContainer"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/errorImage"
-            android:visibility="visible"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@drawable/nothing_found"
-            />
-        <TextView
-            style="@style/ErrorTextRequest"
-            android:id="@+id/errorText"
-            android:visibility="visible"
-            android:layout_width="wrap_content"
+        <!-- 140dp -->
+        <ProgressBar
+            style="@style/ProgressBar"
+            android:id="@+id/progressBar"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="134dp"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:id="@+id/ItemsContainer"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="@string/favorites_empty"/>
+            android:gravity="center"
+            android:orientation="vertical"
+            >
 
-    </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/favourite_list"
+
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp"
+                tools:listitem="@layout/item_track"
+                tools:itemCount="1"/>
+
+        </LinearLayout>
+        <!--Контейнер для пустого контейнера-->
+        <LinearLayout
+            style="@style/EmptyContainer"
+            android:id="@+id/errorContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/errorImage"
+                android:visibility="visible"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/nothing_found"
+                />
+            <TextView
+                style="@style/ErrorTextRequest"
+                android:id="@+id/errorText"
+                android:visibility="visible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="@string/favorites_empty"/>
+
+        </LinearLayout>
+    </FrameLayout>
+
+
 </FrameLayout>

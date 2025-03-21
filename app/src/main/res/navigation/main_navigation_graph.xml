@@ -26,7 +26,7 @@
         tools:layout="@layout/activity_track">
         <argument
             android:name="track"
-            app:argType="com.practicum.playlistmaker.search.domain.models.Track"
+            app:argType="com.practicum.playlistmaker.player.domain.models.TrackInfo"
             />
     </activity>
     <fragment

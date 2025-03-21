@@ -1,5 +1,7 @@
 package com.practicum.playlistmaker.player.domain.models
 
+import java.io.Serializable
+
 data class TrackInfo(
     val trackId: Long,
     val trackName: String,
@@ -12,5 +14,5 @@ data class TrackInfo(
     val primaryGenreName: String?,
     val country: String?,
     val previewUrl: String?,
-    val inFavourite: Boolean
-)
+    var inFavourite: Boolean
+) : Serializable

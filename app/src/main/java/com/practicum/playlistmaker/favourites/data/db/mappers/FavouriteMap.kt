@@ -39,7 +39,8 @@ class FavouriteMap {
             releaseDate = item.releaseDate,
             primaryGenreName = item.primaryGenreName,
             country = item.country,
-            previewUrl = item.previewUrl
+            previewUrl = item.previewUrl,
+            timestamp = System.currentTimeMillis()
         )
     }
 }

@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.player.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,24 +10,18 @@ import com.practicum.playlistmaker.favourites.domain.models.Favourite
 import com.practicum.playlistmaker.player.domain.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.models.PlayStatus
 import com.practicum.playlistmaker.player.domain.models.TrackInfo
-import com.practicum.playlistmaker.player.mapper.TrackInfoMapper
 import com.practicum.playlistmaker.player.presentation.state.PlayerScreenState
-import com.practicum.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
-    private val track: Track,
+    private val trackInfo: TrackInfo,
     private val playerUserCase: PlayerInteractor,
     private val favouriteRepository: FavouriteRepository,
     private val map: FavouriteMap
 ) : ViewModel() {
 
-    private val trackInfo: TrackInfo by lazy {
-        TrackInfoMapper.toTrackInfoMapper(track)
-    }
     private var timerJob: Job? = null
     private var screenStateLiveData = MutableLiveData<PlayerScreenState>(PlayerScreenState.Loading)
     private val playStatusLiveData = MutableLiveData<PlayStatus>()
@@ -38,7 +31,7 @@ class PlayerViewModel(
         val previewUrl = trackInfo.previewUrl
 
         inFavouriteLiveData.postValue(trackInfo.inFavourite)
-        //checkFavourite(trackInfo.trackId)
+        checkFavourite(trackInfo.trackId)
 
         previewUrl?.let {
             playerUserCase.prepareTrack(
@@ -91,12 +84,12 @@ class PlayerViewModel(
                 }
                 .collect {
                     inFavouriteLiveData.postValue(true)
-            }
+                }
         }
     }
 
-    private suspend fun addToFavourite(trackItem: TrackInfo) {
-        val favourite = map.map(
+    private fun convertToFavourite(trackItem: TrackInfo): Favourite {
+        return map.map(
             trackItem,
             object : FavouriteMap.MapToFavourite<TrackInfo> {
                 override fun toFavourite(item: TrackInfo): Favourite {
@@ -114,19 +107,25 @@ class PlayerViewModel(
                     )
                 }
             })
+    }
+
+    private suspend fun addToFavourite(trackItem: TrackInfo) {
         favouriteRepository.addToFavourite(
-            item = favourite
+            item = convertToFavourite(trackItem)
         )
     }
 
     private suspend fun removeFromFavourite(trackItem: TrackInfo) {
-
+        favouriteRepository.deleteFromFavourite(
+            item = convertToFavourite(trackItem)
+        )
     }
 
     fun favouriteHandler(trackItem: TrackInfo) {
         viewModelScope.launch {
             if (trackItem.inFavourite) {
                 removeFromFavourite(trackItem)
+                inFavouriteLiveData.postValue(false)
             } else {
                 addToFavourite(trackItem)
                 inFavouriteLiveData.postValue(true)

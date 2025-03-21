@@ -5,9 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.databinding.FragmentFavoritesBinding
 import com.practicum.playlistmaker.media.presentation.state.FavoriteState
 import com.practicum.playlistmaker.media.presentation.viewmodel.FavoriteViewModel
+import com.practicum.playlistmaker.media.ui.adapter.FavouriteListAdapter
 import com.practicum.playlistmaker.utils.show
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -16,7 +18,17 @@ class FavoritesFragment : Fragment() {
     private var _binding : FragmentFavoritesBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var favouriteListAdapter: FavouriteListAdapter
+
     private val viewModel: FavoriteViewModel by viewModel()
+
+    private fun initRecyclerView() {
+        favouriteListAdapter = FavouriteListAdapter {
+
+        }
+        binding.favouriteList.adapter = favouriteListAdapter
+        binding.favouriteList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,9 +44,14 @@ class FavoritesFragment : Fragment() {
         savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
+
+        initRecyclerView()
+
         viewModel.getScreenStateLiveData().observe(requireActivity()) { screenState ->
             when (screenState) {
                 is FavoriteState.EmptyContent -> showEmptyContent(getString(screenState.res))
+                is FavoriteState.FavouriteContent -> TODO()
+                FavoriteState.Loading -> TODO()
             }
         }
     }
@@ -52,5 +69,6 @@ class FavoritesFragment : Fragment() {
 
     companion object {
         fun newInstance() = FavoritesFragment()
+        const val CLICK_DEBOUNCE_DELAY = 1_000L
     }
 }

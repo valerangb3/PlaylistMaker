@@ -21,7 +21,7 @@ class FavouriteRepositoryImpl(
     }
 
     override suspend fun deleteFromFavourite(item: Favourite) {
-        TODO("Not yet implemented")
+        appDatabase.favouriteTrackDao().deleteFromFavourite(mapper.map(item))
     }
 
     override fun getFavouriteIdList(): Flow<List<Long>> = flow {

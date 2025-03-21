@@ -11,6 +11,7 @@ data class FavouriteTrackEntity(
     val artistName: String,
     val trackTime: String,
     val artworkUrl100: String,
+    val timestamp: Long,
 
     val collectionName: String = "",
     val releaseDate: String = "",
