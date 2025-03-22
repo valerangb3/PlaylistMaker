@@ -5,10 +5,12 @@ import com.google.gson.Gson
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.domain.repository.TracksHistoryRepository
 import androidx.core.content.edit
+import com.practicum.playlistmaker.favourites.domain.FavouriteRepository
 
 class TracksHistoryRepositoryImpl(
     private val sharedPreferences: SharedPreferences,
-    private val gson: Gson
+    private val gson: Gson,
+    private val favouriteRepository: FavouriteRepository
 ): TracksHistoryRepository {
     private val trackListHistory = mutableListOf<Track>()
     private var isRestore = false
@@ -60,6 +62,11 @@ class TracksHistoryRepositoryImpl(
         if (!isRestore) {
             restoreHistoryList()
             isRestore = true
+        }
+        favouriteRepository.getFavouriteIdList().collect { favouriteList ->
+            trackListHistory.map { trackHistory ->
+                trackHistory.inFavourite = favouriteList.contains(trackHistory.trackId)
+            }
         }
         return trackListHistory
     }

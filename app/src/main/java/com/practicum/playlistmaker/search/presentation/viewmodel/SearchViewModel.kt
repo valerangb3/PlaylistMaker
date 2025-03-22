@@ -11,7 +11,6 @@ import com.practicum.playlistmaker.search.presentation.models.ErrorType
 import com.practicum.playlistmaker.search.presentation.state.TrackListState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class SearchViewModel(

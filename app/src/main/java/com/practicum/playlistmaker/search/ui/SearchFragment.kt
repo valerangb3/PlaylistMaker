@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
+import com.practicum.playlistmaker.player.domain.models.TrackInfo
 import com.practicum.playlistmaker.player.ui.TrackActivityArgs
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.presentation.models.ErrorType
@@ -79,6 +80,22 @@ class SearchFragment : Fragment() {
         binding.progressBar.show()
     }
 
+    private fun mapToTrackInfo(track: Track): TrackInfo {
+        return TrackInfo(
+            trackId = track.trackId,
+            trackTime = track.trackTime,
+            trackName = track.trackName,
+            primaryGenreName = track.primaryGenreName,
+            collectionName = track.collectionName,
+            country = track.country,
+            artistName = track.artistName,
+            previewUrl = track.previewUrl,
+            inFavourite = track.inFavourite,
+            releaseDate = track.releaseDate,
+            artworkUrl512 = track.getCoverArtwork()
+        )
+    }
+
     private fun handleTap(trackItem: Track) {
         viewModel.addToHistory(trackItem)
         if (viewModel.getTracksState().value is TrackListState.HistoryContent) {
@@ -89,7 +106,7 @@ class SearchFragment : Fragment() {
                 }
             }
         }
-        findNavController().navigate(R.id.action_searchFragment_to_trackActivity, TrackActivityArgs(trackItem).toBundle())
+        findNavController().navigate(R.id.action_searchFragment_to_trackActivity, TrackActivityArgs(mapToTrackInfo(trackItem)).toBundle())
     }
 
     private fun hideTrackList() {
