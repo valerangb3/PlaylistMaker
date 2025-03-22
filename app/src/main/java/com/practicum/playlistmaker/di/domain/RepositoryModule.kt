@@ -1,5 +1,7 @@
 package com.practicum.playlistmaker.di.domain
 
+import com.practicum.playlistmaker.favourites.data.db.repository.FavouriteRepositoryImpl
+import com.practicum.playlistmaker.favourites.domain.FavouriteRepository
 import com.practicum.playlistmaker.player.data.repository.PlayerRepositoryImpl
 import com.practicum.playlistmaker.player.domain.repository.PlayerRepository
 import com.practicum.playlistmaker.search.data.repository.TracksHistoryRepositoryImpl
@@ -17,14 +19,16 @@ import org.koin.dsl.module
 val repositoryModule = module {
     single<TracksRepository> {
         TracksRepositoryImpl(
-            networkClient = get()
+            networkClient = get(),
+            favouriteRepository = get()
         )
     }
 
     single<TracksHistoryRepository> {
         TracksHistoryRepositoryImpl(
             sharedPreferences = get(),
-            gson = get()
+            gson = get(),
+            favouriteRepository = get()
         )
     }
 
@@ -44,6 +48,13 @@ val repositoryModule = module {
     factory <PlayerRepository> {
         PlayerRepositoryImpl(
             mediaPlayer = get()
+        )
+    }
+
+    single <FavouriteRepository> {
+        FavouriteRepositoryImpl(
+            appDatabase = get(),
+            mapper = get()
         )
     }
 }
