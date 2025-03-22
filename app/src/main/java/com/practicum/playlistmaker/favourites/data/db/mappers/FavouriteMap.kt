@@ -13,6 +13,10 @@ class FavouriteMap {
         return map.toFavourite(item)
     }
 
+    fun map(itemList: List<FavouriteTrackEntity>): List<Favourite> {
+        return itemList.map { map(it) }
+    }
+
     fun map(item: FavouriteTrackEntity): Favourite {
         return Favourite(
             trackId = item.trackId,

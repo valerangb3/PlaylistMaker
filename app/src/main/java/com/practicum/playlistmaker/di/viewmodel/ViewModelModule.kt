@@ -34,7 +34,9 @@ val viewModelModule = module {
     }
 
     viewModel<FavoriteViewModel> {
-        FavoriteViewModel()
+        FavoriteViewModel(
+            favouriteRepository = get()
+        )
     }
 
     viewModel<PlaylistViewModel> {

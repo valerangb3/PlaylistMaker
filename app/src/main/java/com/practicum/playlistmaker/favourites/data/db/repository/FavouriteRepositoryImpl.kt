@@ -28,8 +28,15 @@ class FavouriteRepositoryImpl(
         emit(appDatabase.favouriteTrackDao().getFavouriteTrackIdList())
     }
 
-    override fun getFavouriteItems(): Flow<List<Favourite>> {
-        TODO("Not yet implemented")
+    override fun getFavouriteItems(): Flow<List<Favourite>> = flow {
+        emit(
+            mapper.map(
+                appDatabase.favouriteTrackDao().getFavouriteTrackList()
+                    .sortedWith(compareByDescending {
+                        it.timestamp
+                    })
+            )
+        )
     }
 
 

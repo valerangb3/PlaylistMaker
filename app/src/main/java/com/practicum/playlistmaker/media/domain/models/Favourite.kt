@@ -1,5 +1,7 @@
 package com.practicum.playlistmaker.media.domain.models
 
+import java.io.Serializable
+
 data class Favourite(
     val trackId: Long,
     val trackName: String,
@@ -12,4 +14,6 @@ data class Favourite(
     val primaryGenreName: String,
     val country: String,
     val previewUrl: String
-)
+) : Serializable {
+    fun getCoverArtwork() = artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")
+}
