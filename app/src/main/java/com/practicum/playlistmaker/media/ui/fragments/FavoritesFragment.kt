@@ -45,11 +45,6 @@ class FavoritesFragment : Fragment() {
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        Log.d("SPRINT", "onResume")
-    }
-
     override fun onStart() {
         super.onStart()
         initRecyclerView()
@@ -62,33 +57,11 @@ class FavoritesFragment : Fragment() {
                 is FavoriteState.Loading -> showLoading()
             }
         }
-        Log.d("SPRINT", "onStart")
-        Log.d("SPRINT", arguments.toString())
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        Log.d("SPRINT", "onViewStateRestored")
-        Log.d("SPRING", savedInstanceState.toString())
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d("SPRINT", "onPause")
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
-        super.onViewCreated(view, savedInstanceState)
-        Log.d("SPRINT", "onViewCreated")
-
     }
 
     private fun mapToTrackInfo(favourite: Favourite): TrackInfo {
