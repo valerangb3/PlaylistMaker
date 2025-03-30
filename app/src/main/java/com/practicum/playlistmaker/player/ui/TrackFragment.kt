@@ -1,15 +1,19 @@
 package com.practicum.playlistmaker.player.ui
 
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.navigation.navArgs
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.databinding.ActivityTrackBinding
+import com.practicum.playlistmaker.databinding.FragmentTrackBinding
 import com.practicum.playlistmaker.player.domain.models.TrackInfo
 import com.practicum.playlistmaker.player.presentation.state.PlayerScreenState
 import com.practicum.playlistmaker.player.presentation.viewmodel.PlayerViewModel
@@ -18,20 +22,29 @@ import com.practicum.playlistmaker.utils.gone
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class TrackActivity : AppCompatActivity() {
-
+class TrackFragment : Fragment() {
     companion object {
         private const val POSTER_RADIUS = 8.0F
     }
 
-    //TODO обрати внимание (FragmentArgs используется в акитивити), если будешь возврашать на работу с активити!
+    private var _binding : FragmentTrackBinding? = null
+    private val binding get() = _binding!!
+
     private val args : TrackFragmentArgs by navArgs()
 
-    private lateinit var binding: ActivityTrackBinding
     private lateinit var trackItem: TrackInfo
 
     private val viewModel: PlayerViewModel by viewModel {
         parametersOf(trackItem)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentTrackBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     private fun render(isLoading: Boolean, trackInfo: TrackInfo?) {
@@ -79,27 +92,24 @@ class TrackActivity : AppCompatActivity() {
         Glide.with(this)
             .load(trackInfo.artworkUrl512)
             .placeholder(R.drawable.big_placeholder)
-            .transform(CenterCrop(), RoundedCorners(dpToPx(POSTER_RADIUS, this)))
+            .transform(CenterCrop(), RoundedCorners(dpToPx(POSTER_RADIUS, requireContext())))
             .into(binding.poster)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        binding = ActivityTrackBinding.inflate(layoutInflater)
-
-        setContentView(binding.root)
         trackItem = args.track
 
         binding.play.setOnClickListener {
             if (trackItem.previewUrl == null) {
-                Toast.makeText(this, R.string.play_error, Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), R.string.play_error, Toast.LENGTH_SHORT).show()
             }
             viewModel.playback()
         }
 
         binding.buttonBack.setOnClickListener {
-            finish()
+            findNavController().navigateUp()
         }
 
 
@@ -107,7 +117,7 @@ class TrackActivity : AppCompatActivity() {
             viewModel.favouriteHandler(trackItem/*TrackInfoMapper.toTrackInfoMapper(trackItem)*/)
         }
 
-        viewModel.inFavouriteLiveData().observe(this) { inFavourite ->
+        viewModel.inFavouriteLiveData().observe(viewLifecycleOwner) { inFavourite ->
             if (inFavourite) {
                 binding.toFavourite.setImageResource(R.drawable.in_favourite)
                 trackItem.inFavourite = inFavourite
@@ -117,7 +127,7 @@ class TrackActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.getScreenStateLiveData().observe(this) { screenState ->
+        viewModel.getScreenStateLiveData().observe(viewLifecycleOwner) { screenState ->
             when (screenState) {
                 is PlayerScreenState.Loading -> {
                     render(isLoading = true, trackInfo = null)
@@ -128,7 +138,7 @@ class TrackActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.getPlayStatusLiveData().observe(this) { playStatus ->
+        viewModel.getPlayStatusLiveData().observe(viewLifecycleOwner) { playStatus ->
 
             if (!playStatus.isPlaying) {
                 binding.play.setImageResource(R.drawable.play)
@@ -142,5 +152,10 @@ class TrackActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         viewModel.pause()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

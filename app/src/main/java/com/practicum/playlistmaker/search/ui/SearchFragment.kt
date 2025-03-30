@@ -4,6 +4,7 @@ import androidx.core.content.getSystemService
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.player.domain.models.TrackInfo
-import com.practicum.playlistmaker.player.ui.TrackActivityArgs
+import com.practicum.playlistmaker.player.ui.TrackFragmentArgs
+//import com.practicum.playlistmaker.player.ui.TrackActivityArgs
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.presentation.models.ErrorType
 import com.practicum.playlistmaker.search.presentation.state.TrackListState
@@ -25,6 +27,7 @@ import com.practicum.playlistmaker.search.presentation.viewmodel.SearchViewModel
 import com.practicum.playlistmaker.search.ui.adapter.TrackListAdapter
 import com.practicum.playlistmaker.utils.gone
 import com.practicum.playlistmaker.utils.show
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -40,6 +43,8 @@ class SearchFragment : Fragment() {
 
     private var _binding : FragmentSearchBinding? = null
     private val binding get() = _binding!!
+
+    private var debounceJob: Job? = null
 
     private lateinit var trackListAdapter: TrackListAdapter
 
@@ -106,7 +111,7 @@ class SearchFragment : Fragment() {
                 }
             }
         }
-        findNavController().navigate(R.id.action_searchFragment_to_trackActivity, TrackActivityArgs(mapToTrackInfo(trackItem)).toBundle())
+        findNavController().navigate(R.id.action_searchFragment_to_trackFragment, TrackFragmentArgs(mapToTrackInfo(trackItem)).toBundle())
     }
 
     private fun hideTrackList() {
@@ -194,7 +199,7 @@ class SearchFragment : Fragment() {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            viewLifecycleOwner.lifecycleScope.launch {
+            debounceJob = viewLifecycleOwner.lifecycleScope.launch {
                 delay(CLICK_DEBOUNCE_DELAY)
                 isClickAllowed = true
             }
@@ -303,6 +308,11 @@ class SearchFragment : Fragment() {
     override fun onPause() {
         viewModel.saveHistory()
         super.onPause()
+        if (debounceJob?.isCompleted != true) {
+            debounceJob?.cancel()
+            isClickAllowed = true
+            debounceJob = null
+        }
     }
 
     override fun onDestroyView() {

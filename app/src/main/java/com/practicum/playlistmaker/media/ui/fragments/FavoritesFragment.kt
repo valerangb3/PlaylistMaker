@@ -1,7 +1,6 @@
 package com.practicum.playlistmaker.media.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,11 +15,11 @@ import com.practicum.playlistmaker.media.presentation.state.FavoriteState
 import com.practicum.playlistmaker.media.presentation.viewmodel.FavoriteViewModel
 import com.practicum.playlistmaker.media.ui.adapter.FavouriteListAdapter
 import com.practicum.playlistmaker.player.domain.models.TrackInfo
-import com.practicum.playlistmaker.player.ui.TrackActivityArgs
-import com.practicum.playlistmaker.search.domain.models.Track
-import com.practicum.playlistmaker.search.ui.SearchFragment
+
+import com.practicum.playlistmaker.player.ui.TrackFragmentArgs
 import com.practicum.playlistmaker.utils.gone
 import com.practicum.playlistmaker.utils.show
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -30,11 +29,34 @@ class FavoritesFragment : Fragment() {
     private var _binding : FragmentFavoritesBinding? = null
     private val binding get() = _binding!!
 
-    private var isClickAllowed = true
-
     private lateinit var favouriteListAdapter: FavouriteListAdapter
 
     private val viewModel: FavoriteViewModel by viewModel()
+
+    private var debounceJob: Job? = null
+
+    private var isClickAllowed = true
+
+    override fun onPause() {
+        super.onPause()
+        if (debounceJob?.isCompleted != true) {
+            debounceJob?.cancel()
+            isClickAllowed = true
+            debounceJob = null
+        }
+    }
+
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            debounceJob = viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
+        }
+        return current
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,8 +67,8 @@ class FavoritesFragment : Fragment() {
         return binding.root
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
 
         viewModel.getFavouriteList()
@@ -58,6 +80,7 @@ class FavoritesFragment : Fragment() {
             }
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -80,20 +103,11 @@ class FavoritesFragment : Fragment() {
         )
     }
 
-    private fun clickDebounce() : Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            viewLifecycleOwner.lifecycleScope.launch {
-                delay(CLICK_DEBOUNCE_DELAY)
-                isClickAllowed = true
-            }
-        }
-        return current
-    }
+
+
 
     private fun handleTap(favouriteItem: Favourite) {
-        findNavController().navigate(R.id.action_mediaFragment_to_trackActivity, TrackActivityArgs(mapToTrackInfo(favouriteItem)).toBundle())
+        findNavController().navigate(R.id.action_mediaFragment_to_trackFragment, TrackFragmentArgs(mapToTrackInfo(favouriteItem)).toBundle())
     }
 
     private fun initRecyclerView() {
