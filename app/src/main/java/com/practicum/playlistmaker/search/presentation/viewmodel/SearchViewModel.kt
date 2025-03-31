@@ -20,9 +20,12 @@ class SearchViewModel(
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2_000L
+        const val CLICK_DEBOUNCE_DELAY = 1_000L
     }
 
     private var latestSearchText: String? = null
+
+    private var isClickAllowed = true
 
     private var searchJob: Job? = null
 
@@ -78,6 +81,18 @@ class SearchViewModel(
             delay(SEARCH_DEBOUNCE_DELAY)
             makeRequest(changedText)
         }
+    }
+
+    fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            viewModelScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
+        }
+        return current
     }
 
     fun getTracksState(): LiveData<TrackListState> = tracksState

@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.R
@@ -19,9 +18,6 @@ import com.practicum.playlistmaker.player.domain.models.TrackInfo
 import com.practicum.playlistmaker.player.ui.TrackFragmentArgs
 import com.practicum.playlistmaker.utils.gone
 import com.practicum.playlistmaker.utils.show
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoritesFragment : Fragment() {
@@ -32,31 +28,6 @@ class FavoritesFragment : Fragment() {
     private lateinit var favouriteListAdapter: FavouriteListAdapter
 
     private val viewModel: FavoriteViewModel by viewModel()
-
-    private var debounceJob: Job? = null
-
-    private var isClickAllowed = true
-
-    override fun onPause() {
-        super.onPause()
-        if (debounceJob?.isCompleted != true) {
-            debounceJob?.cancel()
-            isClickAllowed = true
-            debounceJob = null
-        }
-    }
-
-    private fun clickDebounce() : Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            debounceJob = viewLifecycleOwner.lifecycleScope.launch {
-                delay(CLICK_DEBOUNCE_DELAY)
-                isClickAllowed = true
-            }
-        }
-        return current
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -103,16 +74,13 @@ class FavoritesFragment : Fragment() {
         )
     }
 
-
-
-
     private fun handleTap(favouriteItem: Favourite) {
         findNavController().navigate(R.id.action_mediaFragment_to_trackFragment, TrackFragmentArgs(mapToTrackInfo(favouriteItem)).toBundle())
     }
 
     private fun initRecyclerView() {
         favouriteListAdapter = FavouriteListAdapter {
-            if (clickDebounce()) {
+            if (viewModel.clickDebounce()) {
                 handleTap(it)
             }
         }
@@ -160,6 +128,5 @@ class FavoritesFragment : Fragment() {
 
     companion object {
         fun newInstance() = FavoritesFragment()
-        const val CLICK_DEBOUNCE_DELAY = 1_000L
     }
 }

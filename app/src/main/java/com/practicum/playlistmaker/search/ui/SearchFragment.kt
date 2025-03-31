@@ -19,7 +19,6 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.player.domain.models.TrackInfo
 import com.practicum.playlistmaker.player.ui.TrackFragmentArgs
-//import com.practicum.playlistmaker.player.ui.TrackActivityArgs
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.presentation.models.ErrorType
 import com.practicum.playlistmaker.search.presentation.state.TrackListState
@@ -28,7 +27,6 @@ import com.practicum.playlistmaker.search.ui.adapter.TrackListAdapter
 import com.practicum.playlistmaker.utils.gone
 import com.practicum.playlistmaker.utils.show
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -37,20 +35,14 @@ class SearchFragment : Fragment() {
     companion object {
         const val INPUT_VALUE = "INPUT_VALUE"
         const val DEFAULT_INPUT_VALUE = ""
-        const val CLICK_DEBOUNCE_DELAY = 1_000L
-
     }
 
     private var _binding : FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-    private var debounceJob: Job? = null
-
     private lateinit var trackListAdapter: TrackListAdapter
 
     private var searchInputValue: String = DEFAULT_INPUT_VALUE
-
-    private var isClickAllowed = true
 
     private var textWatcher: TextWatcher? = null
 
@@ -187,24 +179,12 @@ class SearchFragment : Fragment() {
 
     private fun initRecyclerView() {
         trackListAdapter = TrackListAdapter {
-            if (clickDebounce()) {
+            if (viewModel.clickDebounce()) {
                 handleTap(it)
             }
         }
         binding.trackList.adapter = trackListAdapter
         binding.trackList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-    }
-
-    private fun clickDebounce() : Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            debounceJob = viewLifecycleOwner.lifecycleScope.launch {
-                delay(CLICK_DEBOUNCE_DELAY)
-                isClickAllowed = true
-            }
-        }
-        return current
     }
 
     private fun handleSearchInput() {
@@ -308,11 +288,6 @@ class SearchFragment : Fragment() {
     override fun onPause() {
         viewModel.saveHistory()
         super.onPause()
-        if (debounceJob?.isCompleted != true) {
-            debounceJob?.cancel()
-            isClickAllowed = true
-            debounceJob = null
-        }
     }
 
     override fun onDestroyView() {
