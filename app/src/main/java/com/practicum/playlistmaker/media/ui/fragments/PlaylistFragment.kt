@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentPlaylistBinding
 import com.practicum.playlistmaker.media.presentation.state.PlaylistState
 import com.practicum.playlistmaker.media.presentation.viewmodel.PlaylistViewModel
@@ -37,6 +39,14 @@ class PlaylistFragment : Fragment() {
                 is PlaylistState.EmptyContent -> showEmptyContent(getString(screenState.res))
             }
         }
+
+        binding.create.setOnClickListener {
+            navToPlayListMaker()
+        }
+    }
+
+    private fun navToPlayListMaker() {
+        findNavController().navigate(R.id.action_mediaFragment_to_playlistMaker)
     }
 
     private fun showEmptyContent(text: String) {

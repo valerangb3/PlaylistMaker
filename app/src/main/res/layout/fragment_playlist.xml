@@ -13,7 +13,7 @@
         android:layout_gravity="center_horizontal">
         <Button
             style="@style/ButtonCommon"
-            android:id="@+id/updateRequest"
+            android:id="@+id/create"
             android:visibility="visible"
             android:layout_gravity="center_horizontal"
             android:text="@string/playlist_add"

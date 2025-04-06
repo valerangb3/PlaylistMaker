@@ -292,4 +292,17 @@
     <style name="Divider">
         <item name="android:background">@color/yp_gray_light</item>
     </style>
+
+    <style name="ActionButton" parent="Widget.Material3.Button">
+        <item name="android:backgroundTint">?attr/colorSecondary</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="CustomTextInput" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <!-- border color -->
+        <item name="boxStrokeColor">@color/text_input_stroke_color</item>
+        <item name="hintTextColor">@color/yp_blue</item>
+        <item name="android:textColorHint">@color/yp_black</item>
+    </style>
 </resources>

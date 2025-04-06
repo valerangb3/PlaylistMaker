@@ -28,7 +28,7 @@ class RootActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.trackFragment -> {
+                R.id.trackFragment, R.id.playlistMakerFragment -> {
                     bottomNavigationView.gone()
                 }
                 else -> {

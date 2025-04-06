@@ -50,7 +50,6 @@ class FavoriteViewModel(
             viewModelScope.launch {
                 delay(CLICK_DEBOUNCE_DELAY)
                 isClickAllowed = true
-                Log.d("TEST", "DONE")
             }
         }
         return current
