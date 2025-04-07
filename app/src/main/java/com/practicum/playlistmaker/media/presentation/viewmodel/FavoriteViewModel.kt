@@ -1,13 +1,12 @@
 package com.practicum.playlistmaker.media.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.favourites.domain.FavouriteRepository
-import com.practicum.playlistmaker.favourites.domain.models.Favourite as FavouriteExt
+import com.practicum.playlistmaker.medialibrary.domain.favourite.FavouriteRepository
+import com.practicum.playlistmaker.medialibrary.domain.favourite.models.Favourite as FavouriteExt
 import com.practicum.playlistmaker.media.domain.models.Favourite
 import com.practicum.playlistmaker.media.presentation.state.FavoriteState
 import kotlinx.coroutines.delay

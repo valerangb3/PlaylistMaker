@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.favourites.domain.models
+package com.practicum.playlistmaker.medialibrary.domain.favourite.models
 
 data class Favourite(
     val trackId: Long,

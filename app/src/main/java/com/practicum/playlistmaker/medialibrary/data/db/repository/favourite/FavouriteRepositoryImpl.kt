@@ -1,9 +1,9 @@
-package com.practicum.playlistmaker.favourites.data.db.repository
+package com.practicum.playlistmaker.medialibrary.data.db.repository.favourite
 
-import com.practicum.playlistmaker.favourites.data.db.AppDatabase
-import com.practicum.playlistmaker.favourites.data.db.mappers.FavouriteMap
-import com.practicum.playlistmaker.favourites.domain.FavouriteRepository
-import com.practicum.playlistmaker.favourites.domain.models.Favourite
+import com.practicum.playlistmaker.medialibrary.data.db.AppDatabase
+import com.practicum.playlistmaker.medialibrary.data.db.mappers.FavouriteMap
+import com.practicum.playlistmaker.medialibrary.domain.favourite.FavouriteRepository
+import com.practicum.playlistmaker.medialibrary.domain.favourite.models.Favourite
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

@@ -5,8 +5,8 @@ import android.media.MediaPlayer
 import androidx.room.Room
 import com.google.gson.Gson
 import com.practicum.playlistmaker.App
-import com.practicum.playlistmaker.favourites.data.db.AppDatabase
-import com.practicum.playlistmaker.favourites.data.db.mappers.FavouriteMap
+import com.practicum.playlistmaker.medialibrary.data.db.AppDatabase
+import com.practicum.playlistmaker.medialibrary.data.db.mappers.FavouriteMap
 import com.practicum.playlistmaker.search.data.NetworkClient
 import com.practicum.playlistmaker.search.data.network.RetrofitNetworkClient
 import com.practicum.playlistmaker.search.data.network.RetrofitNetworkClient.Companion.BASE_URL

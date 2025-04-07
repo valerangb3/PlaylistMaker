@@ -1,9 +1,9 @@
-package com.practicum.playlistmaker.favourites.domain
+package com.practicum.playlistmaker.medialibrary.domain.favourite
 
-import com.practicum.playlistmaker.favourites.domain.models.Favourite
+import com.practicum.playlistmaker.medialibrary.domain.favourite.models.Favourite
 import kotlinx.coroutines.flow.Flow
 
-interface FavouriteInteractor {
+interface FavouriteRepository {
 
     suspend fun addToFavourite(item: Favourite)
     suspend fun deleteFromFavourite(item: Favourite)

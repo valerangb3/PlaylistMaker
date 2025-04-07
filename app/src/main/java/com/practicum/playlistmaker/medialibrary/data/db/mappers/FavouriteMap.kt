@@ -1,7 +1,7 @@
-package com.practicum.playlistmaker.favourites.data.db.mappers
+package com.practicum.playlistmaker.medialibrary.data.db.mappers
 
-import com.practicum.playlistmaker.favourites.data.db.entity.FavouriteTrackEntity
-import com.practicum.playlistmaker.favourites.domain.models.Favourite
+import com.practicum.playlistmaker.medialibrary.data.db.entity.FavouriteTrackEntity
+import com.practicum.playlistmaker.medialibrary.domain.favourite.models.Favourite
 
 class FavouriteMap {
 

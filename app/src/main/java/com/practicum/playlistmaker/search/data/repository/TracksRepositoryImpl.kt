@@ -1,6 +1,6 @@
 package com.practicum.playlistmaker.search.data.repository
 
-import com.practicum.playlistmaker.favourites.domain.FavouriteRepository
+import com.practicum.playlistmaker.medialibrary.domain.favourite.FavouriteRepository
 import com.practicum.playlistmaker.search.data.NetworkClient
 import com.practicum.playlistmaker.search.data.dto.TrackDto
 import com.practicum.playlistmaker.search.data.dto.TracksSearchRequest
@@ -10,8 +10,6 @@ import com.practicum.playlistmaker.search.domain.models.Resource
 import com.practicum.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.toList
 
 class TracksRepositoryImpl(
     private val networkClient: NetworkClient,
