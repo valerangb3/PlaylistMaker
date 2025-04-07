@@ -54,4 +54,11 @@
     <string name="favorites_empty">Ваша медиатека пуста</string>
     <string name="playlist_empty">Вы не создали \nни одного плейлиста</string>
     <string name="playlist_add">Новый плейлист</string>
+    <string name="playlist_image_empty_tag">Empty</string>
+    <string name="playlist_image_not_empty_tag">Not empty</string>
+    <!--ALERT_MESSAGES-->
+    <string name="playlist_message_title">Завершить создание плейлиста?</string>
+    <string name="playlist_message_description">Все несохраненные данные будут потеряны</string>
+    <string name="playlist_message_done">Завершить</string>
+    <string name="playlist_message_cancel">Отмена</string>
 </resources>

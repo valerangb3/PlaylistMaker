@@ -53,7 +53,7 @@
     </fragment>
     <fragment
         android:id="@+id/playlistMakerFragment"
-        android:name="com.practicum.playlistmaker.playlist.ui.fragments.PlaylistMaker"
+        android:name="com.practicum.playlistmaker.playlist.ui.fragments.PlaylistMakerFragment"
         android:label="fragment_playlist_maker"
         tools:layout="@layout/fragment_playlist_maker" />
 </navigation>

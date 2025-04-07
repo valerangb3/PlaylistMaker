@@ -6,7 +6,7 @@
     android:id="@+id/playlistMakerFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".playlist.ui.fragments.PlaylistMaker">
+    tools:context=".playlist.ui.fragments.PlaylistMakerFragment">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/leftBorder"
@@ -27,10 +27,11 @@
         style="@style/ActionButton"
         android:id="@+id/create_playlist"
         android:layout_width="0dp"
+
         android:layout_height="44dp"
         android:text="@string/create"
         android:layout_marginBottom="32dp"
-        android:enabled="true"
+        android:enabled="false"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/leftBorder"
@@ -45,7 +46,7 @@
         android:hint="@string/description_field"
 
         app:layout_constraintVertical_bias="0"
-        app:layout_constraintTop_toBottomOf="@+id/wrapper_title"
+        app:layout_constraintTop_toBottomOf="@+id/edit_title"
         app:layout_constraintBottom_toTopOf="@+id/create_playlist"
         app:layout_constraintEnd_toStartOf="@id/rightBorder"
         app:layout_constraintStart_toStartOf="@+id/leftBorder">
@@ -59,7 +60,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         style="@style/CustomTextInput"
-        android:id="@+id/wrapper_title"
+        android:id="@+id/edit_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -114,6 +115,7 @@
         android:scaleType="centerInside"
         android:src="@drawable/empty_poster"
         android:background="@drawable/bg_corner_dash"
+        android:tag="@string/playlist_image_empty_tag"
 
         app:layout_constraintVertical_bias="0"
         app:layout_constraintStart_toStartOf="@id/leftBorder"
