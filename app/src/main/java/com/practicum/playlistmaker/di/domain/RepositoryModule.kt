@@ -1,7 +1,9 @@
 package com.practicum.playlistmaker.di.domain
 
 import com.practicum.playlistmaker.medialibrary.data.db.repository.favourite.FavouriteRepositoryImpl
+import com.practicum.playlistmaker.medialibrary.data.db.repository.playlist.PlaylistRepositoryImpl
 import com.practicum.playlistmaker.medialibrary.domain.favourite.FavouriteRepository
+import com.practicum.playlistmaker.medialibrary.domain.playlist.PlaylistRepository
 import com.practicum.playlistmaker.player.data.repository.PlayerRepositoryImpl
 import com.practicum.playlistmaker.player.domain.repository.PlayerRepository
 import com.practicum.playlistmaker.search.data.repository.TracksHistoryRepositoryImpl
@@ -54,6 +56,14 @@ val repositoryModule = module {
     single <FavouriteRepository> {
         FavouriteRepositoryImpl(
             appDatabase = get(),
+            mapper = get()
+        )
+    }
+
+    single <PlaylistRepository> {
+        PlaylistRepositoryImpl(
+            appDatabase = get(),
+            context = androidContext(),
             mapper = get()
         )
     }

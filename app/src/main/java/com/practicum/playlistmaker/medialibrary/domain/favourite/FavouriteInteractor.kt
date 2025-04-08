@@ -3,6 +3,7 @@ package com.practicum.playlistmaker.medialibrary.domain.favourite
 import com.practicum.playlistmaker.medialibrary.domain.favourite.models.Favourite
 import kotlinx.coroutines.flow.Flow
 
+//TODO возможно этот интерфейс стоит удалить
 interface FavouriteInteractor {
 
     suspend fun addToFavourite(item: Favourite)

@@ -7,6 +7,7 @@ import com.google.gson.Gson
 import com.practicum.playlistmaker.App
 import com.practicum.playlistmaker.medialibrary.data.db.AppDatabase
 import com.practicum.playlistmaker.medialibrary.data.db.mappers.FavouriteMap
+import com.practicum.playlistmaker.medialibrary.data.db.mappers.PlaylistMapper
 import com.practicum.playlistmaker.search.data.NetworkClient
 import com.practicum.playlistmaker.search.data.network.RetrofitNetworkClient
 import com.practicum.playlistmaker.search.data.network.RetrofitNetworkClient.Companion.BASE_URL
@@ -45,6 +46,10 @@ val dataModule = module {
 
     factory {
         FavouriteMap()
+    }
+
+    factory {
+        PlaylistMapper()
     }
 
     single {

@@ -1,13 +1,10 @@
 package com.practicum.playlistmaker.playlist.ui.fragments
 
-import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doOnTextChanged
@@ -19,12 +16,11 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentPlaylistMakerBinding
+import com.practicum.playlistmaker.playlist.presentation.models.Playlist
+import com.practicum.playlistmaker.playlist.presentation.viewmodel.PlaylistViewModel
 import com.practicum.playlistmaker.utils.dpToPx
 import java.io.File
-import java.math.BigInteger
-import java.security.MessageDigest
-import java.sql.Timestamp
-import java.time.Instant
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistMakerFragment : Fragment() {
 
@@ -35,6 +31,10 @@ class PlaylistMakerFragment : Fragment() {
     private var _binding: FragmentPlaylistMakerBinding? = null
     private val binding get() = _binding!!
 
+    private var fileUri: String = ""
+
+    private val viewModel: PlaylistViewModel by viewModel()
+
 
     private val confirmDialog by lazy {
         MaterialAlertDialogBuilder(requireContext())
@@ -44,22 +44,10 @@ class PlaylistMakerFragment : Fragment() {
             .setNegativeButton(R.string.playlist_message_cancel) { dialog, which -> }
     }
 
-    private fun genFileName(salt: String): String = md5Hash(salt)
-
-    private fun md5Hash(salt: String): String {
-        val md = MessageDigest.getInstance("MD5")
-        val bigInt = BigInteger(1, md.digest(salt.toByteArray(Charsets.UTF_8)))
-        return String.format("%032x", bigInt)
-    }
-
     private val pickMedia =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             uri?.let {
-
-                //binding.poster
-                val filename = genFileName(File(it.toString()).name)
-                Log.d("SPRINT_22", uri.path.toString())
-                File(it.toString()).name
+                fileUri = it.toString()
                 Glide.with(this)
                     .load(uri)
                     .transform(
@@ -69,15 +57,23 @@ class PlaylistMakerFragment : Fragment() {
                     .into(binding.poster)
                 binding.poster.tag = requireActivity().getString(R.string.playlist_image_not_empty_tag)
             }
-            if (uri != null) {
-
-                Log.d("SPRINT_22", uri.path.toString())
-            } else {
-                Log.d("SPRINT_22", "No media selected")
-            }
         }
 
-
+    private fun create() {
+        binding.createPlaylist.setOnClickListener {
+            if (it.isEnabled) {
+                val description = binding.wrapperDescription.editText.toString()
+                val title = binding.editTitle.editText.toString()
+                viewModel.addPlaylist(
+                    Playlist(
+                        title = title,
+                        description = description,
+                        fileUri = fileUri
+                    )
+                )
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -104,14 +100,16 @@ class PlaylistMakerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.buttonBack.setOnClickListener {
             navigateBack()
         }
+
         binding.poster.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
+
         binding.editTitle.editText?.doOnTextChanged { text, _, _, _ ->
-            Log.d("SPRINT_22", text.toString())
             binding.createPlaylist.isEnabled = text.toString().isNotEmpty()
         }
 
@@ -120,6 +118,8 @@ class PlaylistMakerFragment : Fragment() {
                 navigateBack()
             }
         })
+
+        create()
     }
 
 
