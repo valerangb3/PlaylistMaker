@@ -20,6 +20,10 @@
     <string name="create">Создать</string>
     <string name="title_field">Название*</string>
     <string name="description_field">Описание</string>
+    <string name="playlist_maker">Плейлист</string>
+    <string name="playlist_maker_create">создан</string>
+    <string name="playlist_maker_list_title">Спулае мулае Спулае мулае Спулае мулае Спулае мулае</string>
+    <string name="playlist_maker_list_count_tracks">98 треков 98 треков 98 треков 98 треков</string>
     <!--REQUEST_ERROR-->
     <string name="search_error_internet">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
     <string name="search_error_nothing_found">Ничего не нашлось</string>

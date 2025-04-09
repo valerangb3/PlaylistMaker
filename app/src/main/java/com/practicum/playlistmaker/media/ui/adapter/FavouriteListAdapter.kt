@@ -9,7 +9,6 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ItemTrackBinding
 import com.practicum.playlistmaker.media.domain.models.Favourite
 import com.practicum.playlistmaker.media.ui.adapter.common.OnItemClickListener
-import com.practicum.playlistmaker.search.ui.adapter.TrackListAdapter.TrackViewHolder
 import com.practicum.playlistmaker.utils.dpToPx
 
 class FavouriteListAdapter(

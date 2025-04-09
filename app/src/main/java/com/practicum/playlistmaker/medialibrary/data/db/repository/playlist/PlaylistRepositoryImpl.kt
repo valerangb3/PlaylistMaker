@@ -1,14 +1,21 @@
 package com.practicum.playlistmaker.medialibrary.data.db.repository.playlist
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Environment
+import androidx.core.net.toUri
 import com.practicum.playlistmaker.medialibrary.data.db.AppDatabase
 import com.practicum.playlistmaker.medialibrary.data.db.mappers.PlaylistMapper
 import com.practicum.playlistmaker.medialibrary.domain.playlist.PlaylistRepository
 import com.practicum.playlistmaker.medialibrary.domain.playlist.models.Playlist
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.FileOutputStream
 import java.math.BigInteger
 import java.security.MessageDigest
 
@@ -19,6 +26,10 @@ class PlaylistRepositoryImpl(
 ) : PlaylistRepository {
 
 
+    companion object {
+        private const val SUB_FOLDER = "posters"
+    }
+
     private fun genNewFileName(pathSrc: String) = md5Hash(File(pathSrc).name)
 
     private fun md5Hash(salt: String): String {
@@ -27,18 +38,36 @@ class PlaylistRepositoryImpl(
         return String.format("%032x", bigInt)
     }
 
-    private suspend fun saveImage(fileName: String) {
-        withContext(Dispatchers.IO) {
-            val filePath = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+    private fun saveImage(item: Playlist) : String {
+        val fileName = genNewFileName(item.pathSrc)
+        val filePath = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), SUB_FOLDER)
+        if (!filePath.exists()) {
+            filePath.mkdirs()
         }
+        val file = File(filePath, fileName)
+        val inputStream = context.contentResolver.openInputStream(item.pathSrc.toUri())
+        val outputStream = FileOutputStream(file)
+        BitmapFactory
+            .decodeStream(inputStream)
+            .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+        inputStream?.close()
+        return file.toUri().toString()
     }
 
     override suspend fun addPlaylist(item: Playlist) {
-        //TODO нужно сгенерировать полный путь к файлу,
-        // сохранить его во внешней дериктории и получить путь по котором сохранили
-        if (item.pathSrc.isEmpty()) {
-            saveImage(genNewFileName(item.pathSrc))
+        withContext(Dispatchers.IO) {
+            if (item.pathSrc.isNotEmpty()) {
+                val path = saveImage(item)
+                item.pathSrc = path
+            }
+            appDatabase.playlistDao().addPlaylist(mapper.map(item))
         }
-        appDatabase.playlistDao().addPlaylist(mapper.map(item))
+    }
+
+    override suspend fun getPlaylistItems(): Flow<List<Playlist>> = flow {
+        val result = withContext(Dispatchers.IO) {
+            appDatabase.playlistDao().getAllPlaylist()
+        }
+        emit(mapper.map(result))
     }
 }

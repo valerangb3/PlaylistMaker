@@ -14,4 +14,17 @@ class PlaylistMapper {
             trackCount = item.trackCount
         )
     }
+
+    fun map(items: List<PlaylistEntity>): List<Playlist> {
+        return items.map {
+            Playlist(
+                id = it.id,
+                title = it.title,
+                description = it.description,
+                tracks = it.tracks,
+                pathSrc = it.pathSrc,
+                trackCount = it.trackCount
+            )
+        }
+    }
 }

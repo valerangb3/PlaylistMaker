@@ -37,6 +37,8 @@ class PlaylistFragment : Fragment() {
         viewModel.getScreenStateLiveData().observe(requireActivity()) { screenState ->
             when (screenState) {
                 is PlaylistState.EmptyContent -> showEmptyContent(getString(screenState.res))
+                is PlaylistState.Loading -> TODO()
+                is PlaylistState.PlaylistContent -> TODO()
             }
         }
 

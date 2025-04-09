@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "playlist_table")
 data class PlaylistEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Long,
+    val id: Long = 0,
     val title: String,
     val description: String = "",
     @ColumnInfo("img_path")

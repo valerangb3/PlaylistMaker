@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,6 +18,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentPlaylistMakerBinding
 import com.practicum.playlistmaker.playlist.presentation.models.Playlist
+import com.practicum.playlistmaker.playlist.presentation.state.PlaylistMakerState
 import com.practicum.playlistmaker.playlist.presentation.viewmodel.PlaylistViewModel
 import com.practicum.playlistmaker.utils.dpToPx
 import java.io.File
@@ -62,8 +64,8 @@ class PlaylistMakerFragment : Fragment() {
     private fun create() {
         binding.createPlaylist.setOnClickListener {
             if (it.isEnabled) {
-                val description = binding.wrapperDescription.editText.toString()
-                val title = binding.editTitle.editText.toString()
+                val description = binding.wrapperDescription.editText?.text?.toString() ?: ""
+                val title = binding.editTitle.editText?.text?.toString() ?: ""
                 viewModel.addPlaylist(
                     Playlist(
                         title = title,
@@ -120,6 +122,14 @@ class PlaylistMakerFragment : Fragment() {
         })
 
         create()
+
+        viewModel.getScreenStateLiveData().observe(viewLifecycleOwner) { playlistMakerState ->
+            if (playlistMakerState is PlaylistMakerState.Create) {
+                val text = "${requireContext().getString(R.string.playlist_maker)} ${playlistMakerState.playlistName} ${requireContext().getString(R.string.playlist_maker_create)}"
+                Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
+                findNavController().navigateUp()
+            }
+        }
     }
 
 
