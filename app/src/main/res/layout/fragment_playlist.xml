@@ -6,10 +6,11 @@
     tools:context=".media.ui.fragments.PlaylistFragment">
 
     <!--Контейнер для пустого контента-->
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
         <Button
             style="@style/ButtonCommon"
             android:id="@+id/create"
@@ -30,22 +31,26 @@
             android:layout_gravity="center_horizontal"
             android:visibility="gone"/>
 
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/playlist_items"
+
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            tools:listitem="@layout/item_playlist_media"
+            tools:itemCount="1"/>
+
         <LinearLayout
             android:id="@+id/ItemsContainer"
             android:layout_marginTop="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:visibility="gone"
             android:orientation="vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/playlist_items"
 
-                android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:layout_height="0dp"
-                tools:listitem="@layout/item_playlist_media"
-                tools:itemCount="1"/>
 
         </LinearLayout>
 
@@ -72,7 +77,7 @@
 
 
         </LinearLayout>
-    </FrameLayout>
+    </LinearLayout>
 
 
 </FrameLayout>

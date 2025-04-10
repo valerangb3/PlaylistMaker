@@ -28,6 +28,8 @@ class PlaylistMakerFragment : Fragment() {
 
     companion object {
         private const val POSTER_RADIUS = 8.0F
+        const val NEW_PLAYLIST_KEY = "NEW_PLAYLIST_KEY"
+        const val NEW_PLAYLIST_RESULT = "NEW_PLAYLIST_RESULT"
     }
 
     private var _binding: FragmentPlaylistMakerBinding? = null
@@ -35,8 +37,9 @@ class PlaylistMakerFragment : Fragment() {
 
     private var fileUri: String = ""
 
-    private val viewModel: PlaylistViewModel by viewModel()
+    private lateinit var playlistItem: Playlist
 
+    private val viewModel: PlaylistViewModel by viewModel()
 
     private val confirmDialog by lazy {
         MaterialAlertDialogBuilder(requireContext())
@@ -66,12 +69,13 @@ class PlaylistMakerFragment : Fragment() {
             if (it.isEnabled) {
                 val description = binding.wrapperDescription.editText?.text?.toString() ?: ""
                 val title = binding.editTitle.editText?.text?.toString() ?: ""
+                playlistItem = Playlist(
+                    title = title,
+                    description = description,
+                    fileUri = fileUri
+                )
                 viewModel.addPlaylist(
-                    Playlist(
-                        title = title,
-                        description = description,
-                        fileUri = fileUri
-                    )
+                    playlistItem
                 )
             }
         }
@@ -127,6 +131,10 @@ class PlaylistMakerFragment : Fragment() {
             if (playlistMakerState is PlaylistMakerState.Create) {
                 val text = "${requireContext().getString(R.string.playlist_maker)} ${playlistMakerState.playlistName} ${requireContext().getString(R.string.playlist_maker_create)}"
                 Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
+                /*val result = Bundle().apply {
+                    putSerializable(NEW_PLAYLIST_KEY, playlistItem)
+                }*/
+                findNavController().previousBackStackEntry?.savedStateHandle?.set(NEW_PLAYLIST_RESULT, playlistItem)
                 findNavController().navigateUp()
             }
         }
