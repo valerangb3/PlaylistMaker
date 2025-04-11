@@ -35,31 +35,20 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/playlist_items"
 
+            android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:layout_weight="1"
             android:layout_height="0dp"
+            android:visibility="gone"
             tools:listitem="@layout/item_playlist_media"
             tools:itemCount="1"/>
-
-        <LinearLayout
-            android:id="@+id/ItemsContainer"
-            android:layout_marginTop="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:visibility="gone"
-            android:orientation="vertical">
-
-
-
-        </LinearLayout>
 
         <LinearLayout
             style="@style/EmptyContainer"
             android:id="@+id/errorContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone">
+            android:visibility="visible">
             <ImageView
                 android:id="@+id/errorImage"
                 android:visibility="visible"

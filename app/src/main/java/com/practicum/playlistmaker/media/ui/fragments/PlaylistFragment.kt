@@ -101,6 +101,7 @@ class PlaylistFragment : Fragment() {
         hideLoading()
         clearListAdapter()
         addToAdapter(playlistItems)
+        binding.playlistItems.show()
         binding.create.show()
     }
 
@@ -112,6 +113,7 @@ class PlaylistFragment : Fragment() {
     private fun showLoading() {
         binding.create.gone()
         hideErrorContainer()
+        binding.playlistItems.gone()
         binding.progressBar.show()
     }
 
@@ -122,6 +124,7 @@ class PlaylistFragment : Fragment() {
     private fun showEmptyContent(text: String) {
         hideLoading()
         clearListAdapter()
+        binding.playlistItems.gone()
         binding.create.show()
         binding.errorContainer.show()
         binding.errorText.text = text

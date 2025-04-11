@@ -19,7 +19,7 @@ class PlaylistViewModel(
         getPlaylistAll()
     }
 
-    private lateinit var items: MutableList<Playlist>
+    private var items = mutableListOf<Playlist>()
     private var screenStateLiveData = MutableLiveData<PlaylistState>(PlaylistState.Loading)
 
     fun getScreenStateLiveData(): LiveData<PlaylistState> = screenStateLiveData
@@ -50,7 +50,7 @@ class PlaylistViewModel(
         viewModelScope.launch {
             playlistRepository.getPlaylistItems().collect { playlistItems ->
                 if (playlistItems.isEmpty()) {
-                    MutableLiveData<PlaylistState>(PlaylistState.EmptyContent(R.string.playlist_empty))
+                    screenStateLiveData.postValue(PlaylistState.EmptyContent(R.string.playlist_empty))
                 } else {
                     items = map(
                         items = playlistItems
