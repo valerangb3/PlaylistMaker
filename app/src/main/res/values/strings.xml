@@ -22,7 +22,7 @@
     <string name="description_field">Описание</string>
     <string name="playlist_maker">Плейлист</string>
     <string name="playlist_maker_create">создан</string>
-    <string name="playlist_maker_list_title">Спулае мулае Спулае мулае Спулае мулае Спулае мулае</string>
+    <string name="playlist_maker_list_title">Спулае мулае Спулае мулае Спулае мулае Спулае мулае Спулае мулае Спулае мулае</string>
     <string name="playlist_maker_list_count_tracks">98 треков 98 треков 98 треков 98 треков</string>
     <!--REQUEST_ERROR-->
     <string name="search_error_internet">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
@@ -60,6 +60,7 @@
     <string name="playlist_add">Новый плейлист</string>
     <string name="playlist_image_empty_tag">Empty</string>
     <string name="playlist_image_not_empty_tag">Not empty</string>
+    <string name="playlist_add_to_playlist">Добавить в плейлист</string>
     <!--ALERT_MESSAGES-->
     <string name="playlist_message_title">Завершить создание плейлиста?</string>
     <string name="playlist_message_description">Все несохраненные данные будут потеряны</string>
