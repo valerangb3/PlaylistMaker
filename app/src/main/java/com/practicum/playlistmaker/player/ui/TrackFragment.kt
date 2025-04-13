@@ -8,7 +8,6 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,12 +24,9 @@ import com.practicum.playlistmaker.player.presentation.state.ToastState
 import com.practicum.playlistmaker.player.presentation.viewmodel.PlayerViewModel
 import com.practicum.playlistmaker.player.ui.models.PlaylistTrack
 import com.practicum.playlistmaker.player.ui.models.Track
-import com.practicum.playlistmaker.playlist.presentation.models.Playlist
-import com.practicum.playlistmaker.playlist.ui.fragments.PlaylistMakerFragment
 import com.practicum.playlistmaker.utils.dpToPx
 import com.practicum.playlistmaker.utils.gone
 import com.practicum.playlistmaker.utils.show
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -45,6 +41,8 @@ class TrackFragment : Fragment() {
     private val args: TrackFragmentArgs by navArgs()
 
     private lateinit var trackItem: TrackInfo
+
+    private var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>? = null
 
     private lateinit var playlistAdapter: PlaylistAdapter
 
@@ -134,12 +132,12 @@ class TrackFragment : Fragment() {
             .into(binding.poster)
     }
 
-    private fun handleBottomSheet(bottomSheetBehavior: BottomSheetBehavior<LinearLayout>) {
+    private fun handleBottomSheet(bottomSheetBehavior: BottomSheetBehavior<LinearLayout>?) {
         binding.toPlaylist.setOnClickListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            bottomSheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
-        bottomSheetBehavior.addBottomSheetCallback(object :
+        bottomSheetBehavior?.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
@@ -168,8 +166,8 @@ class TrackFragment : Fragment() {
     }
 
     private fun initBottomSheet() {
-        val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
+        bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
         handleBottomSheet(bottomSheetBehavior)
     }
 
@@ -304,6 +302,7 @@ class TrackFragment : Fragment() {
                         requireContext().getString(R.string.playlist_add_track, toastState.additionalMessage),
                         Toast.LENGTH_SHORT
                     ).show()
+                    bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
                 } else {
                     Toast.makeText(
                         requireContext(),
@@ -326,6 +325,7 @@ class TrackFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        bottomSheetBehavior = null
         _binding = null
     }
 }
