@@ -6,6 +6,7 @@ import androidx.room.Room
 import com.google.gson.Gson
 import com.practicum.playlistmaker.App
 import com.practicum.playlistmaker.medialibrary.data.db.AppDatabase
+import com.practicum.playlistmaker.medialibrary.data.db.converter.PlaylistConverter
 import com.practicum.playlistmaker.medialibrary.data.db.mappers.FavouriteMap
 import com.practicum.playlistmaker.medialibrary.data.db.mappers.PlaylistMapper
 import com.practicum.playlistmaker.search.data.NetworkClient
@@ -50,6 +51,10 @@ val dataModule = module {
 
     factory {
         PlaylistMapper()
+    }
+
+    factory {
+        PlaylistConverter()
     }
 
     single {

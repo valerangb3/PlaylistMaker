@@ -21,14 +21,12 @@ import com.practicum.playlistmaker.playlist.presentation.models.Playlist
 import com.practicum.playlistmaker.playlist.presentation.state.PlaylistMakerState
 import com.practicum.playlistmaker.playlist.presentation.viewmodel.PlaylistViewModel
 import com.practicum.playlistmaker.utils.dpToPx
-import java.io.File
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistMakerFragment : Fragment() {
 
     companion object {
         private const val POSTER_RADIUS = 8.0F
-        const val NEW_PLAYLIST_KEY = "NEW_PLAYLIST_KEY"
         const val NEW_PLAYLIST_RESULT = "NEW_PLAYLIST_RESULT"
     }
 
@@ -126,20 +124,26 @@ class PlaylistMakerFragment : Fragment() {
         })
 
         create()
+        unsetItemHandle()
 
         viewModel.getScreenStateLiveData().observe(viewLifecycleOwner) { playlistMakerState ->
             if (playlistMakerState is PlaylistMakerState.Create) {
                 val text = "${requireContext().getString(R.string.playlist_maker)} ${playlistMakerState.playlistName} ${requireContext().getString(R.string.playlist_maker_create)}"
                 Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
-                /*val result = Bundle().apply {
-                    putSerializable(NEW_PLAYLIST_KEY, playlistItem)
-                }*/
+                playlistItem.playlistId = playlistMakerState.playlistId
                 findNavController().previousBackStackEntry?.savedStateHandle?.set(NEW_PLAYLIST_RESULT, playlistItem)
                 findNavController().navigateUp()
             }
         }
     }
 
+    private fun unsetItemHandle() {
+        findNavController().previousBackStackEntry?.savedStateHandle?.let { savedState ->
+            if (savedState.contains(NEW_PLAYLIST_RESULT)) {
+                savedState.remove<Playlist>(NEW_PLAYLIST_RESULT)
+            }
+        }
+    }
 
     override fun onDestroyView() {
         _binding = null

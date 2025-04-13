@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.medialibrary.data.db.repository.favourite
+package com.practicum.playlistmaker.medialibrary.data.repository.favourite
 
 import com.practicum.playlistmaker.medialibrary.data.db.AppDatabase
 import com.practicum.playlistmaker.medialibrary.data.db.mappers.FavouriteMap

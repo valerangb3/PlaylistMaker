@@ -33,7 +33,7 @@ class PlaylistViewModel(
             Playlist(
                 title = it.title,
                 filePath = it.pathSrc,
-                count = it.trackCount
+                count = it.tracksId.size
             )
         }
     }

@@ -21,6 +21,7 @@ val viewModelModule = module {
             trackInfo = track,
             playerUserCase = get(),
             favouriteRepository = get(),
+            playlistRepository = get(),
             map = get()
         )
     }

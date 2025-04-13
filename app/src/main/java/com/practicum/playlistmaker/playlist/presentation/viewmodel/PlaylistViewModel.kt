@@ -20,7 +20,7 @@ class PlaylistViewModel(
         return PlaylistMedia(
             title = item.title,
             description = item.description,
-            pathSrc = item.fileUri
+            pathSrc = item.fileUri,
         )
     }
 
@@ -28,8 +28,11 @@ class PlaylistViewModel(
 
     fun addPlaylist(item: Playlist) {
         viewModelScope.launch {
-            playlistRepository.addPlaylist(map(item))
-            screenStateLiveData.postValue(PlaylistMakerState.Create(playlistName = item.title))
+            val playlistId = playlistRepository.addPlaylist(map(item))
+            screenStateLiveData.postValue(PlaylistMakerState.Create(
+                playlistId = playlistId,
+                playlistName = item.title
+            ))
         }
     }
 

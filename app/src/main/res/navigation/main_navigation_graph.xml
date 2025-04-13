@@ -50,6 +50,9 @@
             android:name="track"
             app:argType="com.practicum.playlistmaker.player.domain.models.TrackInfo"
             />
+        <action
+            android:id="@+id/action_trackFragment_to_playlistMakerFragment"
+            app:destination="@id/playlistMakerFragment" />
     </fragment>
     <fragment
         android:id="@+id/playlistMakerFragment"

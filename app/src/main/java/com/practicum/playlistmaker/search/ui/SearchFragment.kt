@@ -4,7 +4,6 @@ import androidx.core.content.getSystemService
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +25,6 @@ import com.practicum.playlistmaker.search.presentation.viewmodel.SearchViewModel
 import com.practicum.playlistmaker.search.ui.adapter.TrackListAdapter
 import com.practicum.playlistmaker.utils.gone
 import com.practicum.playlistmaker.utils.show
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
