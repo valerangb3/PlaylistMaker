@@ -9,7 +9,6 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ItemTrackBinding
 import com.practicum.playlistmaker.media.domain.models.Favourite
 import com.practicum.playlistmaker.media.ui.adapter.common.OnItemClickListener
-import com.practicum.playlistmaker.search.ui.adapter.TrackListAdapter.TrackViewHolder
 import com.practicum.playlistmaker.utils.dpToPx
 
 class FavouriteListAdapter(
@@ -40,7 +39,7 @@ class FavouriteListAdapter(
                 .load(favourite.artworkUrl100)
                 .placeholder(R.drawable.track_placeholder)
                 .fitCenter()
-                .transform(RoundedCorners(dpToPx(TrackViewHolder.IMG_RADIUS, itemView.context)))
+                .transform(RoundedCorners(dpToPx(IMG_RADIUS, itemView.context)))
                 .into(binding.albumPicture)
 
             binding.trackName.text = favourite.trackName

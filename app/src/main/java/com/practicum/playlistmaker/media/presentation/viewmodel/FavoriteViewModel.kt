@@ -5,16 +5,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.favourites.domain.FavouriteRepository
-import com.practicum.playlistmaker.favourites.domain.models.Favourite as FavouriteExt
+import com.practicum.playlistmaker.medialibrary.domain.favourite.FavouriteRepository
+import com.practicum.playlistmaker.medialibrary.domain.favourite.models.Favourite as FavouriteExt
 import com.practicum.playlistmaker.media.domain.models.Favourite
 import com.practicum.playlistmaker.media.presentation.state.FavoriteState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class FavoriteViewModel(
     private val favouriteRepository: FavouriteRepository,
 ) : ViewModel() {
-
+    private var isClickAllowed = true
 
     init {
         getFavouriteList()
@@ -41,6 +42,18 @@ class FavoriteViewModel(
         }
     }
 
+    fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            viewModelScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
+        }
+        return current
+    }
+
     fun getFavouriteList() {
         viewModelScope.launch {
             favouriteRepository.getFavouriteItems().collect { favouriteList ->
@@ -51,5 +64,9 @@ class FavoriteViewModel(
                 }
             }
         }
+    }
+
+    companion object {
+        const val CLICK_DEBOUNCE_DELAY = 1_000L
     }
 }

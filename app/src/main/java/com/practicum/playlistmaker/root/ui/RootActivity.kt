@@ -7,6 +7,8 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityRootBinding
+import com.practicum.playlistmaker.utils.gone
+import com.practicum.playlistmaker.utils.show
 
 class RootActivity : AppCompatActivity() {
 
@@ -23,6 +25,18 @@ class RootActivity : AppCompatActivity() {
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigationView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.trackFragment, R.id.playlistMakerFragment -> {
+                    bottomNavigationView.gone()
+                }
+                else -> {
+                    bottomNavigationView.show()
+                }
+            }
+
+        }
     }
 
     override fun onDestroy() {

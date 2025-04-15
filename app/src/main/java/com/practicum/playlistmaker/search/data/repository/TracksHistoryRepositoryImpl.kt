@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.domain.repository.TracksHistoryRepository
 import androidx.core.content.edit
-import com.practicum.playlistmaker.favourites.domain.FavouriteRepository
+import com.practicum.playlistmaker.medialibrary.domain.favourite.FavouriteRepository
 
 class TracksHistoryRepositoryImpl(
     private val sharedPreferences: SharedPreferences,
