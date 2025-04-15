@@ -29,12 +29,6 @@ class PlaylistFragment : Fragment() {
 
     private lateinit var playlistAdapter: PlaylistAdapter
 
-    override fun onResume() {
-        super.onResume()
-        Log.d("SPRINT22", "onCreate")
-    }
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
