@@ -8,11 +8,11 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ItemTrackBinding
 import com.practicum.playlistmaker.media.domain.models.Favourite
-import com.practicum.playlistmaker.media.ui.adapter.common.OnItemClickListener
+import com.practicum.playlistmaker.media.ui.adapter.common.OnFavouriteItemClickListener
 import com.practicum.playlistmaker.utils.dpToPx
 
 class FavouriteListAdapter(
-    private val favouriteItemHandler: OnItemClickListener
+    private val favouriteItemHandler: OnFavouriteItemClickListener
 ) : RecyclerView.Adapter<FavouriteListAdapter.FavouriteViewHolder>() {
 
     var favouriteList = mutableListOf<Favourite>()

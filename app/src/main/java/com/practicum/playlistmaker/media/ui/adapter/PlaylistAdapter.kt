@@ -9,9 +9,12 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ItemPlaylistMediaBinding
 import com.practicum.playlistmaker.media.domain.models.Playlist
+import com.practicum.playlistmaker.media.ui.adapter.common.OnPlaylistItemClickListener
 import com.practicum.playlistmaker.utils.dpToPx
 
-class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>() {
+class PlaylistAdapter(
+    private val playlistItemHandler: OnPlaylistItemClickListener
+) : RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>() {
 
     companion object {
         const val IMG_RADIUS = 8.0F
@@ -29,6 +32,7 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>
 
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
         holder.bind(playlist[position])
+        holder.itemView.setOnClickListener { playlistItemHandler.onItemClick(playlistId = playlist[position].id) }
     }
 
     class PlaylistViewHolder(private val binding: ItemPlaylistMediaBinding) :

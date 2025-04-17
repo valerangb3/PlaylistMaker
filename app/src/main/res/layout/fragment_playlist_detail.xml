@@ -132,4 +132,55 @@
             app:layout_constraintTop_toBottomOf="@+id/playlistTimeTotal"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View android:id="@+id/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0"
+        android:background="#99000000"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        style="@style/BottomSheetContainer"
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="8dp"
+        android:paddingHorizontal="14dp"
+
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="266dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        <LinearLayout
+            android:id="@+id/playlistContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+            <View
+                android:id="@+id/roundedRectangle"
+                android:background="@drawable/rounded_rectangle"
+                android:layout_width="50dp"
+                android:layout_height="4dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/playlist"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="24dp"
+
+                tools:listitem="@layout/item_track"
+                tools:itemCount="1"/>
+        </LinearLayout>
+
+        <TextView
+            style="@style/ErrorTextRequest"
+            android:layout_marginTop="16dp"
+            android:id="@+id/emptyPlaylist"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/empty_playlist"/>
+    </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

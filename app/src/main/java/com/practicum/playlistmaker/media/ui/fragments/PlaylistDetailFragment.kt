@@ -20,4 +20,9 @@ class PlaylistDetailFragment : Fragment() {
         _binding = FragmentPlaylistDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
+
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
+    }
 }

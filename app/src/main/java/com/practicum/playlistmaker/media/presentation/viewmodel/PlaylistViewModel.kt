@@ -31,6 +31,7 @@ class PlaylistViewModel(
     private fun map(items: List<PlaylistMediaLibrary>): List<Playlist> {
         return items.map {
             Playlist(
+                id = it.id,
                 title = it.title,
                 filePath = it.pathSrc,
                 count = it.tracksId.size

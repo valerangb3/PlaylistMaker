@@ -49,6 +49,7 @@ class PlaylistFragment : Fragment() {
                 viewLifecycleOwner
             ) { playlistItem ->
                 viewModel.addPlaylist(PlaylistMedia(
+                    id = playlistItem.playlistId,
                     filePath = playlistItem.fileUri,
                     title = playlistItem.title,
                     count = 0
@@ -81,7 +82,9 @@ class PlaylistFragment : Fragment() {
     }
 
     private fun initRecyclerView() {
-        playlistAdapter = PlaylistAdapter()
+        playlistAdapter = PlaylistAdapter { playlistId ->
+            findNavController().navigate(R.id.action_mediaFragment_to_playlistDetailFragment)
+        }
         binding.playlistItems.adapter = playlistAdapter
         binding.playlistItems.layoutManager = GridLayoutManager(requireContext(), 2)
     }
