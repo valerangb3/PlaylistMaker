@@ -76,6 +76,13 @@ class PlaylistRepositoryImpl(
         emit(converter.convert(result))
     }
 
+    override suspend fun getPlaylistItem(playlistId: Long): Flow<Playlist> = flow {
+        val result = withContext(Dispatchers.IO) {
+            appDatabase.playlistDao().getPlaylistDetail(playlistId)
+        }
+        emit(converter.convert(result))
+    }
+
     override suspend fun addTrackToPlaylist(playlistId: Long, track: Track): Long {
         withContext(Dispatchers.IO) {
             val rowTrack = appDatabase.playlistDao().getTrackById(track.trackId)

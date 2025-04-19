@@ -11,6 +11,7 @@ import com.practicum.playlistmaker.databinding.ItemPlaylistMediaBinding
 import com.practicum.playlistmaker.media.domain.models.Playlist
 import com.practicum.playlistmaker.media.ui.adapter.common.OnPlaylistItemClickListener
 import com.practicum.playlistmaker.utils.dpToPx
+import com.practicum.playlistmaker.utils.getWordForm
 
 class PlaylistAdapter(
     private val playlistItemHandler: OnPlaylistItemClickListener
@@ -50,7 +51,7 @@ class PlaylistAdapter(
                 .into(binding.poster)
 
             binding.posterTitle.text = playList.title
-            binding.trackCount.text = itemView.context.resources.getQuantityString(R.plurals.playlist_track_count, playList.count, playList.count)
+            binding.trackCount.text = getWordForm(playList.count)
         }
 
     }

@@ -27,6 +27,9 @@ interface PlaylistDao {
     @Query("SELECT * FROM playlist_table WHERE playlistId = :playlistId")
     suspend fun getPlayListWithTracksById(playlistId: Long): PlaylistTrack
 
+    @Query("SELECT * FROM playlist_table WHERE playlistId = :playlistId")
+    suspend fun getPlaylistDetail(playlistId: Long): PlaylistTrack
+
     @Insert(entity = PlaylistTrackRefEntity::class)
     suspend fun addTrackToPlaylist(row: PlaylistTrackRefEntity)
     @Insert(entity = TrackEntity::class, onConflict = OnConflictStrategy.IGNORE)

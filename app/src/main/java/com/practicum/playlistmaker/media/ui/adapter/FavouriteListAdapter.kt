@@ -20,8 +20,8 @@ class FavouriteListAdapter(
     override fun getItemCount(): Int = favouriteList.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavouriteViewHolder {
-        val layoutInspector = LayoutInflater.from(parent.context)
-        return FavouriteViewHolder(ItemTrackBinding.inflate(layoutInspector, parent, false))
+        val layoutInflater = LayoutInflater.from(parent.context)
+        return FavouriteViewHolder(ItemTrackBinding.inflate(layoutInflater, parent, false))
     }
 
     override fun onBindViewHolder(holder: FavouriteViewHolder, position: Int) {

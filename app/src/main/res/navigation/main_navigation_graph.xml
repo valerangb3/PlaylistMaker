@@ -29,16 +29,6 @@
             android:id="@+id/action_searchFragment_to_trackFragment"
             app:destination="@id/trackFragment" />
     </fragment>
-    <!--<activity
-        android:id="@+id/trackActivity"
-        android:name="com.practicum.playlistmaker.player.ui.TrackActivity"
-        android:label="activity_track"
-        tools:layout="@layout/activity_track">
-        <argument
-            android:name="track"
-            app:argType="com.practicum.playlistmaker.player.domain.models.TrackInfo"
-            />
-    </activity>-->
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.practicum.playlistmaker.settings.ui.SettingsFragment"
@@ -66,5 +56,9 @@
         android:id="@+id/playlistDetailFragment"
         android:name="com.practicum.playlistmaker.media.ui.fragments.PlaylistDetailFragment"
         android:label="fragment_playlist_detail"
-        tools:layout="@layout/fragment_playlist_detail" />
+        tools:layout="@layout/fragment_playlist_detail" >
+        <argument
+            android:name="playlistId"
+            app:argType="long" />
+    </fragment>
 </navigation>

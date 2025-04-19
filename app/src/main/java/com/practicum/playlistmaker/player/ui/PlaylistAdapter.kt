@@ -10,6 +10,7 @@ import com.practicum.playlistmaker.databinding.ItemPlaylistPlayerBinding
 import com.practicum.playlistmaker.player.ui.models.PlaylistTrack
 import com.practicum.playlistmaker.search.ui.adapter.TrackListAdapter.TrackViewHolder.Companion.IMG_RADIUS
 import com.practicum.playlistmaker.utils.dpToPx
+import com.practicum.playlistmaker.utils.getWordForm
 
 class PlaylistAdapter(
     private val playlistItemHandler: OnItemClickListener
@@ -32,22 +33,10 @@ class PlaylistAdapter(
     class PlaylistViewHolder(private val binding: ItemPlaylistPlayerBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        private fun getTrackWordForm(count: Int): String {
-            val mod10 = count % 10
-            val mod100 = count % 100
-
-            val word = when {
-                mod10 == 1 && mod100 != 11 -> "трек"
-                mod10 in 2..4 && (mod100 !in 12..14) -> "трека"
-                else -> "треков"
-            }
-
-            return "$count $word"
-        }
 
         fun binding(playlist: PlaylistTrack) {
 
-            binding.trackCount.text = getTrackWordForm(playlist.playlistItemsId.size)
+            binding.trackCount.text = getWordForm(playlist.playlistItemsId.size)
             binding.posterTitle.text = playlist.title
             Glide.with(itemView.context)
                 .load(playlist.posterPath)

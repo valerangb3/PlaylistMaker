@@ -39,7 +39,6 @@ class PlayerViewModel(
     private val playStatusLiveData = MutableLiveData<PlayStatus>()
     private var inFavouriteLiveData = MutableLiveData<Boolean>()
 
-    private var inPlaylist = MutableLiveData<Triple<String, Boolean, Boolean>>()
     private var toastState = MutableLiveData<ToastState>(ToastState.None)
 
     init {
@@ -90,8 +89,6 @@ class PlayerViewModel(
         screenPlaylistStateLiveData
 
     fun observeToastState(): LiveData<ToastState> = toastState
-
-    fun trackInPlaylist(): LiveData<Triple<String, Boolean, Boolean>> = inPlaylist
 
     fun getPlayStatusLiveData(): LiveData<PlayStatus> = playStatusLiveData
     fun inFavouriteLiveData(): LiveData<Boolean> = inFavouriteLiveData
