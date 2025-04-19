@@ -42,7 +42,7 @@ class PlaylistRepositoryImpl(
         return String.format("%032x", bigInt)
     }
 
-    private fun saveImage(item: Playlist) : String {
+    private fun saveImage(item: Playlist): String {
         val fileName = genNewFileName(item.pathSrc)
         val filePath = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), SUB_FOLDER)
         if (!filePath.exists()) {
@@ -89,10 +89,26 @@ class PlaylistRepositoryImpl(
             val trackId = rowTrack?.trackId ?: appDatabase.playlistDao().addTrack(mapper.map(track))
             val playlist = appDatabase.playlistDao().getPlayListWithTracksById(playlistId)
             if (playlist.trackList.none { it.trackId == trackId }) {
-                appDatabase.playlistDao().addTrackToPlaylist(PlaylistTrackRefEntity(playlistId = playlistId, trackId = trackId))
+                appDatabase.playlistDao().addTrackToPlaylist(
+                    PlaylistTrackRefEntity(
+                        playlistId = playlistId,
+                        trackId = trackId
+                    )
+                )
             }
         }
         return playlistId
+    }
+
+    override suspend fun deleteTrack(playlistId: Long, trackId: Long) {
+        withContext(Dispatchers.IO) {
+            appDatabase.playlistDao().deleteTrackFromPlaylist(
+                entity = PlaylistTrackRefEntity(
+                    playlistId = playlistId,
+                    trackId = trackId
+                )
+            )
+        }
     }
 
 }

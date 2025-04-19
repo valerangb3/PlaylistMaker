@@ -43,8 +43,8 @@ class PlaylistMakerFragment : Fragment() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.playlist_message_title)
             .setMessage(R.string.playlist_message_description)
-            .setPositiveButton(R.string.playlist_message_done) { dialog, which -> findNavController().navigateUp() }
-            .setNegativeButton(R.string.playlist_message_cancel) { dialog, which -> }
+            .setPositiveButton(R.string.playlist_message_done) { _, _ -> findNavController().navigateUp() }
+            .setNegativeButton(R.string.playlist_message_cancel) { _, _ -> }
     }
 
     private val pickMedia =

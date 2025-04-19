@@ -67,6 +67,8 @@ class PlaylistFragment : Fragment() {
         binding.create.setOnClickListener {
             navToPlayListMaker()
         }
+
+        viewModel.getPlaylistAll()
     }
 
     private fun hideLoading() {
@@ -82,7 +84,9 @@ class PlaylistFragment : Fragment() {
 
     private fun initRecyclerView() {
         playlistAdapter = PlaylistAdapter { playlistId ->
-            findNavController().navigate(R.id.action_mediaFragment_to_playlistDetailFragment, PlaylistDetailFragmentArgs(playlistId).toBundle())
+            if (viewModel.clickDebounce()) {
+                findNavController().navigate(R.id.action_mediaFragment_to_playlistDetailFragment, PlaylistDetailFragmentArgs(playlistId).toBundle())
+            }
         }
         binding.playlistItems.adapter = playlistAdapter
         binding.playlistItems.layoutManager = GridLayoutManager(requireContext(), 2)

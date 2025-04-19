@@ -13,12 +13,26 @@ import com.practicum.playlistmaker.media.ui.models.Track as UiTrack
 import kotlinx.coroutines.launch
 
 class PlaylistDetailViewModel(
+    private val playlistId: Long,
     private val playlistRepository: PlaylistRepository
 ) : ViewModel() {
 
     private var screenStateLiveData = MutableLiveData<PlaylistDetailState>(PlaylistDetailState.Idle)
+    private var isDeleteTrack = MutableLiveData(false)
+
+    init {
+        getPlaylistDetail()
+    }
 
     fun getScreenStateLiveData(): LiveData<PlaylistDetailState> = screenStateLiveData
+    fun isDeleteTrackLiveData(): LiveData<Boolean> = isDeleteTrack
+
+    fun deleteTrack(trackId: Long) {
+        viewModelScope.launch {
+            playlistRepository.deleteTrack(playlistId = playlistId, trackId = trackId)
+            isDeleteTrack.postValue(true)
+        }
+    }
 
     private fun getTotalDuration(tracks: List<Track>): Long {
         var duration: Long = 0
@@ -56,7 +70,7 @@ class PlaylistDetailViewModel(
         )
     }
 
-    fun getPlaylistDetail(playlistId: Long) {
+    private fun getPlaylistDetail() {
         screenStateLiveData.postValue(PlaylistDetailState.Loading)
         viewModelScope.launch {
             playlistRepository.getPlaylistItem(playlistId = playlistId).collect { playlist ->

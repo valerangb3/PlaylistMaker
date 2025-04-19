@@ -51,7 +51,7 @@ val viewModelModule = module {
         PlaylistViewModel(playlistRepository = get())
     }
 
-    viewModel<PlaylistDetailViewModel> {
-        PlaylistDetailViewModel(playlistRepository = get())
+    viewModel<PlaylistDetailViewModel> { (playlistId: Long) ->
+        PlaylistDetailViewModel(playlistId = playlistId, playlistRepository = get())
     }
 }

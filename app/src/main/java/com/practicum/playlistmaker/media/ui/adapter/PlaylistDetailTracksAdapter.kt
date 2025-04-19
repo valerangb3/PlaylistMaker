@@ -7,13 +7,13 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ItemTrackBinding
-import com.practicum.playlistmaker.media.ui.adapter.common.OnFavouriteItemClickListener
+import com.practicum.playlistmaker.media.ui.adapter.common.OnPlaylistTrackListeners
 import com.practicum.playlistmaker.media.ui.models.Track
 import com.practicum.playlistmaker.search.ui.adapter.TrackListAdapter.TrackViewHolder.Companion.IMG_RADIUS
 import com.practicum.playlistmaker.utils.dpToPx
 
 class PlaylistDetailTracksAdapter(
-    private val playlistTrackItemHandler: OnFavouriteItemClickListener
+    private val playlistTrackItemHandler: OnPlaylistTrackListeners
 ) : RecyclerView.Adapter<PlaylistDetailTracksAdapter.PlaylistDetailViewHolder>() {
 
     var playlistTracks = mutableListOf<Track>()
@@ -27,6 +27,11 @@ class PlaylistDetailTracksAdapter(
 
     override fun onBindViewHolder(holder: PlaylistDetailViewHolder, position: Int) {
         holder.bind(track = playlistTracks[position])
+        holder.itemView.setOnClickListener { playlistTrackItemHandler.onClickHandler(playlistTracks[position]) }
+        holder.itemView.setOnLongClickListener {
+            playlistTrackItemHandler.onLongClickHandler(playlistTracks[position])
+            return@setOnLongClickListener true
+        }
     }
 
     class PlaylistDetailViewHolder(private val binding: ItemTrackBinding) : RecyclerView.ViewHolder(binding.root) {

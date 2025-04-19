@@ -18,4 +18,5 @@ data class Track(
     val previewUrl: String
 ) {
     fun getFormatTime(): String = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTime)
+    fun getCoverArtwork() = artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")
 }

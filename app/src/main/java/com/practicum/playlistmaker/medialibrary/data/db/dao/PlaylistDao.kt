@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.medialibrary.data.db.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -36,4 +37,7 @@ interface PlaylistDao {
     suspend fun addTrack(row: TrackEntity): Long
     @Query("SELECT * FROM track_table WHERE trackId = :id")
     suspend fun getTrackById(id: Long): TrackEntity?
+
+    @Delete(entity = PlaylistTrackRefEntity::class)
+    suspend fun deleteTrackFromPlaylist(entity: PlaylistTrackRefEntity)
 }
