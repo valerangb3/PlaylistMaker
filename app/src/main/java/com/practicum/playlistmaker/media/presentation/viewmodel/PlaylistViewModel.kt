@@ -19,10 +19,6 @@ class PlaylistViewModel(
 
     private var isClickAllowed = true
 
-    init {
-        //getPlaylistAll()
-    }
-
     private var items = mutableListOf<Playlist>()
     private var screenStateLiveData = MutableLiveData<PlaylistState>(PlaylistState.Loading)
 

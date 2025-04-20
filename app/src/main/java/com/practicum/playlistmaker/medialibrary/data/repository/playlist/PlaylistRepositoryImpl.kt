@@ -100,6 +100,25 @@ class PlaylistRepositoryImpl(
         return playlistId
     }
 
+    private fun removePoster(path: String) {
+        val file = File(path)
+        if (file.exists()) {
+            file.delete()
+        }
+    }
+
+    override suspend fun deletePlaylist(playlistId: Long) {
+        withContext(Dispatchers.IO) {
+            val itemsRef = appDatabase.playlistDao().getPlaylistTrackRef(playlistId = playlistId)
+            val item = appDatabase.playlistDao().getPlaylist(playlistId = playlistId)
+            if (item.pathSrc.isNotEmpty()) {
+                removePoster(path = item.pathSrc)
+            }
+            appDatabase.playlistDao().deletePlaylistRefs(items = itemsRef)
+            appDatabase.playlistDao().deletePlaylist(playlistEntity = item)
+        }
+    }
+
     override suspend fun deleteTrack(playlistId: Long, trackId: Long) {
         withContext(Dispatchers.IO) {
             appDatabase.playlistDao().deleteTrackFromPlaylist(

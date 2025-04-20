@@ -155,7 +155,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingTop="8dp"
-        android:paddingHorizontal="14dp"
 
         app:behavior_hideable="false"
         app:behavior_peekHeight="266dp"
@@ -190,5 +189,89 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/empty_playlist"/>
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/BottomSheetContainer"
+        android:id="@+id/bottom_sheet_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="8dp"
+
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="384dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <View
+            android:id="@+id/menuRoundedRectangle"
+            android:background="@drawable/rounded_rectangle"
+            android:layout_width="50dp"
+            android:layout_height="4dp"/>
+
+        <LinearLayout
+            android:paddingVertical="8dp"
+            android:paddingHorizontal="14dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp">
+
+            <ImageView
+                android:id="@+id/posterBottomSheet"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/moonlight"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:orientation="vertical">
+                <TextView
+                    style="@style/PlaylistTitleStyle"
+                    android:id="@+id/poster_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    tools:text="@string/playlist_maker_list_title"/>
+
+                <TextView
+                    style="@style/PlaylistCountStyle"
+                    android:id="@+id/track_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    tools:text="@string/playlist_maker_list_count_tracks"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/shareBtn"
+            style="@style/SettingsButtonStyle"
+            android:layout_marginTop="8dp"
+            android:text="@string/playlist_detail_share"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
+
+        <TextView
+            android:id="@+id/editBtn"
+            style="@style/SettingsButtonStyle"
+            android:text="@string/playlist_detail_edit"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
+
+        <TextView
+            android:id="@+id/removeBtn"
+            style="@style/SettingsButtonStyle"
+            android:text="@string/playlist_detail_remove"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
+
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

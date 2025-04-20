@@ -40,4 +40,16 @@ interface PlaylistDao {
 
     @Delete(entity = PlaylistTrackRefEntity::class)
     suspend fun deleteTrackFromPlaylist(entity: PlaylistTrackRefEntity)
+
+    @Query("SELECT playlistId, trackId FROM playlist_track_ref WHERE playlistId = :playlistId")
+    suspend fun getPlaylistTrackRef(playlistId: Long): List<PlaylistTrackRefEntity>
+
+    @Delete(entity = PlaylistTrackRefEntity::class)
+    suspend fun deletePlaylistRefs(items: List<PlaylistTrackRefEntity>)
+
+    @Delete(entity = PlaylistEntity::class)
+    suspend fun deletePlaylist(playlistEntity: PlaylistEntity)
+
+    @Query("SELECT * FROM playlist_table WHERE playlistId = :playlistId")
+    suspend fun getPlaylist(playlistId: Long): PlaylistEntity
 }

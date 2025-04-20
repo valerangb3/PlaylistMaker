@@ -1,5 +1,7 @@
 package com.practicum.playlistmaker.utils
 
+import kotlin.math.roundToLong
+
 fun getWordForm(count: Int, list: List<String> = listOf("трек", "трека", "треков")): String {
     val mod10 = count % 10
     val mod100 = count % 100
@@ -14,6 +16,6 @@ fun getWordForm(count: Int, list: List<String> = listOf("трек", "трека"
 }
 
 fun getTimeWordForm(ms: Long): String {
-    val minutes = ms / 1_000 / 60
+    val minutes = (ms.toDouble() / 1_000 / 60).roundToLong()
     return getWordForm(minutes.toInt(), list = listOf("минута", "минуты", "минут"))
 }
