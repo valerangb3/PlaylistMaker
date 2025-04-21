@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.practicum.playlistmaker.medialibrary.data.db.entity.PlaylistEntity
 import com.practicum.playlistmaker.medialibrary.data.db.entity.PlaylistTrack
 import com.practicum.playlistmaker.medialibrary.data.db.entity.PlaylistTrackRefEntity
@@ -52,4 +53,7 @@ interface PlaylistDao {
 
     @Query("SELECT * FROM playlist_table WHERE playlistId = :playlistId")
     suspend fun getPlaylist(playlistId: Long): PlaylistEntity
+
+    @Update(entity = PlaylistEntity::class, onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updatePlaylist(playlistEntity: PlaylistEntity)
 }

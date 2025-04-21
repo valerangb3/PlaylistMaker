@@ -3,8 +3,8 @@ package com.practicum.playlistmaker.medialibrary.data.repository.playlist
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Environment
+import android.util.Log
 import androidx.core.net.toUri
 import com.practicum.playlistmaker.medialibrary.data.db.AppDatabase
 import com.practicum.playlistmaker.medialibrary.data.db.converter.PlaylistConverter
@@ -61,7 +61,7 @@ class PlaylistRepositoryImpl(
     override suspend fun addPlaylist(item: Playlist): Long {
         val playlistId = withContext(Dispatchers.IO) {
             if (item.pathSrc.isNotEmpty()) {
-                val path = saveImage(item)
+                val path = saveImage(item = item)
                 item.pathSrc = path
             }
             appDatabase.playlistDao().addPlaylist(mapper.map(item))
@@ -80,7 +80,29 @@ class PlaylistRepositoryImpl(
         val result = withContext(Dispatchers.IO) {
             appDatabase.playlistDao().getPlaylistDetail(playlistId)
         }
+
         emit(converter.convert(result))
+    }
+
+    override suspend fun updatePlaylistItem(playlistId: Long, newData: Playlist) {
+        withContext(Dispatchers.IO) {
+            val oldPlaylist = appDatabase.playlistDao().getPlaylist(playlistId = playlistId)
+            val title = newData.title
+            val description = newData.description
+            var poster = oldPlaylist.pathSrc
+            if (newData.pathSrc.isNotEmpty()) {
+                if (oldPlaylist.pathSrc.isNotEmpty()) {
+                    removePoster(oldPlaylist.pathSrc)
+                }
+                poster = saveImage(newData)
+            }
+            appDatabase.playlistDao().updatePlaylist(playlistEntity = mapper.map(item = Playlist(
+                id = oldPlaylist.playlistId,
+                title = title,
+                description = description,
+                pathSrc = poster
+            )))
+        }
     }
 
     override suspend fun addTrackToPlaylist(playlistId: Long, track: Track): Long {

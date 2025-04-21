@@ -82,6 +82,9 @@
     <string name="playlist_detail_message_delete_playlist">Хотите удалить плейлист «%1$s»?</string>
     <string name="playlist_detail_delete_no">Нет</string>
     <string name="playlist_detail_delete_yes">Да</string>
+    <string name="playlist_update_button">Сохранть</string>
+    <string name="playlist_update_edit_title">Редактировать</string>
+
 
     <plurals name="playlist_track_count">
         <item quantity="zero">0 треков</item>

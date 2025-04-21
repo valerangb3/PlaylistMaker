@@ -29,6 +29,7 @@ import com.practicum.playlistmaker.utils.show
 import com.practicum.playlistmaker.media.ui.models.Track
 import com.practicum.playlistmaker.player.domain.models.TrackInfo
 import com.practicum.playlistmaker.player.ui.TrackFragmentArgs
+import com.practicum.playlistmaker.playlist.ui.fragments.PlaylistUpdateFragmentArgs
 import com.practicum.playlistmaker.search.ui.adapter.TrackListAdapter.TrackViewHolder.Companion.IMG_RADIUS
 import com.practicum.playlistmaker.utils.dpToPx
 import org.koin.core.parameter.parametersOf
@@ -73,7 +74,6 @@ class PlaylistDetailFragment : Fragment() {
             .setPositiveButton(R.string.playlist_detail_delete_yes) { _, _ ->
                 if (playlistId != -1L) {
                     viewModel.deletePlaylist(playlistId = playlistId)
-
                 }
             }
             .setNegativeButton(R.string.playlist_detail_delete_no) { _, _ -> trackId = -1 }
@@ -158,8 +158,15 @@ class PlaylistDetailFragment : Fragment() {
             share()
         }
 
+        binding.editBtn.setOnClickListener {
+            if (playlistId != -1L) {
+                findNavController().navigate(R.id.action_playlistDetailFragment_to_playlistUpdateFragment, PlaylistUpdateFragmentArgs(playlistId).toBundle())
+            }
+        }
+
         binding.removeBtn.setOnClickListener {
             removePlaylistConfirmDialog.show()
+            bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         viewModel.getScreenStateLiveData().observe(viewLifecycleOwner) { playlistDetailState ->
@@ -182,6 +189,12 @@ class PlaylistDetailFragment : Fragment() {
                 updateAdapter(trackId = trackId)
                 updatePlaylistInfo()
                 trackId = -1
+            }
+        }
+
+        viewModel.isDeletePlaylistLiveData().observe(viewLifecycleOwner) { isDelete ->
+            if (isDelete) {
+                findNavController().navigateUp()
             }
         }
 
@@ -316,6 +329,7 @@ class PlaylistDetailFragment : Fragment() {
 
     override fun onDestroy() {
         _binding = null
+        bottomSheetBehavior = null
         super.onDestroy()
     }
 }

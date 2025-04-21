@@ -24,6 +24,7 @@ class PlaylistDetailViewModel(
 
     private var screenStateLiveData = MutableLiveData<PlaylistDetailState>(PlaylistDetailState.Idle)
     private var isDeleteTrack = MutableLiveData(false)
+    private var isDeletePlaylist = MutableLiveData(false)
 
     private var isClickAllowed = true
 
@@ -63,6 +64,7 @@ class PlaylistDetailViewModel(
 
     fun getScreenStateLiveData(): LiveData<PlaylistDetailState> = screenStateLiveData
     fun isDeleteTrackLiveData(): LiveData<Boolean> = isDeleteTrack
+    fun isDeletePlaylistLiveData(): LiveData<Boolean> = isDeletePlaylist
 
     fun deleteTrack(trackId: Long) {
         viewModelScope.launch {
@@ -74,6 +76,7 @@ class PlaylistDetailViewModel(
     fun deletePlaylist(playlistId: Long) {
         viewModelScope.launch {
             playlistRepository.deletePlaylist(playlistId = playlistId)
+            isDeletePlaylist.postValue(true)
         }
     }
 
@@ -114,7 +117,7 @@ class PlaylistDetailViewModel(
         )
     }
 
-    private fun getPlaylistDetail() {
+    fun getPlaylistDetail() {
         screenStateLiveData.postValue(PlaylistDetailState.Loading)
         viewModelScope.launch {
             playlistRepository.getPlaylistItem(playlistId = playlistId).collect { playlist ->

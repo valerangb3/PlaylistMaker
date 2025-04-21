@@ -10,7 +10,7 @@ import com.practicum.playlistmaker.playlist.presentation.state.PlaylistMakerStat
 import com.practicum.playlistmaker.medialibrary.domain.playlist.models.Playlist as PlaylistMedia
 import kotlinx.coroutines.launch
 
-class PlaylistViewModel(
+open class PlaylistViewModel(
     private val playlistRepository: PlaylistRepository
 ) : ViewModel() {
 
@@ -35,6 +35,4 @@ class PlaylistViewModel(
             ))
         }
     }
-
-
 }

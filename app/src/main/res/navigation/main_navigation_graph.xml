@@ -52,10 +52,6 @@
         android:name="com.practicum.playlistmaker.playlist.ui.fragments.PlaylistMakerFragment"
         android:label="fragment_playlist_maker"
         tools:layout="@layout/fragment_playlist_maker" >
-        <argument
-            android:name="isCreate"
-            app:argType="boolean"
-            android:defaultValue="true" />
     </fragment>
     <fragment
         android:id="@+id/playlistDetailFragment"
@@ -68,5 +64,17 @@
         <action
             android:id="@+id/action_playlistDetailFragment_to_trackFragment"
             app:destination="@id/trackFragment" />
+        <action
+            android:id="@+id/action_playlistDetailFragment_to_playlistUpdateFragment"
+            app:destination="@id/playlistUpdateFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/playlistUpdateFragment"
+        android:name="com.practicum.playlistmaker.playlist.ui.fragments.PlaylistUpdateFragment"
+        android:label="PlaylistUpdateFragment"
+        tools:layout="@layout/fragment_playlist_maker">
+        <argument
+            android:name="playlistId"
+            app:argType="long" />
     </fragment>
 </navigation>
