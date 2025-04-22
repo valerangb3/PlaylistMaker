@@ -33,7 +33,7 @@ class PlaylistDetailViewModel(
     private var playlistDescription: String = ""
 
     init {
-        getPlaylistDetail()
+        //getPlaylistDetail()
     }
 
     fun clickDebounce() : Boolean {

@@ -45,7 +45,6 @@ class PlaylistUpdateViewModel(
     }
 
     fun getPlaylist(playlistId: Long) {
-        screenStateUpdateLiveData.postValue(PlaylistUpdateState.Loading)
         viewModelScope.launch {
             repository.getPlaylistItem(playlistId = playlistId).collect { playlist ->
                 screenStateUpdateLiveData.postValue(

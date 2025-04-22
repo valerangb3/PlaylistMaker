@@ -84,7 +84,6 @@ class PlaylistUpdateFragment : PlaylistMakerFragment() {
         viewModel.getScreenStateUpdateLiveData().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is PlaylistUpdateState.Idle -> {}
-                is PlaylistUpdateState.Loading -> {}
                 is PlaylistUpdateState.PlaylistState -> {
                     fillPlaylistData(playlist = state.playlist)
                 }

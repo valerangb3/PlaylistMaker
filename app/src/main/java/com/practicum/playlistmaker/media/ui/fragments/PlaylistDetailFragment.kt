@@ -95,7 +95,6 @@ class PlaylistDetailFragment : Fragment() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_COLLAPSED -> {
-                        //viewModel.getPlaylistItems()
                         binding.overlay.show()
                     }
 
@@ -140,6 +139,7 @@ class PlaylistDetailFragment : Fragment() {
         } else {
             viewModel.sharingPlaylist(tracks = playlistDetailAdapter.playlistTracks)
         }
+        bottomSheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -197,6 +197,8 @@ class PlaylistDetailFragment : Fragment() {
                 findNavController().navigateUp()
             }
         }
+
+        viewModel.getPlaylistDetail()
 
         initBottomSheet()
         initRecyclerView()
@@ -280,6 +282,7 @@ class PlaylistDetailFragment : Fragment() {
     }
 
     private fun addToAdapter(items: List<Track>) {
+        playlistDetailAdapter.playlistTracks.clear()
         playlistDetailAdapter.playlistTracks.addAll(items)
         playlistDetailAdapter.notifyDataSetChanged()
     }

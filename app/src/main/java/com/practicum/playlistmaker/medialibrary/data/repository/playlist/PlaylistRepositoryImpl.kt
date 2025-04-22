@@ -80,7 +80,10 @@ class PlaylistRepositoryImpl(
         val result = withContext(Dispatchers.IO) {
             appDatabase.playlistDao().getPlaylistDetail(playlistId)
         }
-
+        val sortedTracks = result.trackList.sortedWith(compareByDescending {
+            it.timestamp
+        })
+        result.trackList = sortedTracks
         emit(converter.convert(result))
     }
 
@@ -96,12 +99,16 @@ class PlaylistRepositoryImpl(
                 }
                 poster = saveImage(newData)
             }
-            appDatabase.playlistDao().updatePlaylist(playlistEntity = mapper.map(item = Playlist(
-                id = oldPlaylist.playlistId,
-                title = title,
-                description = description,
-                pathSrc = poster
-            )))
+            appDatabase.playlistDao().updatePlaylist(
+                playlistEntity = mapper.map(
+                    item = Playlist(
+                        id = oldPlaylist.playlistId,
+                        title = title,
+                        description = description,
+                        pathSrc = poster
+                    )
+                )
+            )
         }
     }
 
@@ -133,11 +140,32 @@ class PlaylistRepositoryImpl(
         withContext(Dispatchers.IO) {
             val itemsRef = appDatabase.playlistDao().getPlaylistTrackRef(playlistId = playlistId)
             val item = appDatabase.playlistDao().getPlaylist(playlistId = playlistId)
+            val tracksId = mutableListOf<Long>()
+
+            getPlaylistItem(playlistId = playlistId).collect { playlist ->
+                playlist.tracksId.forEach { trackId ->
+                    tracksId.add(trackId)
+                }
+            }
+
             if (item.pathSrc.isNotEmpty()) {
                 removePoster(path = item.pathSrc)
             }
             appDatabase.playlistDao().deletePlaylistRefs(items = itemsRef)
             appDatabase.playlistDao().deletePlaylist(playlistEntity = item)
+
+            if (tracksId.isNotEmpty()) {
+                val tracksIdEntity = appDatabase.playlistDao().getTrackListRefByListId(tracksId = tracksId)
+                tracksId.forEach { trackId ->
+                    deleteTrackItem(trackId = trackId, tracks = tracksIdEntity)
+                }
+            }
+        }
+    }
+
+    private suspend fun deleteTrackItem(trackId: Long, tracks: List<Long>) {
+        if (!tracks.contains(trackId)) {
+            appDatabase.playlistDao().deleteTrackItemById(trackId = trackId)
         }
     }
 
@@ -149,6 +177,8 @@ class PlaylistRepositoryImpl(
                     trackId = trackId
                 )
             )
+            val tracks = appDatabase.playlistDao().getTrackListRef(trackId = trackId)
+            deleteTrackItem(trackId = trackId, tracks = tracks)
         }
     }
 
