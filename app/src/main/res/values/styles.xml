@@ -266,7 +266,7 @@
 
     <style name="MyBottomNavigationView.TextAppearance" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:textSize">12sp</item>
-        <item name="android:font">@font/ys_display_regular</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight">400</item>
         <item name="android:color">@color/transparent</item>
 
@@ -311,7 +311,7 @@
 
     <style name="PlaylistStyleText">
         <item name="tabTextColor">?attr/colorOnSecondary</item>
-        <item name="android:font">@font/ys_display_regular</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight">400</item>
         <item name="android:textSize">12sp</item>
     </style>
@@ -329,15 +329,40 @@
 
     <style name="PlaylistTitleStyle">
         <item name="android:textColor">?attr/colorOnSecondary</item>
-        <item name="android:font">@font/ys_display_regular</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight">400</item>
         <item name="android:textSize">16sp</item>
     </style>
 
     <style name="PlaylistCountStyle">
         <item name="android:textColor">@color/yp_gray</item>
-        <item name="android:font">@font/ys_display_regular</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight">400</item>
         <item name="android:textSize">11sp</item>
+    </style>
+
+    <style name="PlaylistDetailContainer">
+        <item name="android:background">@color/yp_gray_light</item>
+    </style>
+
+    <style name="PlaylistTitleDetail">
+        <item name="android:textColor">@color/yp_black</item>
+        <item name="android:fontFamily">@font/ys_display_bold</item>
+        <item name="android:textFontWeight">700</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="PlaylistDescriptionDetail">
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">@color/yp_black</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="PlaylistDescriptionDetailWithDot" parent="PlaylistDescriptionDetail">
+        <item name="drawableStartCompat">@drawable/track_time_dot</item>
+        <item name="drawableTint">@color/yp_black</item>
     </style>
 </resources>

@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.playlist.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,28 +24,30 @@ import com.practicum.playlistmaker.playlist.presentation.viewmodel.PlaylistViewM
 import com.practicum.playlistmaker.utils.dpToPx
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PlaylistMakerFragment : Fragment() {
+open class PlaylistMakerFragment : Fragment() {
 
     companion object {
         private const val POSTER_RADIUS = 8.0F
         const val NEW_PLAYLIST_RESULT = "NEW_PLAYLIST_RESULT"
     }
 
+    var backPressedCallback: OnBackPressedCallback? = null
+
     private var _binding: FragmentPlaylistMakerBinding? = null
-    private val binding get() = _binding!!
+    val binding get() = _binding!!
 
-    private var fileUri: String = ""
+    var fileUri: String = ""
 
-    private lateinit var playlistItem: Playlist
+    lateinit var playlistItem: Playlist
 
-    private val viewModel: PlaylistViewModel by viewModel()
+    open val viewModel: PlaylistViewModel by viewModel()
 
     private val confirmDialog by lazy {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.playlist_message_title)
             .setMessage(R.string.playlist_message_description)
-            .setPositiveButton(R.string.playlist_message_done) { dialog, which -> findNavController().navigateUp() }
-            .setNegativeButton(R.string.playlist_message_cancel) { dialog, which -> }
+            .setPositiveButton(R.string.playlist_message_done) { _, _ -> findNavController().navigateUp() }
+            .setNegativeButton(R.string.playlist_message_cancel) { _, _ -> }
     }
 
     private val pickMedia =
@@ -117,11 +120,14 @@ class PlaylistMakerFragment : Fragment() {
             binding.createPlaylist.isEnabled = text.toString().isNotEmpty()
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+        backPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 navigateBack()
             }
-        })
+        }
+        backPressedCallback?.let { callback ->
+            requireActivity().onBackPressedDispatcher.addCallback(callback)
+        }
 
         create()
         unsetItemHandle()

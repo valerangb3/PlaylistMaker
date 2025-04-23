@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_mediaFragment_to_playlistMaker"
             app:destination="@id/playlistMakerFragment" />
+        <action
+            android:id="@+id/action_mediaFragment_to_playlistDetailFragment"
+            app:destination="@id/playlistDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -26,16 +29,6 @@
             android:id="@+id/action_searchFragment_to_trackFragment"
             app:destination="@id/trackFragment" />
     </fragment>
-    <!--<activity
-        android:id="@+id/trackActivity"
-        android:name="com.practicum.playlistmaker.player.ui.TrackActivity"
-        android:label="activity_track"
-        tools:layout="@layout/activity_track">
-        <argument
-            android:name="track"
-            app:argType="com.practicum.playlistmaker.player.domain.models.TrackInfo"
-            />
-    </activity>-->
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.practicum.playlistmaker.settings.ui.SettingsFragment"
@@ -58,5 +51,30 @@
         android:id="@+id/playlistMakerFragment"
         android:name="com.practicum.playlistmaker.playlist.ui.fragments.PlaylistMakerFragment"
         android:label="fragment_playlist_maker"
-        tools:layout="@layout/fragment_playlist_maker" />
+        tools:layout="@layout/fragment_playlist_maker" >
+    </fragment>
+    <fragment
+        android:id="@+id/playlistDetailFragment"
+        android:name="com.practicum.playlistmaker.media.ui.fragments.PlaylistDetailFragment"
+        android:label="fragment_playlist_detail"
+        tools:layout="@layout/fragment_playlist_detail" >
+        <argument
+            android:name="playlistId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_playlistDetailFragment_to_trackFragment"
+            app:destination="@id/trackFragment" />
+        <action
+            android:id="@+id/action_playlistDetailFragment_to_playlistUpdateFragment"
+            app:destination="@id/playlistUpdateFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/playlistUpdateFragment"
+        android:name="com.practicum.playlistmaker.playlist.ui.fragments.PlaylistUpdateFragment"
+        android:label="PlaylistUpdateFragment"
+        tools:layout="@layout/fragment_playlist_maker">
+        <argument
+            android:name="playlistId"
+            app:argType="long" />
+    </fragment>
 </navigation>

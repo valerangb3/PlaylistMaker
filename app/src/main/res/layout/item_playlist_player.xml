@@ -12,7 +12,6 @@
         android:id="@+id/poster"
         android:layout_width="46dp"
         android:layout_height="46dp"
-        android:scaleType="centerCrop"
         tools:src="@drawable/moonlight"
         />
 

@@ -8,16 +8,16 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.media.domain.models.Playlist
 import com.practicum.playlistmaker.medialibrary.domain.playlist.models.Playlist as PlaylistMediaLibrary
 import com.practicum.playlistmaker.media.presentation.state.PlaylistState
+import com.practicum.playlistmaker.media.presentation.viewmodel.FavoriteViewModel.Companion.CLICK_DEBOUNCE_DELAY
 import com.practicum.playlistmaker.medialibrary.domain.playlist.PlaylistRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PlaylistViewModel(
     private val playlistRepository: PlaylistRepository
 ) : ViewModel() {
 
-    init {
-        getPlaylistAll()
-    }
+    private var isClickAllowed = true
 
     private var items = mutableListOf<Playlist>()
     private var screenStateLiveData = MutableLiveData<PlaylistState>(PlaylistState.Loading)
@@ -28,9 +28,22 @@ class PlaylistViewModel(
         postData()
     }
 
+    fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            viewModelScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
+        }
+        return current
+    }
+
     private fun map(items: List<PlaylistMediaLibrary>): List<Playlist> {
         return items.map {
             Playlist(
+                id = it.id,
                 title = it.title,
                 filePath = it.pathSrc,
                 count = it.tracksId.size
@@ -46,7 +59,7 @@ class PlaylistViewModel(
         )
     }
 
-    private fun getPlaylistAll() {
+    fun getPlaylistAll() {
         viewModelScope.launch {
             playlistRepository.getPlaylistItems().collect { playlistItems ->
                 if (playlistItems.isEmpty()) {

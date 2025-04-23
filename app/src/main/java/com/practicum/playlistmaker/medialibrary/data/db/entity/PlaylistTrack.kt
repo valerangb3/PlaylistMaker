@@ -11,5 +11,5 @@ data class PlaylistTrack(
         entityColumn = "trackId",
         associateBy = Junction(PlaylistTrackRefEntity::class)
     )
-    val trackList: List<TrackEntity>
+    var trackList: List<TrackEntity>
 )

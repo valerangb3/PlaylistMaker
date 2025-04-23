@@ -8,11 +8,11 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ItemTrackBinding
 import com.practicum.playlistmaker.media.domain.models.Favourite
-import com.practicum.playlistmaker.media.ui.adapter.common.OnItemClickListener
+import com.practicum.playlistmaker.media.ui.adapter.common.OnFavouriteItemClickListener
 import com.practicum.playlistmaker.utils.dpToPx
 
 class FavouriteListAdapter(
-    private val favouriteItemHandler: OnItemClickListener
+    private val favouriteItemHandler: OnFavouriteItemClickListener
 ) : RecyclerView.Adapter<FavouriteListAdapter.FavouriteViewHolder>() {
 
     var favouriteList = mutableListOf<Favourite>()
@@ -20,8 +20,8 @@ class FavouriteListAdapter(
     override fun getItemCount(): Int = favouriteList.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavouriteViewHolder {
-        val layoutInspector = LayoutInflater.from(parent.context)
-        return FavouriteViewHolder(ItemTrackBinding.inflate(layoutInspector, parent, false))
+        val layoutInflater = LayoutInflater.from(parent.context)
+        return FavouriteViewHolder(ItemTrackBinding.inflate(layoutInflater, parent, false))
     }
 
     override fun onBindViewHolder(holder: FavouriteViewHolder, position: Int) {
