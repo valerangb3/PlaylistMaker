@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PlaybackButtonView">
+        <attr name="playIco"
+            format="reference"/>
+        <attr name="pauseIco"
+            format="reference"/>
+        <attr name="tint"
+            format="color"/>
+    </declare-styleable>
+</resources>

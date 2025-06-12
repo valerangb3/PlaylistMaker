@@ -222,19 +222,34 @@
             app:layout_constraintTop_toTopOf="@id/play"
             app:layout_constraintEnd_toStartOf="@id/rightBorder"/>
 
-        <ImageButton
+        <com.practicum.playlistmaker.customview.PlaybackButtonView
             style="@style/PlayTrackBtn"
             android:id="@+id/play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:src="@drawable/play"
+            android:layout_width="84dp"
+            android:layout_height="84dp"
             android:layout_marginBottom="56dp"
-            android:contentDescription="@string/play"
+
+            app:playIco="@drawable/play"
+            app:pauseIco="@drawable/pause"
 
             app:layout_constraintStart_toEndOf="@id/toPlaylist"
             app:layout_constraintEnd_toStartOf="@id/toFavourite"
             app:layout_constraintBottom_toTopOf="@id/durationName"/>
+
+<!--        <ImageButton-->
+<!--            style="@style/PlayTrackBtn"-->
+<!--            android:id="@+id/play_old"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@null"-->
+<!--            android:src="@drawable/play"-->
+<!--            android:layout_marginBottom="56dp"-->
+<!--            android:contentDescription="@string/play"-->
+<!--            android:visibility="gone"-->
+
+<!--            app:layout_constraintStart_toEndOf="@id/toPlaylist"-->
+<!--            app:layout_constraintEnd_toStartOf="@id/toFavourite"-->
+<!--            app:layout_constraintBottom_toTopOf="@id/durationName"/>-->
 
         <TextView
             style="@style/Timer"
@@ -326,6 +341,7 @@
         android:orientation="vertical"
         android:paddingTop="8dp"
         android:paddingHorizontal="14dp"
+        tools:visibility="gone"
 
         app:behavior_hideable="true"
         app:behavior_peekHeight="506dp"
