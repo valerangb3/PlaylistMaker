@@ -242,12 +242,7 @@ class TrackFragment : Fragment() {
             if (trackItem.previewUrl == null) {
                 Toast.makeText(requireContext(), R.string.play_error, Toast.LENGTH_SHORT).show()
             }
-            val state = binding.play.currentState
-            val newState = when (state) {
-                PlaybackButtonView.STATE.PLAY -> PlaybackButtonView.STATE.PLAY
-                PlaybackButtonView.STATE.PAUSE -> PlaybackButtonView.STATE.PAUSE
-            }
-            binding.play.currentState = newState
+
             viewModel.playback()
         }
 

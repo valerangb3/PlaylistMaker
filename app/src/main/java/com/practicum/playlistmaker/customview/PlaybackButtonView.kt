@@ -3,7 +3,6 @@ package com.practicum.playlistmaker.customview
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -12,7 +11,6 @@ import androidx.annotation.AttrRes
 import androidx.annotation.StyleRes
 import androidx.core.graphics.drawable.toBitmap
 import com.practicum.playlistmaker.R
-import kotlin.math.min
 
 class PlaybackButtonView @JvmOverloads constructor(
     context: Context,
@@ -35,6 +33,13 @@ class PlaybackButtonView @JvmOverloads constructor(
     private val pauseImageBitmap: Bitmap?
 
     private val playbackImageRect = RectF(0f, 0f, 0f, 0f)
+
+    private fun toggleState() {
+        currentState = when (currentState) {
+            STATE.PLAY -> STATE.PLAY
+            STATE.PAUSE -> STATE.PAUSE
+        }
+    }
 
     init {
         context.theme.obtainStyledAttributes(
@@ -79,6 +84,7 @@ class PlaybackButtonView @JvmOverloads constructor(
             MotionEvent.ACTION_DOWN -> return true
             MotionEvent.ACTION_UP -> {
                 performClick()
+                toggleState()
                 return true
             }
         }
