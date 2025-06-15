@@ -63,4 +63,6 @@ dependencies {
     implementation(libs.room.runtime)
     ksp(libs.ksp.compiler)
     implementation(libs.room.ktx)
+
+    implementation(libs.androidx.core.ktx.v170)
 }

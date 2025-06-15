@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.player.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.customview.PlaybackButtonView
 import com.practicum.playlistmaker.databinding.FragmentTrackBinding
 import com.practicum.playlistmaker.player.domain.models.TrackInfo
 import com.practicum.playlistmaker.player.presentation.state.PlayerScreenState
@@ -240,8 +242,10 @@ class TrackFragment : Fragment() {
             if (trackItem.previewUrl == null) {
                 Toast.makeText(requireContext(), R.string.play_error, Toast.LENGTH_SHORT).show()
             }
+
             viewModel.playback()
         }
+
         binding.buttonBack.setOnClickListener {
             findNavController().navigateUp()
         }
@@ -275,9 +279,9 @@ class TrackFragment : Fragment() {
         viewModel.getPlayStatusLiveData().observe(viewLifecycleOwner) { playStatus ->
 
             if (!playStatus.isPlaying) {
-                binding.play.setImageResource(R.drawable.play)
+                binding.play.currentState = PlaybackButtonView.STATE.PAUSE
             } else {
-                binding.play.setImageResource(R.drawable.pause)
+                binding.play.currentState = PlaybackButtonView.STATE.PLAY
             }
             binding.timer.text = playStatus.formatProgress()
         }
