@@ -1,7 +1,8 @@
 package com.practicum.playlistmaker.player.ui
 
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,7 @@ import com.practicum.playlistmaker.player.presentation.state.ToastState
 import com.practicum.playlistmaker.player.presentation.viewmodel.PlayerViewModel
 import com.practicum.playlistmaker.player.ui.models.PlaylistTrack
 import com.practicum.playlistmaker.player.ui.models.Track
+import com.practicum.playlistmaker.utils.NetworkConnectBroadcastReceiver
 import com.practicum.playlistmaker.utils.dpToPx
 import com.practicum.playlistmaker.utils.gone
 import com.practicum.playlistmaker.utils.show
@@ -36,6 +38,8 @@ class TrackFragment : Fragment() {
     companion object {
         private const val POSTER_RADIUS = 8.0F
     }
+
+    private val receiver = NetworkConnectBroadcastReceiver()
 
     private var _binding: FragmentTrackBinding? = null
     private val binding get() = _binding!!
@@ -322,9 +326,16 @@ class TrackFragment : Fragment() {
         initRecyclerView()
     }
 
+    override fun onResume() {
+        super.onResume()
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        requireContext().registerReceiver(receiver, filter)
+    }
+
     override fun onPause() {
         super.onPause()
         viewModel.pause()
+        requireContext().unregisterReceiver(receiver)
     }
 
     override fun onDestroyView() {

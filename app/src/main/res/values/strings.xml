@@ -16,6 +16,7 @@
     <string name="settings_offer_link">https://yandex.ru/legal/practicum_offer/</string>
     <!--COMMON-->
     <string name="empty_playlist">В плейлисте пока нет треков</string>
+    <string name="check_network">Проверьте подключение интернета</string>
     <string name="app_back">Назад</string>
     <string name="update_request">Обновить</string>
     <string name="create">Создать</string>

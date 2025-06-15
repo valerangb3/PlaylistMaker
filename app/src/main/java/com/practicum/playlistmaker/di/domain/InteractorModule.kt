@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker.di.domain
 
+import com.practicum.playlistmaker.network.domain.CheckNetworkUseCase
 import com.practicum.playlistmaker.player.domain.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.impl.PlayerInteractorImpl
 import com.practicum.playlistmaker.search.domain.TracksHistoryInteractor
@@ -41,5 +42,10 @@ val interactorModule = module {
         PlayerInteractorImpl(
             playerRepository = get()
         )
+    }
+
+
+    single <CheckNetworkUseCase> {
+        CheckNetworkUseCase(get())
     }
 }
