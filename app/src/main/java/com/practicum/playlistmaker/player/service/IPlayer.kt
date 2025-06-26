@@ -1,9 +1,13 @@
 package com.practicum.playlistmaker.player.service
 
+import com.practicum.playlistmaker.player.service.state.PlayerState
+
 interface IPlayer {
-    fun startPlater()
+    suspend fun playback()
+    fun pausePlayer()
+   /* fun startPlayer()
 
     fun pausePlayer()
 
-    fun getPlaterState()
+    fun getPlayerState(): PlayerState*/
 }

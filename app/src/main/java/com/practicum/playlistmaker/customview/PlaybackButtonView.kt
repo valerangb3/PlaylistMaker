@@ -36,8 +36,8 @@ class PlaybackButtonView @JvmOverloads constructor(
 
     private fun toggleState() {
         currentState = when (currentState) {
-            STATE.PLAY -> STATE.PLAY
-            STATE.PAUSE -> STATE.PAUSE
+            STATE.PLAY -> STATE.PAUSE
+            STATE.PAUSE -> STATE.PLAY
         }
     }
 

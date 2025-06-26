@@ -10,6 +10,7 @@ import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,18 +30,21 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.customview.PlaybackButtonView
 import com.practicum.playlistmaker.databinding.FragmentTrackBinding
+import com.practicum.playlistmaker.player.domain.models.PlayStatus
 import com.practicum.playlistmaker.player.domain.models.TrackInfo
 import com.practicum.playlistmaker.player.presentation.state.PlayerScreenState
 import com.practicum.playlistmaker.player.presentation.state.PlaylistScreenState
 import com.practicum.playlistmaker.player.presentation.state.ToastState
 import com.practicum.playlistmaker.player.presentation.viewmodel.PlayerViewModel
 import com.practicum.playlistmaker.player.service.PlayerService
+import com.practicum.playlistmaker.player.service.state.PlayerState
 import com.practicum.playlistmaker.player.ui.models.PlaylistTrack
 import com.practicum.playlistmaker.player.ui.models.Track
 import com.practicum.playlistmaker.utils.NetworkConnectBroadcastReceiver
 import com.practicum.playlistmaker.utils.dpToPx
 import com.practicum.playlistmaker.utils.gone
 import com.practicum.playlistmaker.utils.show
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -48,15 +53,26 @@ class TrackFragment : Fragment() {
         private const val POSTER_RADIUS = 8.0F
     }
 
+    private val viewModel: PlayerViewModel by viewModel {
+        parametersOf(trackItem)
+    }
+
     private var playerService: PlayerService? = null
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as PlayerService.PlayerServiceBinder
             playerService = binder.getService()
+            viewModel.setPlayerControl(player = playerService)
+            lifecycleScope.launch {
+                playerService?.playStatusStateFlow?.collect {
+                    updateButtonAndProgress(it)
+                }
+            }
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
+            Log.d("SPRINT25", "onServiceDisconnected")
             playerService = null
         }
     }
@@ -68,8 +84,6 @@ class TrackFragment : Fragment() {
             //bindPlayerService()
             bindPlayerService()
             //playerService?.startPlater()
-        } else {
-
         }
     }
 
@@ -86,9 +100,7 @@ class TrackFragment : Fragment() {
 
     private lateinit var playlistAdapter: PlaylistAdapter
 
-    private val viewModel: PlayerViewModel by viewModel {
-        parametersOf(trackItem)
-    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -298,14 +310,16 @@ class TrackFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         trackItem = args.track
+        preparePlayButton(false)
+        render(isLoading = false, trackInfo = trackItem)
         bindService()
         binding.play.setOnClickListener {
             if (trackItem.previewUrl == null) {
                 Toast.makeText(requireContext(), R.string.play_error, Toast.LENGTH_SHORT).show()
             }
-            playerService?.startPlater()
 
-            //viewModel.playback()
+            //playerService?.playback()
+            viewModel.playback()
         }
 
         binding.buttonBack.setOnClickListener {
@@ -327,17 +341,7 @@ class TrackFragment : Fragment() {
                 trackItem.inFavourite = inFavourite
             }
         }
-        viewModel.getScreenStateLiveData().observe(viewLifecycleOwner) { screenState ->
-            when (screenState) {
-                is PlayerScreenState.Loading -> {
-                    render(isLoading = true, trackInfo = null)
-                }
 
-                is PlayerScreenState.Content -> {
-                    render(isLoading = false, trackInfo = screenState.trackInfo)
-                }
-            }
-        }
         viewModel.getPlayStatusLiveData().observe(viewLifecycleOwner) { playStatus ->
 
             if (!playStatus.isPlaying) {
@@ -356,7 +360,6 @@ class TrackFragment : Fragment() {
                         playlistState.data
                     )
                 }
-
                 is PlaylistScreenState.PlaylistContentState -> handleListAdapter(playlistState.data)
             }
         }
@@ -391,6 +394,30 @@ class TrackFragment : Fragment() {
         initRecyclerView()
     }
 
+    private fun preparePlayButton(isPrepared: Boolean) {
+        if (isPrepared) {
+            binding.play.show()
+        } else {
+            binding.play.gone()
+        }
+        /*if (isPrepared) {
+            binding.play.alpha = 1f
+        } else {
+            binding.play.alpha = .3f
+        }*/
+    }
+
+    private fun updateButtonAndProgress(playStatus: PlayStatus) {
+        if (!playStatus.isPlaying) {
+            binding.play.currentState = PlaybackButtonView.STATE.PAUSE
+        } else {
+            binding.play.currentState = PlaybackButtonView.STATE.PLAY
+        }
+        preparePlayButton(true)
+        binding.timer.text = playStatus.formatProgress()
+    }
+
+
     override fun onResume() {
         super.onResume()
         val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
@@ -399,11 +426,12 @@ class TrackFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        viewModel.pause()
+        //viewModel.pause()
         requireContext().unregisterReceiver(receiver)
     }
 
     override fun onDestroyView() {
+        Log.d("SPRINT25", "onDestroyView")
         super.onDestroyView()
         unbindPlayerService()
         bottomSheetBehavior = null
