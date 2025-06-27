@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker.player.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,6 +22,7 @@ import com.practicum.playlistmaker.player.ui.models.Track
 import com.practicum.playlistmaker.medialibrary.domain.playlist.models.Track as MediaTrack
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
@@ -42,52 +44,18 @@ class PlayerViewModel(
     private var toastState = MutableLiveData<ToastState>(ToastState.None)
 
     init {
-        //TODO удалить код
-        //val previewUrl = trackInfo.previewUrl
-
         inFavouriteLiveData.postValue(trackInfo.inFavourite)
         checkFavourite(trackInfo.trackId)
-        //TODO удалить код
-        /*previewUrl?.let {
-            playerUserCase.prepareTrack(
-                url = previewUrl,
-                events = object : PlayerInteractor.TrackHandler {
-                    override fun onProgress(progress: Long) {
-                        playStatusLiveData.value = getCurrentPlayStatus().copy(progress = progress)
-                    }
-
-                    override fun onComplete() {
-                        timerJob?.cancel()
-                        playStatusLiveData.value =
-                            getCurrentPlayStatus().copy(progress = 0L, isPlaying = false)
-                    }
-
-                    override fun onPause(isPlaying: Boolean) {
-                        playStatusLiveData.value =
-                            getCurrentPlayStatus().copy(isPlaying = isPlaying)
-                    }
-
-                    override suspend fun onStart(isPlaying: Boolean) {
-                        playStatusLiveData.value = getCurrentPlayStatus().copy(
-                            isPlaying = true
-                        )
-                    }
-
-                    override fun onLoad() {
-
-                    }
-                }
-            )
-        }*/
-    }
-
-    //TODO удалить код
-    private fun getCurrentPlayStatus(): PlayStatus {
-        return playStatusLiveData.value ?: PlayStatus(progress = 0L, isPlaying = false)
     }
 
     fun setPlayerControl(player: IPlayer?) {
         playerControl = player
+
+        viewModelScope.launch {
+            playerControl?.getPlayerStatus()?.collect {
+                playStatusLiveData.postValue(it)
+            }
+        }
     }
 
     fun getScreenPlaylistStateLiveData(): LiveData<PlaylistScreenState> =
@@ -197,16 +165,10 @@ class PlayerViewModel(
         }
     }
 
-    //TODO удалить код
     fun playback() {
         viewModelScope.launch {
             playerControl?.playback()
-            //playerUserCase.playback()
         }
-    }
-
-    private fun pause() {
-        playerControl?.pausePlayer()
     }
 
     fun addToPlayList(playlist: PlaylistTrack, track: Track) {
@@ -257,7 +219,22 @@ class PlayerViewModel(
         }
     }
 
+    fun showNotification() {
+        if (playStatusLiveData.value?.isPlaying == true) {
+            playerControl?.showNotification()
+        }
+    }
+
+    fun hideNotification() {
+        playerControl?.hideNotification()
+    }
+
     override fun onCleared() {
         playerUserCase.release()
+        removePlayerControl()
+    }
+
+    fun removePlayerControl() {
+        playerControl = null
     }
 }

@@ -40,9 +40,11 @@ class PlayerRepositoryImpl(
         playerState = STATE_PLAYING
         mediaPlayer.start()
         eventHandler.onStart(isPlaying = mediaPlayer.isPlaying)
-        while (mediaPlayer.isPlaying) {
+        while (true) {
             delay(CHECK_TIME_DELAY)
-            eventHandler.onProgress(progress = mediaPlayer.currentPosition.toLong())
+            if (mediaPlayer.isPlaying) {
+                eventHandler.onProgress(progress = mediaPlayer.currentPosition.toLong())
+            }
         }
     }
 

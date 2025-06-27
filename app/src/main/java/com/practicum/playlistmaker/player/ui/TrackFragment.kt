@@ -19,7 +19,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,21 +29,17 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.customview.PlaybackButtonView
 import com.practicum.playlistmaker.databinding.FragmentTrackBinding
-import com.practicum.playlistmaker.player.domain.models.PlayStatus
 import com.practicum.playlistmaker.player.domain.models.TrackInfo
-import com.practicum.playlistmaker.player.presentation.state.PlayerScreenState
 import com.practicum.playlistmaker.player.presentation.state.PlaylistScreenState
 import com.practicum.playlistmaker.player.presentation.state.ToastState
 import com.practicum.playlistmaker.player.presentation.viewmodel.PlayerViewModel
 import com.practicum.playlistmaker.player.service.PlayerService
-import com.practicum.playlistmaker.player.service.state.PlayerState
 import com.practicum.playlistmaker.player.ui.models.PlaylistTrack
 import com.practicum.playlistmaker.player.ui.models.Track
 import com.practicum.playlistmaker.utils.NetworkConnectBroadcastReceiver
 import com.practicum.playlistmaker.utils.dpToPx
 import com.practicum.playlistmaker.utils.gone
 import com.practicum.playlistmaker.utils.show
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -64,15 +59,10 @@ class TrackFragment : Fragment() {
             val binder = service as PlayerService.PlayerServiceBinder
             playerService = binder.getService()
             viewModel.setPlayerControl(player = playerService)
-            lifecycleScope.launch {
-                playerService?.playStatusStateFlow?.collect {
-                    updateButtonAndProgress(it)
-                }
-            }
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-            Log.d("SPRINT25", "onServiceDisconnected")
+            viewModel.removePlayerControl()
             playerService = null
         }
     }
@@ -81,9 +71,7 @@ class TrackFragment : Fragment() {
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            //bindPlayerService()
             bindPlayerService()
-            //playerService?.startPlater()
         }
     }
 
@@ -112,9 +100,9 @@ class TrackFragment : Fragment() {
     }
 
     private fun bindPlayerService() {
-        trackItem.previewUrl?.let { songUrl ->
+        trackItem.previewUrl?.let { _ ->
             val intent = Intent(requireContext(), PlayerService::class.java).apply {
-                putExtra("song_url", songUrl)
+                putExtra("track", trackItem)
             }
 
             requireContext().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
@@ -310,15 +298,13 @@ class TrackFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         trackItem = args.track
-        preparePlayButton(false)
+        preparePlayButton(isPrepared = false)
         render(isLoading = false, trackInfo = trackItem)
         bindService()
         binding.play.setOnClickListener {
             if (trackItem.previewUrl == null) {
                 Toast.makeText(requireContext(), R.string.play_error, Toast.LENGTH_SHORT).show()
             }
-
-            //playerService?.playback()
             viewModel.playback()
         }
 
@@ -343,7 +329,7 @@ class TrackFragment : Fragment() {
         }
 
         viewModel.getPlayStatusLiveData().observe(viewLifecycleOwner) { playStatus ->
-
+            preparePlayButton(isPrepared = playStatus.isPrepared)
             if (!playStatus.isPlaying) {
                 binding.play.currentState = PlaybackButtonView.STATE.PAUSE
             } else {
@@ -395,45 +381,26 @@ class TrackFragment : Fragment() {
     }
 
     private fun preparePlayButton(isPrepared: Boolean) {
-        if (isPrepared) {
-            binding.play.show()
-        } else {
-            binding.play.gone()
-        }
-        /*if (isPrepared) {
-            binding.play.alpha = 1f
-        } else {
-            binding.play.alpha = .3f
-        }*/
+        binding.play.isEnabled = isPrepared
     }
-
-    private fun updateButtonAndProgress(playStatus: PlayStatus) {
-        if (!playStatus.isPlaying) {
-            binding.play.currentState = PlaybackButtonView.STATE.PAUSE
-        } else {
-            binding.play.currentState = PlaybackButtonView.STATE.PLAY
-        }
-        preparePlayButton(true)
-        binding.timer.text = playStatus.formatProgress()
-    }
-
 
     override fun onResume() {
         super.onResume()
+        viewModel.hideNotification()
         val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
         requireContext().registerReceiver(receiver, filter)
     }
 
     override fun onPause() {
         super.onPause()
-        //viewModel.pause()
         requireContext().unregisterReceiver(receiver)
+        viewModel.showNotification()
     }
 
     override fun onDestroyView() {
-        Log.d("SPRINT25", "onDestroyView")
         super.onDestroyView()
         unbindPlayerService()
+        viewModel.hideNotification()
         bottomSheetBehavior = null
         _binding = null
     }
