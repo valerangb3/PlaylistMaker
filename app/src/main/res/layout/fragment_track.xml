@@ -236,21 +236,6 @@
             app:layout_constraintEnd_toStartOf="@id/toFavourite"
             app:layout_constraintBottom_toTopOf="@id/durationName"/>
 
-<!--        <ImageButton-->
-<!--            style="@style/PlayTrackBtn"-->
-<!--            android:id="@+id/play_old"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:background="@null"-->
-<!--            android:src="@drawable/play"-->
-<!--            android:layout_marginBottom="56dp"-->
-<!--            android:contentDescription="@string/play"-->
-<!--            android:visibility="gone"-->
-
-<!--            app:layout_constraintStart_toEndOf="@id/toPlaylist"-->
-<!--            app:layout_constraintEnd_toStartOf="@id/toFavourite"-->
-<!--            app:layout_constraintBottom_toTopOf="@id/durationName"/>-->
-
         <TextView
             style="@style/Timer"
             android:id="@+id/timer"

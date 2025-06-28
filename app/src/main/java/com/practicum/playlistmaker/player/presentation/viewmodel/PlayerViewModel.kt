@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker.player.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,11 +16,13 @@ import com.practicum.playlistmaker.player.domain.models.TrackInfo
 import com.practicum.playlistmaker.player.presentation.state.PlayerScreenState
 import com.practicum.playlistmaker.player.presentation.state.PlaylistScreenState
 import com.practicum.playlistmaker.player.presentation.state.ToastState
+import com.practicum.playlistmaker.player.service.IPlayer
 import com.practicum.playlistmaker.player.ui.models.PlaylistTrack
 import com.practicum.playlistmaker.player.ui.models.Track
 import com.practicum.playlistmaker.medialibrary.domain.playlist.models.Track as MediaTrack
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
@@ -30,9 +33,8 @@ class PlayerViewModel(
     private val map: FavouriteMap
 ) : ViewModel() {
 
-    private var timerJob: Job? = null
+    private var playerControl: IPlayer? = null
 
-    private var screenStateLiveData = MutableLiveData<PlayerScreenState>(PlayerScreenState.Loading)
     private var screenPlaylistStateLiveData =
         MutableLiveData<PlaylistScreenState>(PlaylistScreenState.Loading)
 
@@ -42,49 +44,20 @@ class PlayerViewModel(
     private var toastState = MutableLiveData<ToastState>(ToastState.None)
 
     init {
-        val previewUrl = trackInfo.previewUrl
-
         inFavouriteLiveData.postValue(trackInfo.inFavourite)
         checkFavourite(trackInfo.trackId)
+    }
 
-        previewUrl?.let {
-            playerUserCase.prepareTrack(
-                url = previewUrl,
-                events = object : PlayerInteractor.TrackHandler {
-                    override fun onProgress(progress: Long) {
-                        playStatusLiveData.value = getCurrentPlayStatus().copy(progress = progress)
-                    }
+    fun setPlayerControl(player: IPlayer?) {
+        playerControl = player
 
-                    override fun onComplete() {
-                        timerJob?.cancel()
-                        playStatusLiveData.value =
-                            getCurrentPlayStatus().copy(progress = 0L, isPlaying = false)
-                    }
-
-                    override fun onPause(isPlaying: Boolean) {
-                        playStatusLiveData.value =
-                            getCurrentPlayStatus().copy(isPlaying = isPlaying)
-                    }
-
-                    override suspend fun onStart(isPlaying: Boolean) {
-                        playStatusLiveData.value = getCurrentPlayStatus().copy(
-                            isPlaying = true
-                        )
-                    }
-
-                    override fun onLoad() {
-                        screenStateLiveData.postValue(PlayerScreenState.Content(trackInfo))
-                    }
-                }
-            )
+        viewModelScope.launch {
+            playerControl?.getPlayerStatus()?.collect {
+                playStatusLiveData.postValue(it)
+            }
         }
     }
 
-    private fun getCurrentPlayStatus(): PlayStatus {
-        return playStatusLiveData.value ?: PlayStatus(progress = 0L, isPlaying = false)
-    }
-
-    fun getScreenStateLiveData(): LiveData<PlayerScreenState> = screenStateLiveData
     fun getScreenPlaylistStateLiveData(): LiveData<PlaylistScreenState> =
         screenPlaylistStateLiveData
 
@@ -193,14 +166,9 @@ class PlayerViewModel(
     }
 
     fun playback() {
-        timerJob = viewModelScope.launch {
-            playerUserCase.playback()
+        viewModelScope.launch {
+            playerControl?.playback()
         }
-    }
-
-    fun pause() {
-        timerJob?.cancel()
-        playerUserCase.pause()
     }
 
     fun addToPlayList(playlist: PlaylistTrack, track: Track) {
@@ -251,8 +219,22 @@ class PlayerViewModel(
         }
     }
 
+    fun showNotification() {
+        if (playStatusLiveData.value?.isPlaying == true) {
+            playerControl?.showNotification()
+        }
+    }
+
+    fun hideNotification() {
+        playerControl?.hideNotification()
+    }
+
     override fun onCleared() {
-        timerJob?.cancel()
         playerUserCase.release()
+        removePlayerControl()
+    }
+
+    fun removePlayerControl() {
+        playerControl = null
     }
 }

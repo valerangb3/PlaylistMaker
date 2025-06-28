@@ -4,6 +4,7 @@ import android.app.Application
 import com.practicum.playlistmaker.di.data.dataModule
 import com.practicum.playlistmaker.di.domain.interactorModule
 import com.practicum.playlistmaker.di.domain.repositoryModule
+import com.practicum.playlistmaker.di.platform.platformModule
 import com.practicum.playlistmaker.di.viewmodel.viewModelModule
 import com.practicum.playlistmaker.settings.domain.SettingsInteractor
 import org.koin.android.ext.android.inject
@@ -26,7 +27,8 @@ class App : Application() {
                 dataModule,
                 repositoryModule,
                 interactorModule,
-                viewModelModule
+                viewModelModule,
+                platformModule
             )
         }
         themeUseCase.switchTheme(themeUseCase.getTheme())

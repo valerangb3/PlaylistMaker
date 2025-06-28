@@ -1,5 +1,8 @@
 package com.practicum.playlistmaker.search.ui
 
+import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import androidx.core.content.getSystemService
 import android.os.Bundle
 import android.text.Editable
@@ -23,6 +26,7 @@ import com.practicum.playlistmaker.search.presentation.models.ErrorType
 import com.practicum.playlistmaker.search.presentation.state.TrackListState
 import com.practicum.playlistmaker.search.presentation.viewmodel.SearchViewModel
 import com.practicum.playlistmaker.search.ui.adapter.TrackListAdapter
+import com.practicum.playlistmaker.utils.NetworkConnectBroadcastReceiver
 import com.practicum.playlistmaker.utils.gone
 import com.practicum.playlistmaker.utils.show
 import kotlinx.coroutines.launch
@@ -34,6 +38,8 @@ class SearchFragment : Fragment() {
         const val INPUT_VALUE = "INPUT_VALUE"
         const val DEFAULT_INPUT_VALUE = ""
     }
+
+    private val receiver = NetworkConnectBroadcastReceiver()
 
     private var _binding : FragmentSearchBinding? = null
     private val binding get() = _binding!!
@@ -286,6 +292,7 @@ class SearchFragment : Fragment() {
     override fun onPause() {
         viewModel.saveHistory()
         super.onPause()
+        requireContext().unregisterReceiver(receiver)
     }
 
     override fun onDestroyView() {
@@ -294,5 +301,11 @@ class SearchFragment : Fragment() {
         }
         _binding = null
         super.onDestroyView()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        requireContext().registerReceiver(receiver, filter)
     }
 }
