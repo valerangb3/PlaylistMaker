@@ -44,6 +44,8 @@ class PlayerRepositoryImpl(
             delay(CHECK_TIME_DELAY)
             if (mediaPlayer.isPlaying) {
                 eventHandler.onProgress(progress = mediaPlayer.currentPosition.toLong())
+            } else {
+                break
             }
         }
     }
