@@ -26,6 +26,7 @@ interface PlaylistDao {
     @Query("SELECT * FROM playlist_table WHERE playlistId = :playlistId")
     suspend fun getPlayListWithTracksById(playlistId: Long): PlaylistTrack
 
+    @Transaction
     @Query("SELECT * FROM playlist_table WHERE playlistId = :playlistId")
     suspend fun getPlaylistDetail(playlistId: Long): PlaylistTrack
 

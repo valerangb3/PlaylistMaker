@@ -12,9 +12,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+//import com.bumptech.glide.Glide
+//import com.bumptech.glide.load.resource.bitmap.CenterCrop
+//import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentPlaylistMakerBinding
@@ -54,13 +54,13 @@ open class PlaylistMakerFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             uri?.let {
                 fileUri = it.toString()
-                Glide.with(this)
+                /*Glide.with(this)
                     .load(uri)
                     .transform(
                         CenterCrop(),
                         RoundedCorners(dpToPx(POSTER_RADIUS, requireContext()))
                     )
-                    .into(binding.poster)
+                    .into(binding.poster)*/
                 binding.poster.tag = requireActivity().getString(R.string.playlist_image_not_empty_tag)
             }
         }

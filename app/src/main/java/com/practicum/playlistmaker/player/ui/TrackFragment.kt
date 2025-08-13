@@ -22,9 +22,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+//import com.bumptech.glide.Glide
+//import com.bumptech.glide.load.resource.bitmap.CenterCrop
+//import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.customview.PlaybackButtonView
@@ -179,11 +179,11 @@ class TrackFragment : Fragment() {
             binding.countryValue.gone()
         }
 
-        Glide.with(this)
+        /*Glide.with(this)
             .load(trackInfo.artworkUrl512)
             .placeholder(R.drawable.big_placeholder)
             .transform(CenterCrop(), RoundedCorners(dpToPx(POSTER_RADIUS, requireContext())))
-            .into(binding.poster)
+            .into(binding.poster)*/
     }
 
     private fun handleBottomSheet(bottomSheetBehavior: BottomSheetBehavior<LinearLayout>?) {

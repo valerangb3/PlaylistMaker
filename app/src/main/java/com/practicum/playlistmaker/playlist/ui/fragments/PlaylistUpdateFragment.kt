@@ -5,9 +5,9 @@ import android.util.Log
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+//import com.bumptech.glide.Glide
+//import com.bumptech.glide.load.resource.bitmap.CenterCrop
+//import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.playlist.presentation.models.Playlist
 import com.practicum.playlistmaker.playlist.presentation.state.PlaylistUpdateState
@@ -29,13 +29,13 @@ class PlaylistUpdateFragment : PlaylistMakerFragment() {
 
     private fun fillPlaylistData(playlist: Playlist) {
         if (playlist.fileUri.isNotEmpty()) {
-            Glide.with(requireContext())
+            /*Glide.with(requireContext())
                 .load(playlist.fileUri)
                 .transform(
                     CenterCrop(),
                     RoundedCorners(dpToPx(POSTER_RADIUS, requireContext()))
                 )
-                .into(binding.poster)
+                .into(binding.poster)*/
         }
         binding.editTitle.editText?.setText(playlist.title)
         binding.wrapperDescription.editText?.setText(playlist.description)

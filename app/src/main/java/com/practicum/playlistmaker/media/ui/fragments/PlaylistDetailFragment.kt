@@ -9,9 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+//import com.bumptech.glide.Glide
+//import com.bumptech.glide.load.resource.bitmap.CenterCrop
+//import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.practicum.playlistmaker.R
@@ -303,20 +303,20 @@ class PlaylistDetailFragment : Fragment() {
     private fun showPlaylistDetailInfoBottomSheet(playlist: PlaylistDetail) {
         binding.trackCount.text = getWordForm(playlist.trackList.size)
         binding.posterTitle.text = playlist.title
-        Glide.with(requireContext())
+        /*Glide.with(requireContext())
             .load(playlist.poster)
             .placeholder(R.drawable.track_placeholder)
             .transform(CenterCrop(), RoundedCorners(dpToPx(IMG_RADIUS, requireContext())))
-            .into(binding.posterBottomSheet)
+            .into(binding.posterBottomSheet)*/
     }
 
     private fun showPlaylistDetailInfo(playlist: PlaylistDetail) {
         showContent()
-        Glide.with(requireContext())
+        /*Glide.with(requireContext())
             .load(playlist.poster)
             .placeholder(R.drawable.playlist_detail_empty)
             .centerCrop()
-            .into(binding.poster)
+            .into(binding.poster)*/
         binding.playlistTitle.text = playlist.title
         binding.playlistTimeTotal.text = getTimeWordForm(ms = playlist.duration)
         binding.playlistCountTotal.text = getWordForm(playlist.trackList.size)

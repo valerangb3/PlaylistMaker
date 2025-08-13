@@ -3,8 +3,8 @@ package com.practicum.playlistmaker.search.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+//import com.bumptech.glide.Glide
+//import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ItemTrackBinding
 import com.practicum.playlistmaker.search.domain.models.Track
@@ -34,12 +34,12 @@ class TrackListAdapter(
     ) {
 
         fun bind(trackItem: Track) {
-            Glide.with(itemView.context)
+            /*Glide.with(itemView.context)
                 .load(trackItem.artworkUrl100)
                 .placeholder(R.drawable.track_placeholder)
                 .fitCenter()
                 .transform(RoundedCorners(dpToPx(IMG_RADIUS, itemView.context)))
-                .into(binding.albumPicture)
+                .into(binding.albumPicture)*/
 
             binding.trackName.text = trackItem.trackName
             binding.musicalArtistName.text = trackItem.artistName

@@ -3,9 +3,9 @@ package com.practicum.playlistmaker.player.ui
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+//import com.bumptech.glide.Glide
+//import com.bumptech.glide.load.resource.bitmap.CenterCrop
+//import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ItemPlaylistPlayerBinding
 import com.practicum.playlistmaker.player.ui.models.PlaylistTrack
@@ -41,14 +41,14 @@ class PlaylistAdapter(
 
             binding.trackCount.text = getWordForm(playlist.playlistItemsId.size)
             binding.posterTitle.text = playlist.title
-            Glide.with(itemView.context)
+            /*Glide.with(itemView.context)
                 .load(playlist.posterPath)
                 .placeholder(R.drawable.track_placeholder)
                 .transform(
                     CenterCrop(),
                     RoundedCorners(dpToPx(IMG_RADIUS, itemView.context))
                 )
-                .into(binding.poster)
+                .into(binding.poster)*/
         }
 
     }

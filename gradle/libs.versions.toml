@@ -1,10 +1,13 @@
 [versions]
+activityCompose = "1.10.1"
 activityKtx = "1.9.3"
 agp = "8.7.0"
+coilCompose = "3.3.0"
+coilNetworkOkhttp = "3.3.0"
 compiler = "4.14.2"
 #kotlin = "1.9.0"
 coreKtxVersion = "1.7.0"
-kotlin = "2.0.21"
+kotlin = "2.2.0"
 coreKtx = "1.10.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
@@ -22,16 +25,23 @@ navigationFragmentUi = "2.5.3"
 fragmentKtx = "1.5.6"
 safaArgs = "2.5.3"
 coroutines = "1.7.3"
-room = "2.6.1"
+room = "2.7.2"
 #devToolsKsp = "1.9.0-1.0.13"
-devToolsKsp = "2.0.21-1.0.27"
+devToolsKsp = "2.2.0-2.0.2"
 
 [libraries]
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 androidx-core-ktx-v170 = { module = "androidx.core:core-ktx", version.ref = "coreKtxVersion" }
+androidx-material3 = { module = "androidx.compose.material3:material3" }
+androidx-ui = { module = "androidx.compose.ui:ui" }
+androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilNetworkOkhttp" }
 koin = { group = "io.insert-koin", name = "koin-android", version.ref = "koinAndroid" }
 androidx-activity-ktx = { group = "androidx.activity", name ="activity-ktx", version.ref = "activityKtx" }
-glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "compiler" }
+#glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+#compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "compiler" }
 ksp-compiler = { group ="androidx.room", name = "room-compiler", version.ref = "room" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "converterGson" }
@@ -59,3 +69,5 @@ androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 navigationSafeArgs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "safaArgs" }
 ksp = { id ="com.google.devtools.ksp", version.ref = "devToolsKsp" }
+
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
