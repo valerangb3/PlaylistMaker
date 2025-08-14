@@ -23,5 +23,6 @@
 
     <dimen name="loupe_ico_width">16dp</dimen>
     <dimen name="loupe_ico_height">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 <!--    <dimen name="setting_padding_b">18dp</dimen>-->
 </resources>
