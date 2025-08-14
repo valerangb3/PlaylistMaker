@@ -9,6 +9,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.practicum.playlistmaker.ui.components.SearchBar
 import com.practicum.playlistmaker.ui.components.Track
+import com.practicum.playlistmaker.ui.theme.PlaylistMakerTheme
 
 @Composable
 fun SearchScreen(modifier: Modifier) {
@@ -27,5 +28,7 @@ fun SearchScreen(modifier: Modifier) {
 @Preview(apiLevel = 35, showBackground = false, showSystemUi = true)
 @Composable
 fun SearchScreenPreview() {
-    SearchScreen(modifier = Modifier)
+    PlaylistMakerTheme {
+        SearchScreen(modifier = Modifier)
+    }
 }

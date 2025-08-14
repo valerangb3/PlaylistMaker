@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,6 +23,7 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.ui.theme.PlaylistMakerTheme
 
 @Composable
 fun Track(
@@ -42,7 +44,7 @@ fun Track(
         AsyncImage(
             modifier = Modifier
                 .size(45.dp)
-                .clip(RoundedCornerShape(2.dp)),
+                .clip(MaterialTheme.shapes.extraSmall),
             model = ImageRequest.Builder(LocalContext.current)
                 .data(model)
                 .crossfade(true)
@@ -52,25 +54,47 @@ fun Track(
             contentScale = ContentScale.Crop,
         )
         Column(
-            modifier = Modifier.weight(1F)
+            modifier = Modifier.weight(1F),
+            verticalArrangement = Arrangement.Bottom
         ) {
             Text(
+                style = MaterialTheme.typography.titleSmall,
                 text = trackName,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
             Row {
                 Text(
-                    modifier = Modifier.weight(1F),
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier
+                        .weight(1F),
                     text = artistName,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                Text(text = duration)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+//                    <item name="android:drawableTint">?attr/colorPrimary</item>
+                    Icon(
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .padding(horizontal = 6.dp),
+                        painter = painterResource(R.drawable.track_time_dot),
+                        contentDescription = null
+                    )
+                    Text(
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.bodySmall,
+                        text = duration
+                    )
+                }
             }
         }
 
         Icon(
+            tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(width = 24.dp, height = 24.dp),
             painter = painterResource(id = R.drawable.forward_24),
             contentDescription = null
@@ -82,8 +106,10 @@ fun Track(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun TrackPreview() {
-    Track(
-        modifier = Modifier,
-        pic = ""
-    )
+    PlaylistMakerTheme {
+        Track(
+            modifier = Modifier,
+            pic = ""
+        )
+    }
 }

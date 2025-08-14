@@ -6,13 +6,16 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.Modifier
 import com.practicum.playlistmaker.ui.SearchScreen
 import com.practicum.playlistmaker.ui.components.Track
+import com.practicum.playlistmaker.ui.theme.PlaylistMakerTheme
 
 class ComposeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SearchScreen(modifier = Modifier)
+            PlaylistMakerTheme {
+                SearchScreen(modifier = Modifier)
+            }
         }
     }
 
