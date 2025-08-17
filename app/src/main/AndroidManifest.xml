@@ -21,10 +21,10 @@
         android:theme="@style/Theme.PlaylistMaker"
         tools:targetApi="31" >
         <activity
-            android:name=".root.ui.RootActivity"
+            android:name=".root.ui.ComposeActivity"
             android:exported="false" />
         <activity
-            android:name=".root.ui.ComposeActivity"
+            android:name=".root.ui.RootActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustNothing" >
             <intent-filter>

@@ -2,6 +2,7 @@ package com.practicum.playlistmaker.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,10 +39,17 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.ui.data.model.Screen
 import com.practicum.playlistmaker.ui.theme.yp_black
 import com.practicum.playlistmaker.ui.theme.yp_blue
+import com.practicum.playlistmaker.ui.theme.yp_gray_light
 
 @Composable
-fun PlaylistMakerBottomBar(modifier: Modifier = Modifier, screen: Screen = Screen.SEARCH) {
-    val borderColor = MaterialTheme.colorScheme.onSurface
+fun PlaylistMakerBottomBar(
+    modifier: Modifier = Modifier,
+    screen: Screen = Screen.SEARCH,
+    onSearchItem: () -> Unit = {},
+    onMediaItem: () -> Unit = {},
+    onSettingsItem: () -> Unit = {},
+) {
+    val borderColor = yp_gray_light
     BottomAppBar(
         modifier = modifier
             .height(56.dp)
@@ -62,7 +70,11 @@ fun PlaylistMakerBottomBar(modifier: Modifier = Modifier, screen: Screen = Scree
                 modifier = Modifier.height(56.dp).fillMaxWidth()
 
             ) {
-                Box(modifier = Modifier, contentAlignment = Alignment.Center) {
+                Box(
+                    modifier = Modifier.clickable { onSearchItem() },
+                    contentAlignment = Alignment.Center
+                )
+                {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(
                             painter = painterResource(R.drawable.menu_item_search_new),
@@ -76,7 +88,10 @@ fun PlaylistMakerBottomBar(modifier: Modifier = Modifier, screen: Screen = Scree
                         )
                     }
                 }
-                Box(modifier = Modifier) {
+                Box(
+                    modifier = Modifier.clickable { onMediaItem() },
+                    contentAlignment = Alignment.Center
+                ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(
                             painter = painterResource(R.drawable.menu_item_media_new),
@@ -88,7 +103,10 @@ fun PlaylistMakerBottomBar(modifier: Modifier = Modifier, screen: Screen = Scree
                         )
                     }
                 }
-                Box(modifier = Modifier) {
+                Box(
+                    modifier = Modifier.clickable { onSettingsItem() },
+                    contentAlignment = Alignment.Center
+                ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(
                             painter = painterResource(R.drawable.menu_item_settings_new),

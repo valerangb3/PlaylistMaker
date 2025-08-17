@@ -15,22 +15,52 @@ import com.practicum.playlistmaker.ui.theme.PlaylistMakerTheme
 import org.koin.androidx.compose.koinViewModel
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.ui.components.PlaylistMakerBottomBar
+import com.practicum.playlistmaker.ui.data.model.Screen
+import com.practicum.playlistmaker.ui.screens.MediaScreen
 
 @Composable
 fun App(
-    viewModel: SearchViewModel = koinViewModel()
+    viewModel: SearchViewModel = koinViewModel(),
+    screen: Screen = Screen.MEDIA,
+    onSearchItem: () -> Unit = {},
+    onMediaItem: () -> Unit = {},
+    onSettingsItem: () -> Unit = {},
 ) {
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.surface,
-        topBar = { PlaylistMakerAppBar(title = stringResource(R.string.main_menu_search)) },
-        bottomBar = {
-            PlaylistMakerBottomBar()
+    val titleRes = when(screen) {
+        Screen.MEDIA -> R.string.main_menu_media
+        Screen.SEARCH -> R.string.main_menu_search
+        Screen.SETTINGS -> R.string.main_menu_settings
+    }
+    PlaylistMakerTheme {
+        Scaffold(
+            containerColor = MaterialTheme.colorScheme.surface,
+            topBar = { PlaylistMakerAppBar(title = stringResource(titleRes)) },
+            bottomBar = {
+                PlaylistMakerBottomBar(
+                    onSearchItem = onSearchItem,
+                    onMediaItem = onMediaItem,
+                    onSettingsItem = onSettingsItem
+                )
+            }
+        ) { paddingValues ->
+            when(screen) {
+                Screen.SEARCH -> {
+                    SearchScreen(
+                        viewModel = viewModel,
+                        modifier = Modifier
+                            .padding(paddingValues)
+                            .fillMaxHeight()
+                    )
+                }
+                Screen.MEDIA -> {
+                    MediaScreen()
+                }
+                Screen.SETTINGS -> {
+
+                }
+            }
+
         }
-    ) { paddingValues ->
-        SearchScreen(
-            viewModel = viewModel,
-            modifier = Modifier.padding(paddingValues).fillMaxHeight()
-        )
     }
 }
 
