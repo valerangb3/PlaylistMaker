@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     debugImplementation(libs.androidx.ui.tooling)
 
+    implementation(libs.koinCompose)
     implementation(libs.koin)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
@@ -69,7 +70,7 @@ dependencies {
     //annotationProcessor(libs.compiler)
     //ksp(libs.compiler)
 
-
+    implementation(libs.androidx.runtime.livedata)
 
     //implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

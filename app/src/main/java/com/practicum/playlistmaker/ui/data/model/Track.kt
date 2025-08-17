@@ -1,7 +1,8 @@
-package com.practicum.playlistmaker.ui.data
+package com.practicum.playlistmaker.ui.data.model
 
 import java.io.Serializable
 
+//TODO оставляю пока здесь - пригодится при полном переходе на compose
 data class Track(
     val trackId: Long,
     val trackName: String,
@@ -18,4 +19,3 @@ data class Track(
 ): Serializable {
     fun getCoverArtwork() = artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")
 }
-

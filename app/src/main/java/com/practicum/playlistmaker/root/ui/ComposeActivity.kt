@@ -3,9 +3,7 @@ package com.practicum.playlistmaker.root.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.ui.Modifier
-import com.practicum.playlistmaker.ui.SearchScreen
-import com.practicum.playlistmaker.ui.components.Track
+import com.practicum.playlistmaker.ui.App
 import com.practicum.playlistmaker.ui.theme.PlaylistMakerTheme
 
 class ComposeActivity : ComponentActivity() {
@@ -14,7 +12,7 @@ class ComposeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             PlaylistMakerTheme {
-                SearchScreen(modifier = Modifier)
+                App()
             }
         }
     }

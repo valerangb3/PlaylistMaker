@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.search.ui
 
-import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import androidx.core.content.getSystemService
@@ -68,6 +67,8 @@ class SearchFragment : Fragment() {
                 hideLoading()
                 showErrorContainer(state.error)
             }
+
+            TrackListState.Idle -> {}
         }
     }
 
