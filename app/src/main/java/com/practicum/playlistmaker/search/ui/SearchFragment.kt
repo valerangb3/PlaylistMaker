@@ -11,11 +11,14 @@ import androidx.navigation.fragment.findNavController
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.player.domain.models.TrackInfo
+import com.practicum.playlistmaker.player.ui.TrackFragmentArgs
 import com.practicum.playlistmaker.playlist.ui.fragments.PlaylistUpdateFragmentArgs
 import com.practicum.playlistmaker.search.domain.models.Track
+import com.practicum.playlistmaker.search.presentation.viewmodel.SearchViewModel
 import com.practicum.playlistmaker.ui.App
 import com.practicum.playlistmaker.ui.data.model.Screen
 import com.practicum.playlistmaker.utils.NetworkConnectBroadcastReceiver
+import org.koin.androidx.compose.koinViewModel
 
 class SearchFragment : Fragment() {
     private val receiver = NetworkConnectBroadcastReceiver()
@@ -47,9 +50,15 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.searchScreen.setContent {
             App(
-                screen = Screen.MEDIA,
+                //viewModel = koinViewModel<SearchViewModel>(),
+                screen = Screen.SEARCH,
                 onSearchItem = {
                     findNavController().navigate(R.id.searchFragment)
                 },
@@ -58,15 +67,12 @@ class SearchFragment : Fragment() {
                 },
                 onSettingsItem = {
                     findNavController().navigate(R.id.settingsFragment)
+                },
+                onTrackClick = { track ->
+                    findNavController().navigate(R.id.trackFragment, TrackFragmentArgs(mapToTrackInfo(track)).toBundle())
                 }
             )
         }
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        //HERE
     }
 
     override fun onPause() {

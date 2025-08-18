@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.presentation.viewmodel.SearchViewModel
 import com.practicum.playlistmaker.ui.components.SearchBar
 import com.practicum.playlistmaker.ui.components.TracksList
@@ -18,6 +19,7 @@ import org.koin.androidx.compose.koinViewModel
 fun SearchScreen(
     viewModel: SearchViewModel,
     modifier: Modifier,
+    onTrackClick: (track: Track) -> Unit = {}
 ) {
     Row(modifier = modifier) {
         Column {
@@ -39,6 +41,9 @@ fun SearchScreen(
                 onTrackClick = {
                     viewModel.addToHistory(it)
                     viewModel.saveHistory()
+                    if (viewModel.clickDebounce()) {
+                        onTrackClick(it)
+                    }
                 }
             )
         }

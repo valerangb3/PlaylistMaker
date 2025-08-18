@@ -47,9 +47,5 @@ class FavouriteListAdapter(
             binding.duration.text = favourite.trackTime
             binding.musicalArtistName.requestLayout()
         }
-
-        companion object {
-            const val IMG_RADIUS = 2.0F
-        }
     }
 }

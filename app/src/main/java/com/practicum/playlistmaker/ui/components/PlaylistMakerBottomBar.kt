@@ -44,7 +44,7 @@ import com.practicum.playlistmaker.ui.theme.yp_gray_light
 @Composable
 fun PlaylistMakerBottomBar(
     modifier: Modifier = Modifier,
-    screen: Screen = Screen.SEARCH,
+    screen: Screen = Screen.MEDIA,
     onSearchItem: () -> Unit = {},
     onMediaItem: () -> Unit = {},
     onSettingsItem: () -> Unit = {},
@@ -95,11 +95,13 @@ fun PlaylistMakerBottomBar(
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(
                             painter = painterResource(R.drawable.menu_item_media_new),
-                            contentDescription = null
+                            contentDescription = null,
+                            tint = if (screen == Screen.MEDIA) yp_blue else LocalContentColor.current
                         )
                         Text(
                             text = stringResource(R.string.main_menu_media),
-                            style = MaterialTheme.typography.labelSmall
+                            style = MaterialTheme.typography.labelSmall,
+                            color = if (screen == Screen.MEDIA) yp_blue else LocalContentColor.current
                         )
                     }
                 }
@@ -110,11 +112,13 @@ fun PlaylistMakerBottomBar(
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(
                             painter = painterResource(R.drawable.menu_item_settings_new),
-                            contentDescription = null
+                            contentDescription = null,
+                            tint = if (screen == Screen.SETTINGS) yp_blue else LocalContentColor.current
                         )
                         Text(
                             text = stringResource(R.string.main_menu_settings),
-                            style = MaterialTheme.typography.labelSmall
+                            style = MaterialTheme.typography.labelSmall,
+                            color = if (screen == Screen.SETTINGS) yp_blue else LocalContentColor.current
                         )
                     }
                 }
