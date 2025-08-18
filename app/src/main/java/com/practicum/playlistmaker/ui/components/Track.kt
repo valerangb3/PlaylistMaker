@@ -65,7 +65,6 @@ fun Track(
                 .clip(MaterialTheme.shapes.extraSmall),
             model = ImageRequest.Builder(LocalContext.current)
                 .data(model)
-                .crossfade(true)
                 .build(),
             placeholder = painterResource(R.drawable.track_placeholder),
             contentDescription = trackName,

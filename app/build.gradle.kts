@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.ui)
 
+    implementation(libs.coil.view)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
     //ksp("io.coil-kt.coil3:coil-compose-compiler:3.3.0")

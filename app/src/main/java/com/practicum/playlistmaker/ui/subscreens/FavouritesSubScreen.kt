@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.practicum.playlistmaker.media.presentation.viewmodel.FavoriteViewModel
+import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.ui.components.FavouriteList
 import com.practicum.playlistmaker.ui.components.TracksListDemo
 import com.practicum.playlistmaker.ui.theme.PlaylistMakerTheme
@@ -14,11 +15,13 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun FavouritesSubScreen(
     modifier: Modifier = Modifier,
-    viewModel: FavoriteViewModel = koinViewModel()
+    viewModel: FavoriteViewModel = koinViewModel(),
+    onTrackClick: (Track) -> Unit = {}
 ) {
     FavouriteList(
         modifier = modifier.fillMaxSize(),
-        viewModel = viewModel
+        viewModel = viewModel,
+        onTrackClick = onTrackClick
     )
 }
 

@@ -40,7 +40,6 @@ class PlaylistAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(playList: Playlist) {
-
             /*Glide.with(itemView.context)
                 .load(playList.filePath)
                 .placeholder(R.drawable.track_placeholder)

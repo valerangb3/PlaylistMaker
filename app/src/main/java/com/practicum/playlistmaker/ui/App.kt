@@ -18,21 +18,26 @@ import com.practicum.playlistmaker.ui.theme.PlaylistMakerTheme
 import org.koin.androidx.compose.koinViewModel
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.media.presentation.viewmodel.FavoriteViewModel
+import com.practicum.playlistmaker.media.presentation.viewmodel.PlaylistViewModel
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.ui.components.PlaylistMakerBottomBar
 import com.practicum.playlistmaker.ui.data.model.MediaSubScreens
 import com.practicum.playlistmaker.ui.data.model.Screen
 import com.practicum.playlistmaker.ui.screens.MediaScreen
 import com.practicum.playlistmaker.ui.subscreens.FavouritesSubScreen
+import com.practicum.playlistmaker.ui.subscreens.PlaylistsSubScreen
 
+//TODO
+//Подход такой себе (в App определять такое большое кол-во лямбд),
+// но в дальнейшем планирую изменить подход с переходом всего приложения на Compose
 @Composable
 fun App(
-    //viewModel: ViewModel = koinViewModel(),
     screen: Screen = Screen.MEDIA,
     onSearchItem: () -> Unit = {},
     onMediaItem: () -> Unit = {},
     onSettingsItem: () -> Unit = {},
-    onTrackClick: (track: Track) -> Unit = {}
+    onTrackClick: (track: Track) -> Unit = {},
+    onPlaylistClick: (playlistId: Long) -> Unit = {}
 ) {
     val titleRes = when(screen) {
         Screen.MEDIA -> R.string.main_menu_media
@@ -73,12 +78,17 @@ fun App(
                                 Spacer(modifier = Modifier.height(16.dp))
                                 FavouritesSubScreen(
                                     viewModel = koinViewModel<FavoriteViewModel>(),
-                                    modifier = Modifier
+                                    modifier = Modifier,
+                                    onTrackClick = onTrackClick
                                 )
                             }
                             MediaSubScreens.PLAYLISTS -> {
                                 Spacer(modifier = Modifier.height(16.dp))
-                                Text("Second")
+                                PlaylistsSubScreen(
+                                    modifier = Modifier,
+                                    viewModel = koinViewModel<PlaylistViewModel>(),
+                                    onPlaylistClick = onPlaylistClick
+                                )
                             }
                         }
                     }

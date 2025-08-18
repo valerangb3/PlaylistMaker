@@ -10,6 +10,9 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentMediaBinding
 import com.practicum.playlistmaker.media.presentation.viewmodel.FavoriteViewModel
+import com.practicum.playlistmaker.player.domain.models.TrackInfo
+import com.practicum.playlistmaker.player.ui.TrackFragmentArgs
+import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.ui.App
 import com.practicum.playlistmaker.ui.data.model.Screen
 import org.koin.androidx.compose.koinViewModel
@@ -28,6 +31,22 @@ class MediaFragment: Fragment() {
         return binding.root
     }
 
+    private fun mapToTrackInfo(track: Track): TrackInfo {
+        return TrackInfo(
+            trackId = track.trackId,
+            trackTime = track.trackTime,
+            trackName = track.trackName,
+            primaryGenreName = track.primaryGenreName,
+            collectionName = track.collectionName,
+            country = track.country,
+            artistName = track.artistName,
+            previewUrl = track.previewUrl,
+            inFavourite = track.inFavourite,
+            releaseDate = track.releaseDate,
+            artworkUrl512 = track.getCoverArtwork()
+        )
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.mediaScreen.setContent {
@@ -41,6 +60,12 @@ class MediaFragment: Fragment() {
                 },
                 onSettingsItem = {
                     findNavController().navigate(R.id.settingsFragment)
+                },
+                onTrackClick = { track ->
+                    findNavController().navigate(R.id.trackFragment, TrackFragmentArgs(mapToTrackInfo(track)).toBundle())
+                },
+                onPlaylistClick = { playlistId ->
+                    findNavController().navigate(R.id.action_mediaFragment_to_playlistDetailFragment, PlaylistDetailFragmentArgs(playlistId).toBundle())
                 }
             )
         }
