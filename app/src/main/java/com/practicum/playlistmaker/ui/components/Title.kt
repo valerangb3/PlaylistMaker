@@ -11,17 +11,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 
-/*<item name="android:fontFamily">@font/ys_display_medium</item>
-<item name="android:textFontWeight">500</item>
-<item name="android:textColor">?attr/colorOnSecondary</item>
-<item name="android:gravity">start|center</item>
-<item name="android:backgroundTint">@color/transparent</item>
-<item name="android:textAllCaps">false</item>
-<item name="android:layout_marginEnd">100dp</item>
-<item name="android:paddingStart">@dimen/setting_padding_s</item>*/
-
-
-
 @Composable
 fun Title(
     modifier: Modifier = Modifier,
