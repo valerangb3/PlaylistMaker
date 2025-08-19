@@ -8,15 +8,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.practicum.playlistmaker.R
 
-/*<item name="android:textSize">16sp</item>
-<item name="android:fontFamily">@font/ys_display_regular</item>
-<item name="android:textFontWeight">400</item>*/
-
-/*<item name="android:fontFamily">@font/ys_display_regular</item>
-<item name="android:textFontWeight">400</item>
-<item name="android:textColor">?attr/colorPrimary</item>
-<item name="android:textSize">11sp</item>*/
-
 private val fontFamilyYS = FontFamily(
     listOf(
         Font(
@@ -84,5 +75,9 @@ val typography = Typography(
         fontSize = 14.sp,
         fontWeight = FontWeight.Medium,
         fontFamily = fontFamilyYS,
+    ),
+    displayMedium = TextStyle(
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Normal,
     )
 )

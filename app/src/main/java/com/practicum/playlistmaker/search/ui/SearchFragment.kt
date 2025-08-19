@@ -59,9 +59,6 @@ class SearchFragment : Fragment() {
             App(
                 //viewModel = koinViewModel<SearchViewModel>(),
                 screen = Screen.SEARCH,
-                onSearchItem = {
-                    findNavController().navigate(R.id.searchFragment)
-                },
                 onMediaItem = {
                     findNavController().navigate(R.id.mediaFragment)
                 },

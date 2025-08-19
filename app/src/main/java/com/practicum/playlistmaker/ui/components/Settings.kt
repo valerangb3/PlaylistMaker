@@ -24,21 +24,24 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.settings.presentation.SettingsViewModel
 import com.practicum.playlistmaker.ui.theme.PlaylistMakerTheme
+import com.practicum.playlistmaker.ui.theme.yp_blue
+import com.practicum.playlistmaker.ui.theme.yp_blue_light
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CustomSwitch(
@@ -55,9 +58,8 @@ fun CustomSwitch(
         label = "thumbOffset"
     )
 
-    // Цвета можно брать и из темы
-    val trackColor = if (checked) Color(0xFFB0BEC5) else MaterialTheme.colorScheme.primary
-    val thumbColor = if (checked) Color.DarkGray else MaterialTheme.colorScheme.onPrimary
+    val trackColor = if (checked) yp_blue_light else MaterialTheme.colorScheme.primary
+    val thumbColor = if (checked) yp_blue else MaterialTheme.colorScheme.onPrimary
 
     Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.Center) {
         Box(
@@ -75,7 +77,7 @@ fun CustomSwitch(
                 .size(thumbSize)
                 .clip(CircleShape)
                 .background(thumbColor)
-                .align(Alignment.CenterStart) // 👈 центрируем по вертикали, поэтому он выше трека
+                .align(Alignment.CenterStart)
         )
     }
 
@@ -98,6 +100,8 @@ fun SettingsItem(
         horizontalArrangement = Arrangement.SpaceAround
     ) {
         Text(
+            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.displayMedium,
             text = stringResource(itemText),
             modifier = Modifier.width(280.dp)
         )
@@ -107,37 +111,49 @@ fun SettingsItem(
 
 @Composable
 fun Settings(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: SettingsViewModel = koinViewModel(),
+    onSwitchTheme: (isChecked: Boolean) -> Unit = {},
+    onShareApp: () -> Unit = {},
+    onTechnicalSupportClick: () -> Unit = {},
+    onAgreeClick: () -> Unit = {},
 ) {
+    val isDarkState by viewModel.themeState().observeAsState()
+
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         SettingsItem(itemText = R.string.settings_menu_dark_theme) {
-            var checked by remember { mutableStateOf(true) }
-
             CustomSwitch(
-                checked = checked,
+                checked = isDarkState ?: false,
                 onCheckedChange = {
-                    checked = it
-                }
-            )
-
-            //Switch
-            val switch = Switch(
-                checked = checked,
-                onCheckedChange = {
-                    checked = it
+                    onSwitchTheme(it)
                 }
             )
         }
         SettingsItem(itemText = R.string.settings_menu_share) {
-            Icon(painter = painterResource(R.drawable.share_24), contentDescription = null)
+            Icon(
+                modifier = Modifier.clickable { onShareApp() },
+                tint = MaterialTheme.colorScheme.onPrimary,
+                painter = painterResource(R.drawable.share_24),
+                contentDescription = null
+            )
         }
         SettingsItem(itemText = R.string.settings_menu_support) {
-            Icon(painter = painterResource(R.drawable.support_24), contentDescription = null)
+            Icon(
+                modifier = Modifier.clickable { onTechnicalSupportClick() },
+                tint = MaterialTheme.colorScheme.onPrimary,
+                painter = painterResource(R.drawable.support_24),
+                contentDescription = null
+            )
         }
         SettingsItem(itemText = R.string.settings_menu_user_agreement) {
-            Icon(painter = painterResource(R.drawable.forward_24), contentDescription = null)
+            Icon(
+                modifier = Modifier.clickable { onAgreeClick() },
+                tint = MaterialTheme.colorScheme.onPrimary,
+                painter = painterResource(R.drawable.forward_24),
+                contentDescription = null
+            )
         }
     }
 }

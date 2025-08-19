@@ -23,10 +23,13 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.media.presentation.viewmodel.FavoriteViewModel
 import com.practicum.playlistmaker.media.presentation.viewmodel.PlaylistViewModel
 import com.practicum.playlistmaker.search.domain.models.Track
+import com.practicum.playlistmaker.settings.presentation.SettingsViewModel
 import com.practicum.playlistmaker.ui.components.PlaylistMakerBottomBar
+import com.practicum.playlistmaker.ui.components.Settings
 import com.practicum.playlistmaker.ui.data.model.MediaSubScreens
 import com.practicum.playlistmaker.ui.data.model.Screen
 import com.practicum.playlistmaker.ui.screens.MediaScreen
+import com.practicum.playlistmaker.ui.screens.SettingsScreen
 import com.practicum.playlistmaker.ui.subscreens.FavouritesSubScreen
 import com.practicum.playlistmaker.ui.subscreens.PlaylistsSubScreen
 
@@ -82,8 +85,8 @@ fun App(
                             MediaSubScreens.FAVOURITES -> {
                                 Spacer(modifier = Modifier.height(16.dp))
                                 val viewModel = koinViewModel<FavoriteViewModel>()
-                                //пока такое решение, потом переделаю все на Flow
                                 LaunchedEffect(Unit) {
+                                    //пока такое решение, потом переделаю все на Flow
                                     viewModel.getFavouriteList()
                                 }
                                 FavouritesSubScreen(
@@ -95,8 +98,8 @@ fun App(
                             MediaSubScreens.PLAYLISTS -> {
                                 Spacer(modifier = Modifier.height(16.dp))
                                 val viewModel = koinViewModel<PlaylistViewModel>()
-                                //пока такое решение, потом переделаю все на Flow
                                 LaunchedEffect(Unit) {
+                                    //пока такое решение, потом переделаю все на Flow
                                     viewModel.getPlaylistAll()
                                 }
                                 PlaylistsSubScreen(
@@ -110,7 +113,23 @@ fun App(
                     }
                 }
                 Screen.SETTINGS -> {
-
+                    val vm = koinViewModel<SettingsViewModel>()
+                    SettingsScreen(
+                        modifier = Modifier.fillMaxHeight(),
+                        viewModel = vm,
+                        onShareApp = {
+                            vm.shareApp()
+                        },
+                        onAgreeClick = {
+                            vm.termsApp()
+                        },
+                        onTechnicalSupportClick = {
+                            vm.supportApp()
+                        },
+                        onSwitchTheme = {
+                            vm.switchTheme(it)
+                        }
+                    )
                 }
             }
 

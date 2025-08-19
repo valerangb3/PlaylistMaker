@@ -5,8 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSettingsBinding
 import com.practicum.playlistmaker.settings.presentation.SettingsViewModel
+import com.practicum.playlistmaker.ui.App
+import com.practicum.playlistmaker.ui.data.model.Screen
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsFragment : Fragment() {
@@ -26,7 +30,18 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.themeSwitcher.isChecked = viewModel.getTheme()
+        binding.settingsScreen.setContent {
+            App(
+                screen = Screen.SETTINGS,
+                onSearchItem = {
+                    findNavController().navigate(R.id.searchFragment)
+                },
+                onMediaItem = {
+                    findNavController().navigate(R.id.mediaFragment)
+                },
+            )
+        }
+        /*binding.themeSwitcher.isChecked = viewModel.getTheme()
         binding.themeSwitcher.setOnCheckedChangeListener { _, checked ->
             viewModel.switchTheme(checked)
         }
@@ -38,7 +53,7 @@ class SettingsFragment : Fragment() {
         }
         binding.forward.setOnClickListener {
             viewModel.termsApp()
-        }
+        }*/
     }
 
     override fun onDestroyView() {
