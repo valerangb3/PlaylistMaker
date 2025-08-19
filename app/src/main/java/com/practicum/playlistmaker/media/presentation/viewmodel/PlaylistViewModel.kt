@@ -23,7 +23,7 @@ class PlaylistViewModel(
     private var screenStateLiveData = MutableLiveData<PlaylistState>(PlaylistState.Loading)
 
     init {
-        getPlaylistAll()
+        //getPlaylistAll()
     }
 
     fun getScreenStateLiveData(): LiveData<PlaylistState> = screenStateLiveData

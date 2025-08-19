@@ -12,9 +12,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-//import com.bumptech.glide.Glide
-//import com.bumptech.glide.load.resource.bitmap.CenterCrop
-//import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import coil3.ImageLoader
+import coil3.request.ImageRequest
+import coil3.request.placeholder
+import coil3.request.target
+import coil3.request.transformations
+import coil3.size.Scale
+import coil3.transform.RoundedCornersTransformation
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentPlaylistMakerBinding
@@ -54,13 +58,17 @@ open class PlaylistMakerFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             uri?.let {
                 fileUri = it.toString()
-                /*Glide.with(this)
-                    .load(uri)
-                    .transform(
-                        CenterCrop(),
-                        RoundedCorners(dpToPx(POSTER_RADIUS, requireContext()))
-                    )
-                    .into(binding.poster)*/
+
+                ImageLoader(binding.poster.context).enqueue(
+                    ImageRequest.Builder(binding.poster.context)
+                        .data(uri)
+                        .placeholder(R.drawable.track_placeholder)
+                        .scale(Scale.FIT)
+                        .transformations(RoundedCornersTransformation(radius = dpToPx(POSTER_RADIUS, binding.poster.context).toFloat()))
+                        .target(binding.poster)
+                        .build()
+                )
+
                 binding.poster.tag = requireActivity().getString(R.string.playlist_image_not_empty_tag)
             }
         }

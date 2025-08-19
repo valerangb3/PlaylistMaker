@@ -11,12 +11,14 @@ import org.koin.androidx.compose.koinViewModel
 fun PlaylistsSubScreen(
     modifier: Modifier = Modifier,
     viewModel: PlaylistViewModel = koinViewModel(),
-    onPlaylistClick: (playlistId: Long) -> Unit = {}
+    onPlaylistClick: (playlistId: Long) -> Unit = {},
+    onCreatePlaylist: () -> Unit = {},
 ) {
     Playlist(
         modifier = modifier,
         viewModel = viewModel,
-        onPlaylistClick = onPlaylistClick
+        onPlaylistClick = onPlaylistClick,
+        onCreatePlaylist = onCreatePlaylist,
     )
 }
 

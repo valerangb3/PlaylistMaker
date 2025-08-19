@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
@@ -8,10 +9,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.practicum.playlistmaker.ui.components.PlaylistMakerAppBar
 import com.practicum.playlistmaker.ui.screens.SearchScreen
 import com.practicum.playlistmaker.ui.theme.PlaylistMakerTheme
@@ -27,7 +30,6 @@ import com.practicum.playlistmaker.ui.screens.MediaScreen
 import com.practicum.playlistmaker.ui.subscreens.FavouritesSubScreen
 import com.practicum.playlistmaker.ui.subscreens.PlaylistsSubScreen
 
-//TODO
 //Подход такой себе (в App определять такое большое кол-во лямбд),
 // но в дальнейшем планирую изменить подход с переходом всего приложения на Compose
 @Composable
@@ -37,13 +39,15 @@ fun App(
     onMediaItem: () -> Unit = {},
     onSettingsItem: () -> Unit = {},
     onTrackClick: (track: Track) -> Unit = {},
-    onPlaylistClick: (playlistId: Long) -> Unit = {}
+    onPlaylistClick: (playlistId: Long) -> Unit = {},
+    handler: () -> Unit = {}
 ) {
     val titleRes = when(screen) {
         Screen.MEDIA -> R.string.main_menu_media
         Screen.SEARCH -> R.string.main_menu_search
         Screen.SETTINGS -> R.string.main_menu_settings
     }
+
     PlaylistMakerTheme {
         Scaffold(
             containerColor = MaterialTheme.colorScheme.surface,
@@ -57,6 +61,7 @@ fun App(
                 )
             }
         ) { paddingValues ->
+
             when(screen) {
                 Screen.SEARCH -> {
                     SearchScreen(
@@ -76,18 +81,29 @@ fun App(
                         when(mediaSubScreen) {
                             MediaSubScreens.FAVOURITES -> {
                                 Spacer(modifier = Modifier.height(16.dp))
+                                val viewModel = koinViewModel<FavoriteViewModel>()
+                                //пока такое решение, потом переделаю все на Flow
+                                LaunchedEffect(Unit) {
+                                    viewModel.getFavouriteList()
+                                }
                                 FavouritesSubScreen(
-                                    viewModel = koinViewModel<FavoriteViewModel>(),
+                                    viewModel = viewModel,
                                     modifier = Modifier,
                                     onTrackClick = onTrackClick
                                 )
                             }
                             MediaSubScreens.PLAYLISTS -> {
                                 Spacer(modifier = Modifier.height(16.dp))
+                                val viewModel = koinViewModel<PlaylistViewModel>()
+                                //пока такое решение, потом переделаю все на Flow
+                                LaunchedEffect(Unit) {
+                                    viewModel.getPlaylistAll()
+                                }
                                 PlaylistsSubScreen(
                                     modifier = Modifier,
                                     viewModel = koinViewModel<PlaylistViewModel>(),
-                                    onPlaylistClick = onPlaylistClick
+                                    onPlaylistClick = onPlaylistClick,
+                                    onCreatePlaylist = handler
                                 )
                             }
                         }

@@ -6,16 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.tabs.TabLayoutMediator
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentMediaBinding
-import com.practicum.playlistmaker.media.presentation.viewmodel.FavoriteViewModel
 import com.practicum.playlistmaker.player.domain.models.TrackInfo
 import com.practicum.playlistmaker.player.ui.TrackFragmentArgs
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.ui.App
 import com.practicum.playlistmaker.ui.data.model.Screen
-import org.koin.androidx.compose.koinViewModel
 
 class MediaFragment: Fragment() {
 
@@ -65,7 +62,10 @@ class MediaFragment: Fragment() {
                     findNavController().navigate(R.id.trackFragment, TrackFragmentArgs(mapToTrackInfo(track)).toBundle())
                 },
                 onPlaylistClick = { playlistId ->
-                    findNavController().navigate(R.id.action_mediaFragment_to_playlistDetailFragment, PlaylistDetailFragmentArgs(playlistId).toBundle())
+                    findNavController().navigate(R.id.playlistDetailFragment, PlaylistDetailFragmentArgs(playlistId).toBundle())
+                },
+                handler = {
+                    findNavController().navigate(R.id.playlistMakerFragment)
                 }
             )
         }

@@ -56,13 +56,13 @@ class PlaylistFragment : Fragment() {
             }
 
         initRecyclerView()
-        viewModel.getScreenStateLiveData().observe(requireActivity()) { screenState ->
+        /*viewModel.getScreenStateLiveData().observe(requireActivity()) { screenState ->
             when (screenState) {
                 is PlaylistState.EmptyContent -> showEmptyContent(getString(screenState.res))
                 is PlaylistState.Loading -> showLoading()
                 is PlaylistState.PlaylistContent -> showContent(screenState.data)
             }
-        }
+        }*/
 
         binding.create.setOnClickListener {
             navToPlayListMaker()

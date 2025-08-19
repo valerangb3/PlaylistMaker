@@ -22,9 +22,13 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -46,8 +50,15 @@ fun MediaScreen(
 
     val pagerState = rememberPagerState(pageCount = { 2 })
 
-    val selectedTabIndex = remember { derivedStateOf { pagerState.currentPage } }
-
+    var selectedTabIndex by remember { mutableIntStateOf(pagerState.currentPage) }
+    LaunchedEffect(selectedTabIndex) {
+        pagerState.animateScrollToPage(selectedTabIndex)
+    }
+    LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
+        if(!pagerState.isScrollInProgress) {
+            selectedTabIndex = pagerState.currentPage
+        }
+    }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -55,14 +66,14 @@ fun MediaScreen(
     ) {
         TabRow(
             containerColor = MaterialTheme.colorScheme.surface,
-            selectedTabIndex = selectedTabIndex.value,
+            selectedTabIndex = selectedTabIndex,
             modifier = Modifier.fillMaxWidth()
                 .padding(bottom = 16.dp)
                 .height(48.dp),
             divider = {},
             indicator = { tabPositions ->
                 Row(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex.value]),
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
                     horizontalArrangement = Arrangement.Center // Center the indicator if smaller
                 ) {
                     Box(
@@ -76,13 +87,14 @@ fun MediaScreen(
         ) {
             MediaSubScreens.entries.forEachIndexed { index, destination ->
                 Tab(
-                    selected = selectedTabIndex.value == index,
+                    selected = selectedTabIndex == index,
                     selectedContentColor = MaterialTheme.colorScheme.primary,
                     unselectedContentColor = MaterialTheme.colorScheme.outline,
                     onClick = {
-                        scope.launch {
+                        selectedTabIndex = index
+                        /*scope.launch {
                             pagerState.animateScrollToPage(index)
-                        }
+                        }*/
                     },
                     text = { Text(
                         style = MaterialTheme.typography.labelMedium,

@@ -19,7 +19,7 @@ class FavoriteViewModel(
     private var isClickAllowed = true
 
     init {
-        getFavouriteList()
+        //getFavouriteList()
     }
 
     private var screenStateLiveData = MutableLiveData<FavoriteState>(FavoriteState.Loading)

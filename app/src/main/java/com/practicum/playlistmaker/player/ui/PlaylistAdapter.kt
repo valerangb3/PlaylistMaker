@@ -3,9 +3,14 @@ package com.practicum.playlistmaker.player.ui
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-//import com.bumptech.glide.Glide
-//import com.bumptech.glide.load.resource.bitmap.CenterCrop
-//import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import coil3.ImageLoader
+import coil3.request.ImageRequest
+import coil3.request.crossfade
+import coil3.request.placeholder
+import coil3.request.target
+import coil3.request.transformations
+import coil3.size.Scale
+import coil3.transform.RoundedCornersTransformation
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ItemPlaylistPlayerBinding
 import com.practicum.playlistmaker.player.ui.models.PlaylistTrack
@@ -41,14 +46,17 @@ class PlaylistAdapter(
 
             binding.trackCount.text = getWordForm(playlist.playlistItemsId.size)
             binding.posterTitle.text = playlist.title
-            /*Glide.with(itemView.context)
-                .load(playlist.posterPath)
-                .placeholder(R.drawable.track_placeholder)
-                .transform(
-                    CenterCrop(),
-                    RoundedCorners(dpToPx(IMG_RADIUS, itemView.context))
-                )
-                .into(binding.poster)*/
+
+            ImageLoader(binding.poster.context).enqueue(
+                ImageRequest.Builder(binding.poster.context)
+                    .data(playlist.posterPath)
+                    .placeholder(R.drawable.track_placeholder)
+                    .crossfade(true)
+                    .scale(Scale.FIT)
+                    .transformations(RoundedCornersTransformation(radius = dpToPx(IMG_RADIUS, binding.poster.context).toFloat()))
+                    .target(binding.poster)
+                    .build()
+            )
         }
 
     }
