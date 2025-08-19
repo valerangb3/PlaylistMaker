@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,15 +38,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.ui.theme.PlaylistMakerTheme
 
 @Composable
 fun CustomSwitch(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    trackWidth: Dp = 52.dp,
-    trackHeight: Dp = 20.dp,   // трек узкий
-    thumbSize: Dp = 36.dp,     // а thumb больше трека 👈
+    trackWidth: Dp = 32.dp,
+    trackHeight: Dp = 12.dp,
+    thumbSize: Dp = 18.dp,
     enabled: Boolean = true
 ) {
     val thumbOffset by animateDpAsState(
@@ -54,8 +56,8 @@ fun CustomSwitch(
     )
 
     // Цвета можно брать и из темы
-    val trackColor = if (checked) Color(0xFFB0BEC5) else Color(0xFFECEFF1)
-    val thumbColor = if (checked) Color.DarkGray else Color.LightGray
+    val trackColor = if (checked) Color(0xFFB0BEC5) else MaterialTheme.colorScheme.primary
+    val thumbColor = if (checked) Color.DarkGray else MaterialTheme.colorScheme.onPrimary
 
     Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.Center) {
         Box(
@@ -74,7 +76,6 @@ fun CustomSwitch(
                 .clip(CircleShape)
                 .background(thumbColor)
                 .align(Alignment.CenterStart) // 👈 центрируем по вертикали, поэтому он выше трека
-                .shadow(2.dp, CircleShape)
         )
     }
 
@@ -144,5 +145,7 @@ fun Settings(
 @Preview
 @Composable
 fun SettingsPreview() {
-    Settings()
+    PlaylistMakerTheme {
+        Settings()
+    }
 }
