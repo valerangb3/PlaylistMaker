@@ -22,9 +22,14 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import coil3.ImageLoader
+import coil3.request.ImageRequest
+import coil3.request.crossfade
+import coil3.request.placeholder
+import coil3.request.target
+import coil3.request.transformations
+import coil3.size.Scale
+import coil3.transform.RoundedCornersTransformation
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.customview.PlaybackButtonView
@@ -34,6 +39,7 @@ import com.practicum.playlistmaker.player.presentation.state.PlaylistScreenState
 import com.practicum.playlistmaker.player.presentation.state.ToastState
 import com.practicum.playlistmaker.player.presentation.viewmodel.PlayerViewModel
 import com.practicum.playlistmaker.player.service.PlayerService
+import com.practicum.playlistmaker.player.ui.PlaylistAdapter.Companion.IMG_RADIUS
 import com.practicum.playlistmaker.player.ui.models.PlaylistTrack
 import com.practicum.playlistmaker.player.ui.models.Track
 import com.practicum.playlistmaker.utils.NetworkConnectBroadcastReceiver
@@ -179,11 +185,16 @@ class TrackFragment : Fragment() {
             binding.countryValue.gone()
         }
 
-        Glide.with(this)
-            .load(trackInfo.artworkUrl512)
-            .placeholder(R.drawable.big_placeholder)
-            .transform(CenterCrop(), RoundedCorners(dpToPx(POSTER_RADIUS, requireContext())))
-            .into(binding.poster)
+        ImageLoader(binding.poster.context).enqueue(
+            ImageRequest.Builder(binding.poster.context)
+                .data(trackInfo.artworkUrl512)
+                .placeholder(R.drawable.big_placeholder)
+                .crossfade(true)
+                .scale(Scale.FIT)
+                .transformations(RoundedCornersTransformation(radius = dpToPx(POSTER_RADIUS, binding.poster.context).toFloat()))
+                .target(binding.poster)
+                .build()
+        )
     }
 
     private fun handleBottomSheet(bottomSheetBehavior: BottomSheetBehavior<LinearLayout>?) {

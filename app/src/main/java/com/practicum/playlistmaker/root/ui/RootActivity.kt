@@ -29,7 +29,8 @@ class RootActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.trackFragment, R.id.playlistMakerFragment, R.id.playlistUpdateFragment, R.id.playlistDetailFragment -> {
+                R.id.searchFragment, R.id.trackFragment, R.id.playlistMakerFragment, R.id.settingsFragment,
+                R.id.playlistUpdateFragment, R.id.playlistDetailFragment, R.id.mediaFragment -> {
                     bottomNavigationView.gone()
                 }
 

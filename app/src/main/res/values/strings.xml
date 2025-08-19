@@ -97,4 +97,12 @@
         <item quantity="many">%1$d треков</item>
         <item quantity="other">%1$d треков</item>
     </plurals>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="tab_favourite">Избранные треки</string>
+    <string name="tab_playlists">Плейлисты</string>
 </resources>

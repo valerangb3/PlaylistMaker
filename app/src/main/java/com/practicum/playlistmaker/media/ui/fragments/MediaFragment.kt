@@ -5,16 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.google.android.material.tabs.TabLayoutMediator
+import androidx.navigation.fragment.findNavController
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentMediaBinding
+import com.practicum.playlistmaker.player.domain.models.TrackInfo
+import com.practicum.playlistmaker.player.ui.TrackFragmentArgs
+import com.practicum.playlistmaker.search.domain.models.Track
+import com.practicum.playlistmaker.ui.App
+import com.practicum.playlistmaker.ui.data.model.Screen
 
 class MediaFragment: Fragment() {
 
     private var _binding : FragmentMediaBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var tabLayoutMediator: TabLayoutMediator
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,24 +28,44 @@ class MediaFragment: Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.viewPager.adapter = MediaViewPagerAdapter(
-            fragmentManager = childFragmentManager,
-            lifecycle = lifecycle
+    private fun mapToTrackInfo(track: Track): TrackInfo {
+        return TrackInfo(
+            trackId = track.trackId,
+            trackTime = track.trackTime,
+            trackName = track.trackName,
+            primaryGenreName = track.primaryGenreName,
+            collectionName = track.collectionName,
+            country = track.country,
+            artistName = track.artistName,
+            previewUrl = track.previewUrl,
+            inFavourite = track.inFavourite,
+            releaseDate = track.releaseDate,
+            artworkUrl512 = track.getCoverArtwork()
         )
-        tabLayoutMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            when (position) {
-                0 -> tab.text = getString(R.string.favorites_tab)
-                else -> tab.text = getString(R.string.playlist_tab)
-            }
-        }
-        tabLayoutMediator.attach()
     }
 
-    override fun onDestroyView() {
-        tabLayoutMediator.detach()
-        //_binding = null
-        super.onDestroyView()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.mediaScreen.setContent {
+            App(
+                screen = Screen.MEDIA,
+                onSearchItem = {
+                    findNavController().navigate(R.id.searchFragment)
+                },
+                onSettingsItem = {
+                    findNavController().navigate(R.id.settingsFragment)
+                },
+                onTrackClick = { track ->
+                    findNavController().navigate(R.id.trackFragment, TrackFragmentArgs(mapToTrackInfo(track)).toBundle())
+                },
+                onPlaylistClick = { playlistId ->
+                    findNavController().navigate(R.id.playlistDetailFragment, PlaylistDetailFragmentArgs(playlistId).toBundle())
+                },
+                handler = {
+                    findNavController().navigate(R.id.playlistMakerFragment)
+                }
+            )
+        }
     }
+
 }

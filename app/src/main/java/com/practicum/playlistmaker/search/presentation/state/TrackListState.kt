@@ -5,6 +5,7 @@ import com.practicum.playlistmaker.search.presentation.models.ErrorType
 
 sealed interface TrackListState {
     object Loading : TrackListState
+    object Idle : TrackListState
     data class SearchContent(val data: List<Track>) : TrackListState
     data class HistoryContent(val data: List<Track>) : TrackListState
     data class Error(val error: ErrorType) : TrackListState

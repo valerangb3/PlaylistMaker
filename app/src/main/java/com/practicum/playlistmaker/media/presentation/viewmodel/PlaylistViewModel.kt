@@ -22,6 +22,10 @@ class PlaylistViewModel(
     private var items = mutableListOf<Playlist>()
     private var screenStateLiveData = MutableLiveData<PlaylistState>(PlaylistState.Loading)
 
+    init {
+        //getPlaylistAll()
+    }
+
     fun getScreenStateLiveData(): LiveData<PlaylistState> = screenStateLiveData
     fun addPlaylist(item: Playlist) {
         items.add(item)

@@ -9,6 +9,7 @@ import com.practicum.playlistmaker.medialibrary.domain.favourite.FavouriteReposi
 import com.practicum.playlistmaker.medialibrary.domain.favourite.models.Favourite as FavouriteExt
 import com.practicum.playlistmaker.media.domain.models.Favourite
 import com.practicum.playlistmaker.media.presentation.state.FavoriteState
+import com.practicum.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -18,7 +19,7 @@ class FavoriteViewModel(
     private var isClickAllowed = true
 
     init {
-        getFavouriteList()
+        //getFavouriteList()
     }
 
     private var screenStateLiveData = MutableLiveData<FavoriteState>(FavoriteState.Loading)
@@ -52,6 +53,24 @@ class FavoriteViewModel(
             }
         }
         return current
+    }
+
+    fun mapToTrackList(items: List<Favourite>): List<Track> {
+        return items.map {
+            Track(
+                trackId = it.trackId,
+                artistName = it.artistName,
+                trackName = it.trackName,
+                trackTime = it.trackTime,
+                country = it.country,
+                previewUrl = it.previewUrl,
+                inFavourite = true,
+                releaseDate = it.releaseDate,
+                artworkUrl100 = it.artworkUrl100,
+                collectionName = it.collectionName,
+                primaryGenreName = it.primaryGenreName
+            )
+        }
     }
 
     fun getFavouriteList() {

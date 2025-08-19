@@ -120,6 +120,8 @@ class SearchViewModel(
     fun clearHistory() {
         viewModelScope.launch {
             tracksHistoryInteractor.remove()
+            val tracks: List<Track> = emptyList()
+            tracksState.postValue(TrackListState.Idle)
         }
     }
 }
