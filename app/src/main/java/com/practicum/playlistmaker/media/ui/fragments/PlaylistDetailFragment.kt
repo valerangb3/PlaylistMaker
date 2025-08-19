@@ -35,7 +35,6 @@ import com.practicum.playlistmaker.media.ui.models.Track
 import com.practicum.playlistmaker.player.domain.models.TrackInfo
 import com.practicum.playlistmaker.player.ui.TrackFragmentArgs
 import com.practicum.playlistmaker.playlist.ui.fragments.PlaylistUpdateFragmentArgs
-import com.practicum.playlistmaker.search.ui.adapter.TrackListAdapter.TrackViewHolder.Companion.IMG_RADIUS
 import com.practicum.playlistmaker.utils.dpToPx
 import org.koin.core.parameter.parametersOf
 
@@ -350,5 +349,9 @@ class PlaylistDetailFragment : Fragment() {
         _binding = null
         bottomSheetBehavior = null
         super.onDestroy()
+    }
+
+    companion object {
+        const val IMG_RADIUS = 2.0F
     }
 }

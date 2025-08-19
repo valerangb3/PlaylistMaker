@@ -15,7 +15,6 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ItemTrackBinding
 import com.practicum.playlistmaker.media.ui.adapter.common.OnPlaylistTrackListeners
 import com.practicum.playlistmaker.media.ui.models.Track
-import com.practicum.playlistmaker.search.ui.adapter.TrackListAdapter.TrackViewHolder.Companion.IMG_RADIUS
 import com.practicum.playlistmaker.utils.dpToPx
 
 class PlaylistDetailTracksAdapter(
@@ -60,5 +59,8 @@ class PlaylistDetailTracksAdapter(
             binding.duration.text = track.getFormatTime()
             binding.musicalArtistName.requestLayout()
         }
+    }
+    companion object {
+        const val IMG_RADIUS = 2F
     }
 }

@@ -8,16 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSettingsBinding
-import com.practicum.playlistmaker.settings.presentation.SettingsViewModel
 import com.practicum.playlistmaker.ui.App
 import com.practicum.playlistmaker.ui.data.model.Screen
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsFragment : Fragment() {
     private var _binding : FragmentSettingsBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by viewModel<SettingsViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,23 +38,5 @@ class SettingsFragment : Fragment() {
                 },
             )
         }
-        /*binding.themeSwitcher.isChecked = viewModel.getTheme()
-        binding.themeSwitcher.setOnCheckedChangeListener { _, checked ->
-            viewModel.switchTheme(checked)
-        }
-        binding.share.setOnClickListener {
-            viewModel.shareApp()
-        }
-        binding.support.setOnClickListener {
-            viewModel.supportApp()
-        }
-        binding.forward.setOnClickListener {
-            viewModel.termsApp()
-        }*/
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
     }
 }

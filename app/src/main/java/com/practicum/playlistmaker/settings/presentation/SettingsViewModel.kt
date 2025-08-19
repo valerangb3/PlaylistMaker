@@ -31,5 +31,6 @@ class SettingsViewModel(
 
     fun switchTheme(checked: Boolean) {
         settingsInteractor.switchTheme(checked)
+        isDarkTheme.postValue(checked)
     }
 }

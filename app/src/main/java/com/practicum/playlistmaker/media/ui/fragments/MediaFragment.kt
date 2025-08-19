@@ -52,9 +52,6 @@ class MediaFragment: Fragment() {
                 onSearchItem = {
                     findNavController().navigate(R.id.searchFragment)
                 },
-                onMediaItem = {
-                    findNavController().navigate(R.id.mediaFragment)
-                },
                 onSettingsItem = {
                     findNavController().navigate(R.id.settingsFragment)
                 },
